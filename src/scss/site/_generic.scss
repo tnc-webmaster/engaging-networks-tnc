@@ -1,0 +1,12 @@
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;  
+}
+
+.main {
+  margin-top: 1.5rem;
+
+  @include media-breakpoint-up(lg) {
+    margin-top: 3rem;
+  }
+}

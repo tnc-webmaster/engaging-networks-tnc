@@ -1,0 +1,149 @@
+//@include placeholder {
+  //  color: $gray-600;
+//}
+
+label {
+  font-size: 1rem;
+  font-weight: $font-weight-medium;
+  line-height: 1.875;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+textarea {
+  &.form-control {
+    height: calc(6.875rem + 2px);
+    padding: .75rem 1.25rem;
+  }
+}
+
+.form-select {
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+}
+
+.field-error {
+  font-size: $font-size-sm;
+  font-style: italic;
+  font-weight: $font-weight-medium;
+}
+
+.en__component--row.en__component--advrow {
+  @extend .row;
+  display: block;
+
+  @include media-breakpoint-up(lg) {
+    display: flex;
+    justify-content: space-between;    
+  }
+}
+
+.en__component--column.en__component--advcolumn {
+  &:first-child:not(:last-child) {
+    @extend .col-lg-6;
+    @extend .offset-lg-1;
+    
+    @include media-breakpoint-up(xl) {      
+      .en__component--formblock {
+        padding-right: 35%;      
+      }
+    }
+  }
+
+  &:last-child:not(:first-child) {
+    @extend .col-lg-4;
+  }
+
+  &:fist-child:last-child {
+   flex: none;
+   width: 100%; 
+  }  
+}
+
+
+.form {
+  .en__component--formblock {
+    &:not(last-child) {
+      margin-bottom: 4.5rem;
+    }
+  }
+
+  .en__component--copyblock:not(.hero) {
+    h5 {
+      @extend %form-heading;
+    }
+  }
+}
+
+.en__field__input--calendar,
+.en__field__input--email,
+.en__field__input--number,
+.en__field__input--other,
+.en__field__input--password,
+.en__field__input--select,
+.en__field__input--splittext,
+.en__field__input--telephone,
+.en__field__input--text,
+.en__field__input--textarea,
+.en__field__input--tripletext {
+  @extend .form-control;
+  
+  &:focus {
+    border-width: 2px;
+  }
+}
+
+.en__field__input--select,
+.en__field__input--splitselect,
+.en__field__input--tripleselect {
+  @extend .form-select;
+}
+
+.en__field__input--splittext,
+.en__field__input--tripletext,
+.en__field__element--splitselect,
+.en__field__input--tripleselect {
+  @extend .row;
+  
+  .en__field__item {
+    @extend .col;
+  }
+}
+
+.en__field__input--checkbox {
+  @extend .visually-hidden;
+}
+
+.en__field__element--checkbox {
+  .en__field__label {
+    display: flex;
+    line-height: 1.375;
+    margin: 0;
+    
+    &::before {
+      @extend %styled-checkbox;
+    }
+  }
+  
+  & :checked + .en__field__label {
+    &::before {
+      @extend %styled-checkbox-checked;      
+    }
+  }
+}
+
+.en__submit {
+  button {
+    @extend .btn;
+    @extend .btn-lg;
+    @extend .btn-primary;
+  }
+}

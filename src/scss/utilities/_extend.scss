@@ -1,0 +1,24 @@
+%form-heading {
+  border-bottom: $hr;
+  color: $primary;
+  padding-bottom: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+%styled-checkbox {
+  background-color: $white;
+  border: 1px solid $gray-500;
+  content: "";
+  display: inline-block;
+  flex: none;
+  height: 1rem;
+  margin-right: .5rem;
+  transform: translateY(.125rem);
+  transition: $transition-base;
+  width: 1rem;  
+}
+
+%styled-checkbox-checked {
+  background: $body-color url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10.822' height='8.414' viewBox='0 0 10.822 8.414'><path d='M6,8,0,2,2.438,0' transform='translate(1.407 7.414) rotate(-90)' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-miterlimit='10' stroke-width='2'/></svg>") center no-repeat;  
+  border-color: $body-color;
+}

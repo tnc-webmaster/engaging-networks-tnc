@@ -1,0 +1,7 @@
+.aside {
+  .en__component--imageblock {
+    @include media-breakpoint-down(lg) {
+      display: none;
+    }
+  }
+}

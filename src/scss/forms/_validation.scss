@@ -1,0 +1,50 @@
+.en__field--validationFailed {
+  display: flex;
+  flex-direction: column;
+
+  .en__field__input--calendar,
+  .en__field__input--email,
+  .en__field__input--number,
+  .en__field__input--other,
+  .en__field__input--password,
+  .en__field__input--select,
+  .en__field__input--splittext,
+  .en__field__input--telephone,
+  .en__field__input--text,
+  .en__field__input--textarea,
+  .en__field__input--tripletext {
+    border-color: $warning;
+    border-width: 2px;    
+  }  
+
+  .en__field__input--calendar,
+  .en__field__input--email,
+  .en__field__input--number,
+  .en__field__input--other,
+  .en__field__input--password,
+  .en__field__input--splittext,
+  .en__field__input--telephone,
+  .en__field__input--text,
+  .en__field__input--textarea,
+  .en__field__input--tripletext {
+    background: $input-indicator-error;
+    padding-right: $form-select-indicator-padding;    
+  }
+}
+
+
+.form-select {
+  &[aria-invalid="true"] {
+    background-image: $form-select-indicator-error;
+  }
+}
+
+.en__field__error {
+  color: $warning;
+  font-size: $font-size-sm;
+  font-style: italic;
+  font-weight: $font-weight-medium;
+  line-height: 1.4285;
+  margin-top: .6875rem;
+  order: 1;
+}

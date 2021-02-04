@@ -1,0 +1,25 @@
+.btn {
+  height: 4.2857em;
+  text-transform: uppercase;
+  min-width: 11.875rem;
+  
+  &:not(a) {
+    min-width: 0;
+  }
+  
+  &-lg {
+    height: 3em;
+  }
+  
+  &-primary {
+    @include button-variant($primary, $primary, $white, $gray-900, $gray-900, $white);    
+  }
+  
+  &-outline-primary {    
+    @include button-outline-variant($primary, $white, $gray-900, $gray-900);
+    
+    &:disabled {
+      @include button-outline-variant($disabled, $white, $gray-900, $disabled);      
+    }
+  }
+}

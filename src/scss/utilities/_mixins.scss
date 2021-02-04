@@ -1,0 +1,55 @@
+@function url-friendly-colour($colour) {
+  @return '%23' + str-slice('#{$colour}', 2, -1)
+}
+
+@function strip-unit($value) {
+  @return $value / ($value * 0 + 1);
+}
+
+@mixin fluid-value($min-vw, $max-vw, $min-px, $max-px, $property: font-size) {
+  $u1: unit($min-vw);
+  $u2: unit($max-vw);
+  $u3: unit($min-px);
+  $u4: unit($max-px);
+
+  @if $u1 == $u2 and $u1 == $u3 and $u1 == $u4 {
+    & {
+      #{$property}: $min-px;
+      @media screen and (min-width: $min-vw) {
+        #{$property}: calc(#{$min-px} + #{strip-unit($max-px - $min-px)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}));
+      }
+      @media screen and (min-width: $max-vw) {
+        #{$property}: $max-px;
+      }
+    }
+  }
+}
+
+// @description converts 1 or more characters into a unicode
+// @markup {scss}
+// unicode("e655"); // "\e655"
+@function unicode($str){
+    @return unquote("\"")+unquote(str-insert($str, "\\", 1))+unquote("\"")
+}
+
+// Browser specific
+@mixin safari-only {
+  @media not all and (min-resolution:.001dpcm){ @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+    @content;
+  }}
+}
+
+@mixin ie-only {
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    @content;
+  }
+}
+
+// Input placeholders
+@mixin placeholder {
+  ::-webkit-input-placeholder {@content}
+  :-moz-placeholder           {@content}
+  ::-moz-placeholder          {@content}
+  :-ms-input-placeholder      {@content}  
+  ::placeholder      {@content}  
+}

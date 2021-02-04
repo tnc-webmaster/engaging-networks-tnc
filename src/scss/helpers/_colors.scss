@@ -1,0 +1,12 @@
+.has-background-dark {
+  background-color: $gray-900 !important;
+  color: $white !important;
+  
+  * {
+    color: inherit;
+  }
+  
+  a:hover {
+    color: $primary;
+  }
+}

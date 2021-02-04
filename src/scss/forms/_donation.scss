@@ -1,0 +1,106 @@
+.en__field--withOther {
+  > .en__field__label {
+    @extend .h5;
+    @extend %form-heading; 
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .en__component--formblock {
+    &.cols-3 {
+      padding-right: 35% !important;
+    }
+
+    .cols-4 {
+      padding-right: 12.5% !important;
+    }
+  }
+}
+
+.en__field--donationAmt .en__field__element--radio {
+  @extend .row;
+  @extend .row-cols-2;
+  @extend .g-2;
+  @extend .g-md-3;
+  
+  .cols-3 & {
+    @extend .row-cols-md-3;    
+  }
+
+  .cols-4 & {
+    @extend .row-cols-md-4;    
+  }
+
+  .en__field__item {
+    &:nth-last-child(2) {
+      @extend .visually-hidden;
+    }
+
+    &.en__field__item--other {
+      display: block;
+      position: relative;
+      width: 100%;
+
+      &::before {
+        color: $gray-600;
+        content: "$";
+        font-style: italic;
+        left: 1.75rem;
+        position: absolute;
+        top: 1.1875rem;
+        transition: $transition-base;
+      }
+      
+      &.is-active {
+        &::before {
+          color: $body-color;
+        }
+      }
+      
+      p {
+        font-size: $font-size-sm;
+        line-height: 1.4285;
+        margin-top: .25rem;
+      }
+    }
+  }
+
+  .en__field__input--radio {
+    @extend .visually-hidden;
+
+    &:checked {
+      + .en__field__label {
+        background-color: $primary;
+        border-color: $primary;
+        color: $white;
+      }
+    }
+  }
+
+  .en__field__label {
+    @extend .btn;
+    @include button-variant($white, $gray-500, $primary, $primary, $primary, $white, $primary, $primary, $white);
+    font-size: $font-size-base;
+    height: 3.75em;
+    line-height: 1;
+    padding: 1.28875rem 0;
+    width: 100%;
+  }
+}
+
+.en__field__input--other {
+  padding-left: 1.833rem;
+}
+
+.en__field--ccnumber {
+  &::after {    
+    content: url(http://localhost/zuri/engaging%20networks/en-tnc/images/Icon_CCs.png);
+    display: block;
+    margin-top: 1rem;
+  }
+}
+
+.en__field--tip-jar {
+  border: 1px solid $gray-500;
+  padding: 1.25rem;
+}

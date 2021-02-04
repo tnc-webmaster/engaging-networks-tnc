@@ -1,0 +1,41 @@
+.en__captcha, .en__field {
+  padding-bottom: 1.3333rem;
+}
+
+.en__field__item {
+  padding: 0;
+}
+
+.en__field__label {
+  display: block;
+  margin-bottom: .25rem;
+  padding: 0;
+  width: auto;
+}
+
+.en__field__element--calendar,
+.en__field__element--checkbox,
+.en__field__element--email,
+.en__field__element--number,
+.en__field__element--password,
+.en__field__element--radio,
+.en__field__element--range,
+.en__field__element--rating,
+.en__field__element--select,
+.en__field__element--telephone,
+.en__field__element--text,
+.en__field__element--textarea,
+.en__field__item {
+  display: block;
+}
+
+.en__field__element--splitselect,
+.en__field__element--splittext,
+.en__field__element--tripleselect,
+.en__field__element--tripletext {
+  display: flex;
+}
+
+.en__field__input--other {
+  margin: 0;
+}

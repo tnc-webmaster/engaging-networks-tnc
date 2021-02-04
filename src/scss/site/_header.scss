@@ -1,0 +1,35 @@
+.header {
+  border-bottom: $hr;
+  padding: 3.5%;
+
+  @include media-breakpoint-up(sm) {
+    padding: 1.25rem 1.875rem;
+  }
+  
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+  
+  .navbar-brand {
+    max-width: 200px;
+    width: 36%;
+  }
+  
+  .navbar-text {
+    font-size: $lead-font-size;
+    max-width: 12rem;
+    text-align: right;
+    
+    + a {
+      border-left: $hr;
+      margin-left: auto;
+      padding-left: 33%;      
+      
+      @include media-breakpoint-up(sm) {
+        margin-left: 1.875rem;
+        padding-left: 1.875rem;              
+      }
+    }
+  }
+}
