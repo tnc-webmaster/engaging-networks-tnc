@@ -30,12 +30,6 @@ textarea {
   text-transform: uppercase;
 }
 
-.field-error {
-  font-size: $font-size-sm;
-  font-style: italic;
-  font-weight: $font-weight-medium;
-}
-
 .en__component--row.en__component--advrow {
   @extend .row;
   display: block;

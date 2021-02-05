@@ -13666,12 +13666,6 @@ textarea.en__field__input--tripletext {
   text-transform: uppercase;
 }
 
-.field-error {
-  font-size: 0.875rem;
-  font-style: italic;
-  font-weight: 500;
-}
-
 .en__component--row.en__component--advrow {
   display: block;
 }
