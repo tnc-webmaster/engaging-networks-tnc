@@ -42,7 +42,7 @@ textarea {
 
   @include media-breakpoint-up(lg) {
     display: flex;
-    justify-content: space-between;    
+    justify-content: space-between;
   }
 }
 
@@ -50,10 +50,10 @@ textarea {
   &:first-child:not(:last-child) {
     @extend .col-lg-6;
     @extend .offset-lg-1;
-    
-    @include media-breakpoint-up(xl) {      
+
+    @include media-breakpoint-up(xl) {
       .en__component--formblock {
-        padding-right: 35%;      
+        padding-right: 35%;
       }
     }
   }
@@ -63,11 +63,10 @@ textarea {
   }
 
   &:fist-child:last-child {
-   flex: none;
-   width: 100%; 
-  }  
+    flex: none;
+    width: 100%;
+  }
 }
-
 
 .form {
   .en__component--formblock {
@@ -95,7 +94,7 @@ textarea {
 .en__field__input--textarea,
 .en__field__input--tripletext {
   @extend .form-control;
-  
+
   &:focus {
     border-width: 2px;
   }
@@ -112,7 +111,7 @@ textarea {
 .en__field__element--splitselect,
 .en__field__input--tripleselect {
   @extend .row;
-  
+
   .en__field__item {
     @extend .col;
   }
@@ -123,20 +122,52 @@ textarea {
 }
 
 .en__field__element--checkbox {
+  .en__field__item:not(:last-child) {
+    margin-bottom: .75rem;
+  }
+  
   .en__field__label {
     display: flex;
     line-height: 1.375;
     margin: 0;
-    
+
     &::before {
       @extend %styled-checkbox;
     }
   }
-  
+
   & :checked + .en__field__label {
     &::before {
-      @extend %styled-checkbox-checked;      
+      @extend %styled-checkbox-checked;
     }
+  }
+
+  > .en__field__label {
+    margin-bottom: .5rem;
+  }
+}
+
+.en__field--radio:not(.en__field--donationAmt) {  
+  .en__field__item {
+    @extend .form-check;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .en__field__input--radio {
+    @extend .form-check-input;
+  }
+  
+  .en__field__label {
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  > .en__field__label {
+    line-height: 1.375;
+    margin-bottom: .75rem;
   }
 }
 

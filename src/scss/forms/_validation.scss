@@ -32,7 +32,6 @@
   }
 }
 
-
 .form-select {
   &[aria-invalid="true"] {
     background-image: $form-select-indicator-error;
@@ -47,4 +46,46 @@
   line-height: 1.4285;
   margin-top: .6875rem;
   order: 1;
+}
+
+.error-box {
+  border: 2px solid $warning;
+  max-width: 39.375rem;
+  padding: 1rem 2.125rem 1.5rem 3.75rem;
+  position: relative;
+  
+  &::before {
+    content: $input-idicator-error-icon;
+    left: 1.25rem;
+    position: absolute;
+  }
+}
+
+.en__errorHeader {
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.125;
+  margin-bottom: .75rem;
+}
+
+.en__errorList {
+  list-style-type: none;
+}
+
+.en__error {
+  line-height: 1.5;
+  
+  &:empty {
+    display: none;
+  }
+}
+
+.has-hero {
+  > * {
+    order: 1;
+  }
+  
+  > .error-box + .en__component--advrow {
+    order: 0;
+  }  
 }

@@ -692,12 +692,13 @@ $input-height-lg: add($input-line-height * 1em, add($input-padding-y-lg * 2, $in
 
 $input-transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out !default;
 
-$input-indicator-error: #fff url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='18'%3E%3Cpath fill='%23C5351C' d='M19.9078,16.98,10.6291.348a.7428.7428,0,0,0-1.2584,0L.0931,16.98a.6521.6521,0,0,0,.0052.68.73.73,0,0,0,.623.34H19.2786a.7294.7294,0,0,0,.6229-.34A.654.654,0,0,0,19.9078,16.98ZM11.0417,16H8.9582V14h2.0835Zm0-3.5H8.9582V6h2.0835Z'/%3E%3C/svg%3E") right 1.25rem center/20px 18px no-repeat;
+$input-idicator-error-icon: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='18'%3E%3Cpath fill='%23C5351C' d='M19.9078,16.98,10.6291.348a.7428.7428,0,0,0-1.2584,0L.0931,16.98a.6521.6521,0,0,0,.0052.68.73.73,0,0,0,.623.34H19.2786a.7294.7294,0,0,0,.6229-.34A.654.654,0,0,0,19.9078,16.98ZM11.0417,16H8.9582V14h2.0835Zm0-3.5H8.9582V6h2.0835Z'/%3E%3C/svg%3E");
+$input-indicator-error: #fff #{$input-idicator-error-icon} right 1.25rem center/20px 18px no-repeat;
 
 $form-check-input-width: 1em !default;
 $form-check-min-height: $font-size-base * $line-height-base !default;
 $form-check-padding-start: $form-check-input-width + .5em !default;
-$form-check-margin-bottom: .125rem !default;
+$form-check-margin-bottom: .75rem;
 $form-check-label-color: null !default;
 $form-check-label-cursor: null !default;
 $form-check-transition: background-color .15s ease-in-out, background-position .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out !default;
