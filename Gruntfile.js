@@ -32,7 +32,7 @@ module.exports = function(grunt) {
       target: {
         options: {
           outputStyle: 'expanded', 
-          sourceMap: true
+          sourceMap: false
         },
         files: {
           'dist/css/styles.css': 'src/scss/styles.scss'
@@ -41,10 +41,10 @@ module.exports = function(grunt) {
     },
     postcss: {
       options: {
-        map: true,
+        map: false,
         processors: [
           require('autoprefixer')(),
-          //require('cssnano')()
+          require('cssnano')()
         ]
       },
       dist: {
