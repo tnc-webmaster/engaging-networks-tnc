@@ -92,108 +92,6 @@ $min-contrast-ratio: 4.5 !default;
 $color-contrast-dark: $black !default;
 $color-contrast-light: $white !default;
 
-// fusv-disable
-$blue-100: tint-color($blue, 80%) !default;
-$blue-200: tint-color($blue, 60%) !default;
-$blue-300: tint-color($blue, 40%) !default;
-$blue-400: tint-color($blue, 20%) !default;
-$blue-500: $blue !default;
-$blue-600: shade-color($blue, 20%) !default;
-$blue-700: shade-color($blue, 40%) !default;
-$blue-800: shade-color($blue, 60%) !default;
-$blue-900: shade-color($blue, 80%) !default;
-
-$indigo-100: tint-color($indigo, 80%) !default;
-$indigo-200: tint-color($indigo, 60%) !default;
-$indigo-300: tint-color($indigo, 40%) !default;
-$indigo-400: tint-color($indigo, 20%) !default;
-$indigo-500: $indigo !default;
-$indigo-600: shade-color($indigo, 20%) !default;
-$indigo-700: shade-color($indigo, 40%) !default;
-$indigo-800: shade-color($indigo, 60%) !default;
-$indigo-900: shade-color($indigo, 80%) !default;
-
-$purple-100: tint-color($purple, 80%) !default;
-$purple-200: tint-color($purple, 60%) !default;
-$purple-300: tint-color($purple, 40%) !default;
-$purple-400: tint-color($purple, 20%) !default;
-$purple-500: $purple !default;
-$purple-600: shade-color($purple, 20%) !default;
-$purple-700: shade-color($purple, 40%) !default;
-$purple-800: shade-color($purple, 60%) !default;
-$purple-900: shade-color($purple, 80%) !default;
-
-$pink-100: tint-color($pink, 80%) !default;
-$pink-200: tint-color($pink, 60%) !default;
-$pink-300: tint-color($pink, 40%) !default;
-$pink-400: tint-color($pink, 20%) !default;
-$pink-500: $pink !default;
-$pink-600: shade-color($pink, 20%) !default;
-$pink-700: shade-color($pink, 40%) !default;
-$pink-800: shade-color($pink, 60%) !default;
-$pink-900: shade-color($pink, 80%) !default;
-
-$red-100: tint-color($red, 80%) !default;
-$red-200: tint-color($red, 60%) !default;
-$red-300: tint-color($red, 40%) !default;
-$red-400: tint-color($red, 20%) !default;
-$red-500: $red !default;
-$red-600: shade-color($red, 20%) !default;
-$red-700: shade-color($red, 40%) !default;
-$red-800: shade-color($red, 60%) !default;
-$red-900: shade-color($red, 80%) !default;
-
-$orange-100: tint-color($orange, 80%) !default;
-$orange-200: tint-color($orange, 60%) !default;
-$orange-300: tint-color($orange, 40%) !default;
-$orange-400: tint-color($orange, 20%) !default;
-$orange-500: $orange !default;
-$orange-600: shade-color($orange, 20%) !default;
-$orange-700: shade-color($orange, 40%) !default;
-$orange-800: shade-color($orange, 60%) !default;
-$orange-900: shade-color($orange, 80%) !default;
-
-$yellow-100: tint-color($yellow, 80%) !default;
-$yellow-200: tint-color($yellow, 60%) !default;
-$yellow-300: tint-color($yellow, 40%) !default;
-$yellow-400: tint-color($yellow, 20%) !default;
-$yellow-500: $yellow !default;
-$yellow-600: shade-color($yellow, 20%) !default;
-$yellow-700: shade-color($yellow, 40%) !default;
-$yellow-800: shade-color($yellow, 60%) !default;
-$yellow-900: shade-color($yellow, 80%) !default;
-
-$green-100: tint-color($green, 80%) !default;
-$green-200: tint-color($green, 60%) !default;
-$green-300: tint-color($green, 40%) !default;
-$green-400: tint-color($green, 20%) !default;
-$green-500: $green !default;
-$green-600: shade-color($green, 20%) !default;
-$green-700: shade-color($green, 40%) !default;
-$green-800: shade-color($green, 60%) !default;
-$green-900: shade-color($green, 80%) !default;
-
-$teal-100: tint-color($teal, 80%) !default;
-$teal-200: tint-color($teal, 60%) !default;
-$teal-300: tint-color($teal, 40%) !default;
-$teal-400: tint-color($teal, 20%) !default;
-$teal-500: $teal !default;
-$teal-600: shade-color($teal, 20%) !default;
-$teal-700: shade-color($teal, 40%) !default;
-$teal-800: shade-color($teal, 60%) !default;
-$teal-900: shade-color($teal, 80%) !default;
-
-$cyan-100: tint-color($cyan, 80%) !default;
-$cyan-200: tint-color($cyan, 60%) !default;
-$cyan-300: tint-color($cyan, 40%) !default;
-$cyan-400: tint-color($cyan, 20%) !default;
-$cyan-500: $cyan !default;
-$cyan-600: shade-color($cyan, 20%) !default;
-$cyan-700: shade-color($cyan, 40%) !default;
-$cyan-800: shade-color($cyan, 60%) !default;
-$cyan-900: shade-color($cyan, 80%) !default;
-// fusv-enable
-
 // Characters which are escaped by the escape-svg function
 $escaped-characters: (
  ("<", "%3c"),
@@ -254,16 +152,6 @@ $spacers: (
 ) !default;
 
 $negative-spacers: if($enable-negative-margins, negativify-map($spacers), null) !default;
-
-// Position
-//
-// Define the edge positioning anchors of the position utilities.
-
-$position-values: (
- 0: 0,
- 50: 50%,
- 100: 100%
-) !default;
 
 
 // Body
@@ -417,14 +305,8 @@ $font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
 $font-size-sm: $font-size-base * .875 !default;
 $font-size-lg: $font-size-base * 1.125;
 
-$font-weight-lighter: lighter !default;
-$font-weight-light: 300 !default;
-$font-weight-normal: 400 !default;
 $font-weight-medium: 500;
-$font-weight-bold: 700 !default;
-$font-weight-bolder: bolder !default;
 
-$font-weight-base: $font-weight-normal !default;
 
 $line-height-base: 1.5 !default;
 $line-height-sm: 1.25 !default;
@@ -485,9 +367,8 @@ $blockquote-footer-color: $gray-600 !default;
 $blockquote-footer-font-size: $small-font-size !default;
 
 $hr-margin-y: $spacer !default;
-$hr-color: inherit !default;
-$hr-height: $border-width !default;
-$hr-opacity: .25 !default;
+$hr-color: $gray-300;
+$hr-opacity: 1;
 
 $hr: 1px solid $gray-300;
 
@@ -497,9 +378,6 @@ $legend-font-weight: null !default;
 
 $mark-padding: .2em !default;
 
-$dt-font-weight: $font-weight-bold !default;
-
-$nested-kbd-font-weight: $font-weight-bold !default;
 
 $list-inline-padding: .5rem !default;
 
@@ -611,7 +489,7 @@ $btn-font-size-lg: $input-btn-font-size-lg !default;
 
 $btn-border-width: $input-btn-border-width !default;
 
-$btn-font-weight: $font-weight-bold;
+$btn-font-weight: 700;
 $btn-box-shadow: inset 0 1px 0 rgba($white, .15), 0 1px 1px rgba($black, .075) !default;
 $btn-focus-width: $input-btn-focus-width !default;
 $btn-focus-box-shadow: $input-btn-focus-box-shadow !default;
@@ -647,7 +525,6 @@ $form-label-color: null !default;
 $input-padding-y: $input-btn-padding-y !default;
 $input-padding-x: 1.25rem;
 $input-font-size: $font-size-base;
-$input-font-weight: $font-weight-base !default;
 $input-line-height: $input-btn-line-height !default;
 
 $input-padding-y-sm: $input-btn-padding-y-sm !default;
@@ -690,7 +567,7 @@ $input-height: add($input-line-height * 1em, add($input-padding-y * 2, $input-he
 $input-height-sm: add($input-line-height * 1em, add($input-padding-y-sm * 2, $input-height-border, false)) !default;
 $input-height-lg: add($input-line-height * 1em, add($input-padding-y-lg * 2, $input-height-border, false)) !default;
 
-$input-transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out !default;
+$input-transition: border-color .3s ease-in-out, box-shadow .3s ease-in-out;
 
 $input-idicator-error-icon: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='18'%3E%3Cpath fill='%23C5351C' d='M19.9078,16.98,10.6291.348a.7428.7428,0,0,0-1.2584,0L.0931,16.98a.6521.6521,0,0,0,.0052.68.73.73,0,0,0,.623.34H19.2786a.7294.7294,0,0,0,.6229-.34A.654.654,0,0,0,19.9078,16.98ZM11.0417,16H8.9582V14h2.0835Zm0-3.5H8.9582V6h2.0835Z'/%3E%3C/svg%3E");
 $input-indicator-error: #fff #{$input-idicator-error-icon} right 1.25rem center/20px 18px no-repeat;
@@ -744,7 +621,6 @@ $form-check-inline-margin-end: 1rem !default;
 
 $input-group-addon-padding-y: $input-padding-y !default;
 $input-group-addon-padding-x: $input-padding-x !default;
-$input-group-addon-font-weight: $input-font-weight !default;
 $input-group-addon-color: $input-color !default;
 $input-group-addon-bg: $gray-200 !default;
 $input-group-addon-border-color: $input-border-color !default;
@@ -753,7 +629,7 @@ $form-select-padding-y: $input-padding-y !default;
 $form-select-padding-x: $input-padding-x !default;
 $form-select-font-size: $font-size-sm;
 $form-select-indicator-padding: 1rem !default; // Extra padding to account for the presence of the background-image based indicator
-$form-select-font-weight: $font-weight-bold;
+$form-select-font-weight: 700;
 $form-select-line-height: $input-line-height !default;
 $form-select-color: $input-color !default;
 $form-select-disabled-color: $gray-600 !default;
@@ -1119,7 +995,6 @@ $toast-header-border-color: rgba(0, 0, 0, .05) !default;
 // Badges
 
 $badge-font-size: .75em !default;
-$badge-font-weight: $font-weight-bold !default;
 $badge-color: $white !default;
 $badge-padding-y: .35em !default;
 $badge-padding-x: .65em !default;
@@ -1177,7 +1052,6 @@ $alert-padding-y: $spacer !default;
 $alert-padding-x: $spacer !default;
 $alert-margin-bottom: 1rem !default;
 $alert-border-radius: $border-radius !default;
-$alert-link-font-weight: $font-weight-bold !default;
 $alert-border-width: $border-width !default;
 
 $alert-bg-scale: -80% !default;

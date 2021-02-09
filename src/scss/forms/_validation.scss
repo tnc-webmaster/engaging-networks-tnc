@@ -1,3 +1,9 @@
+.en__mandatory:not(.en__field--radio) {
+  .en__field__label::before {
+    content: "* ";
+  }
+}
+
 .en__field--validationFailed {
   display: flex;
   flex-direction: column;
@@ -12,7 +18,8 @@
   .en__field__input--telephone,
   .en__field__input--text,
   .en__field__input--textarea,
-  .en__field__input--tripletext {
+  .en__field__input--tripletext,
+  .choices__inner {
     border-color: $warning;
     border-width: 2px;    
   }  
@@ -29,6 +36,10 @@
   .en__field__input--tripletext {
     background: $input-indicator-error;
     padding-right: $form-select-indicator-padding;    
+  }
+  
+  .choices__inner {
+    background: none;
   }
 }
 
@@ -88,4 +99,21 @@
   > .error-box + .en__component--advrow {
     order: 0;
   }  
+}
+
+.en__field {
+  &:not(.en__field--validationFailed) {
+    .en__field__error {
+      display: none;
+    }
+  }
+}
+
+.en__field__input {
+  &.is-valid {
+    background: none;
+    border-color: $primary;
+    border-width: 2px;
+    padding-right: 1.25rem;
+  }
 }

@@ -1,5 +1,10 @@
-.en__captcha, .en__field {
-  padding-bottom: 1.3333rem;
+.en__captcha,
+.en__field {
+  padding: 0;
+  
+  &:not(:last-child) {
+    margin-bottom: 1.3333rem;    
+  }
 }
 
 .en__field__item {
@@ -38,4 +43,8 @@
 
 .en__field__input--other {
   margin: 0;
+}
+
+.en__component--row--2 {
+  @extend .row;
 }

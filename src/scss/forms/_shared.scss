@@ -2,6 +2,39 @@
   //  color: $gray-600;
 //}
 
+.form {
+  a {
+    text-decoration: underline;
+    text-transform: none;
+    
+    &:hover {
+      border: 0;
+      text-decoration: none;
+    }
+  }
+  
+  hr {
+    margin-bottom: 2.75rem;
+    margin-top: 2.75rem;
+  }
+  
+  .en__component--copyblock:not(.hero):not(.form-heading) {
+    margin-top: 2.25rem; 
+  }
+}
+
+.form-heading {
+  margin-top: 4.35rem;
+
+  h5 {
+    @extend %form-heading;
+  }
+
+  p + h5 {
+    margin-top: 1.75rem;
+  }
+}
+
 label {
   font-size: 1rem;
   font-weight: $font-weight-medium;
@@ -44,36 +77,16 @@ textarea {
   &:first-child:not(:last-child) {
     @extend .col-lg-6;
     @extend .offset-lg-1;
-
-    @include media-breakpoint-up(xl) {
-      .en__component--formblock {
-        padding-right: 35%;
-      }
-    }
   }
 
   &:last-child:not(:first-child) {
     @extend .col-lg-4;
   }
 
-  &:fist-child:last-child {
-    flex: none;
-    width: 100%;
-  }
-}
-
-.form {
-  .en__component--formblock {
-    &:not(last-child) {
-      margin-bottom: 4.5rem;
-    }
-  }
-
-  .en__component--copyblock:not(.hero) {
-    h5 {
-      @extend %form-heading;
-    }
-  }
+  //&:first-child:last-child {
+  //  flex: none;
+  //  width: 100%;
+  //}
 }
 
 .en__field__input--calendar,
@@ -94,21 +107,22 @@ textarea {
   }
 }
 
-.en__field__input--select,
-.en__field__input--splitselect,
-.en__field__input--tripleselect {
-  @extend .form-select;
-}
-
 .en__field__input--splittext,
 .en__field__input--tripletext,
 .en__field__element--splitselect,
 .en__field__input--tripleselect {
   @extend .row;
+  @extend .gx-2;
+  @extend .gx-md-3;
+  @extend .gx-lg-4;
 
   .en__field__item {
     @extend .col;
   }
+}
+
+.en__field--checkbox:not(:last-child) {
+  margin-bottom: .75rem;
 }
 
 .en__field__input--checkbox {
@@ -166,9 +180,12 @@ textarea {
 }
 
 .en__submit {
+  margin-top: 2.75rem;
+
   button {
     @extend .btn;
     @extend .btn-lg;
     @extend .btn-primary;
+    min-width: 11.875rem !important;
   }
 }

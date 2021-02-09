@@ -5,9 +5,9 @@ module.exports = function(grunt) {
       options: {
         browser: true,
         esversion: 6,
-        reporter: require('jshint-stylish')       
+        reporter: require('jshint-stylish'),    
       },
-      build: ['Gruntfile.js', 'src/js/scripts.js']
+      build: ['Gruntfile.js', 'src/js/scripts.js'],
     },
     babel: {
       options: {
@@ -32,23 +32,46 @@ module.exports = function(grunt) {
       target: {
         options: {
           outputStyle: 'expanded', 
-          sourceMap: false
+          sourceMap: true,
         },
         files: {
-          'dist/css/styles.css': 'src/scss/styles.scss'
+          'dist/css/styles.css': 'src/scss/styles.scss',
         }
       }
     },
     postcss: {
       options: {
-        map: false,
+        map: true,
         processors: [
           require('autoprefixer')(),
-          require('cssnano')()
+          require('cssnano')(),
         ]
       },
       dist: {
         src: 'dist/css/*.css'
+      }
+    },
+    critical: {
+      test: {
+        options: {
+          base: 'dist/css',
+          css: [
+          'dist/css/styles.css'
+          ],
+          width: 1420,
+          height: 1024,
+          target: {
+            html: 'critical.css',
+            uncritical: 'noncritical.css',
+          },
+          ignore: {
+            atrule: ['@font-face'],
+            decl: (node, value) => /url\(/.test(value),
+          },
+
+        },
+        src: 'https://preserve.nature.org/page/75242/donate/1',
+        dest: 'dist/css/critical.css'
       }
     },
     watch: {
@@ -68,6 +91,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-dart-sass');
   grunt.loadNpmTasks('grunt-postcss');
+  grunt.loadNpmTasks('grunt-critical');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.registerTask('w',['watch']);
   grunt.registerTask('css', ['dart-sass', 'postcss']);

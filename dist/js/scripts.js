@@ -3,6 +3,8 @@
 (function () {
   var root = document.documentElement;
   var activeClass = 'is-active';
+  var validClass = 'is-active';
+  var validationFailedClass = 'en__field--validationFailed';
   var enFieldItemSelector = '.en__field__item';
   var theForm = document.querySelector('.en__component--page');
   /**
@@ -15,7 +17,27 @@
 
   var ui = function ui() {
     var el = null;
-    var els = null; // Initiate choices.js
+    var els = null;
+    /**
+     * Returns Class for form element.
+     *
+     * @returns {string} Class for form element
+     */
+
+    var maybeHasHero = function maybeHasHero() {
+      return document.querySelector('.hero-full-bleed') ? 'has-hero' : 'not-has-hero';
+    };
+    /**
+     * @param {string} amt Total donation amount
+     */
+
+
+    var updateTotalGift = function updateTotalGift(amt) {
+      getAll('.js-total-gift').forEach(function (el) {
+        el.textContent = ' $' + amt;
+      });
+    }; // Initiate choices.js
+
 
     getAll('select').forEach(function (el) {
       choices = new Choices(el, {
@@ -56,18 +78,104 @@
         // Add paragraph with min amount underneath Other Amount field
         addEl(el, 'p', '$' + minAmountValidator[0].format.split('~')[0] + ' minumum');
       }
-    } // Active state for field containers    
+    } // Other amount field is always visible, so the corresponding radio need to be button clicked here even though hidden
+
+
+    el = document.querySelector('.en__field__input--other');
+
+    if (el) {
+      el.addEventListener('focus', function (e) {
+        var otherRadio = e.target.closest('.en__field__item').previousElementSibling.querySelector('.en__field__input--radio');
+
+        if (otherRadio) {
+          otherRadio.click();
+        }
+      });
+    } // The upsell amount is in a hidden untaggged field that updates according to form dependencies
+
+
+    el = document.getElementById('en__field_supporter_NOT_TAGGED_9');
+
+    if (el) {
+      updateTotalGift(el.value);
+      el.addEventListener('change', function (e) {
+        updateTotalGift(e.target.value);
+      });
+    } // Active state for field containers
 
 
     getAll('.en__field__input').forEach(function (el) {
       el.addEventListener('focus', activateField);
       el.addEventListener('blur', deactivateField);
     });
+  };
+
+  var validation = function validation() {
+    var handleInput = function handleInput(e) {
+      var el = e.target;
+      var field = el.closest('.en__field');
+      e.preventDefault(); // Hide/display error formatting
+
+      if (e.target.validity.valid) {
+        addClass(e.target, validClass);
+        removeClass(field, validationFailedClass);
+      } else {
+        removeClass(e.target, validClass);
+        addClass(field, validationFailedClass);
+      }
+    };
+
+    var handleChange = function handleChange(e) {
+      var el = e.target;
+      var field = el.closest('.en__field');
+      e.preventDefault(); // Hide/display error formatting
+
+      if (e.target.validity.valid) {
+        addClass(e.target, validClass);
+        removeClass(field, validationFailedClass);
+      } else {
+        removeClass(e.target, validClass);
+        addClass(field, validationFailedClass);
+      }
+    }; // Set validation patterns
+
+
+    getAll('.en__mandatory .en__field__input').forEach(function (el) {
+      el.required = true;
+
+      switch (el.type) {
+        case 'email':
+          el.setAttribute('pattern', '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$');
+          el.addEventListener('input', handleInput);
+          break;
+
+        case 'select-one':
+          el.addEventListener('change', handleChange);
+          break;
+
+        default:
+          // Not empty pattern
+          el.setAttribute('pattern', '.*\\S.*');
+          el.addEventListener('input', handleInput);
+      } // No browser form validation
+
+
+      theForm.setAttribute('novalidate', true); // Allow form submit with invalid fields
+
+      theForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+      }); // Don't display browser error messages
+
+      el.addEventListener('oninvalid', function (e) {
+        e.preventDefault();
+      });
+    });
   }; // On load
 
 
   document.addEventListener('DOMContentLoaded', function () {
     ui();
+    validation();
   }); // Functions
 
   /**
@@ -91,16 +199,6 @@
 
   var isEmpty = function isEmpty(el) {
     return el.innerHTML.replace(/^\s*/, '').replace(/\s*$/, '') === '';
-  };
-  /**
-   * Returns Class for form element.
-   *
-   * @returns {string} Class for form element
-   */
-
-
-  var maybeHasHero = function maybeHasHero() {
-    return document.querySelector('.hero-full-bleed') ? 'has-hero' : 'not-has-hero';
   };
   /**
    * Returns Closest element up tree that matches selector
@@ -138,12 +236,14 @@
   /**
    * Adds placeholder attribute
    *
-   * @param {Node} field The field to add placeholder to
+   * @param {Node} el The field to add placeholder to
    * @param {string} textContent Placeholder value
    */
 
 
-  var addPlaceholder = function addPlaceholder(field, textContent) {};
+  var addPlaceholder = function addPlaceholder(el, textContent) {
+    el.setAttribute('placeholder', textContent);
+  };
   /**
    * Adds active class to element
    *
