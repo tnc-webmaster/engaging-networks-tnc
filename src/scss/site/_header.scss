@@ -1,8 +1,21 @@
+.skip:focus {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  margin: .25rem !important;
+  clip: auto !important;
+  white-space: normal !important;
+  padding: .5rem !important;
+  display: inline-block;
+  border: 1px solid !important;  
+  outline: 0;
+}
+
 .header {
   border-bottom: $hr;
-  padding: 3.5%;
+  padding: 1.5% 3.5%;
 
-  @include media-breakpoint-up(sm) {
+  @include media-breakpoint-up(md) {
     padding: 1.25rem 1.875rem;
   }
   
@@ -14,6 +27,11 @@
   .navbar-brand {
     max-width: 200px;
     width: 36%;
+    
+    &:hover {
+      border-bottom: 0;
+      text-decoration: none;
+    }
   }
   
   .navbar-text {
@@ -23,13 +41,32 @@
     
     + a {
       border-left: $hr;
-      margin-left: auto;
-      padding-left: 33%;      
       
-      @include media-breakpoint-up(sm) {
-        margin-left: 1.875rem;
-        padding-left: 1.875rem;              
+      &:hover {
+        border-bottom: 0;
       }
+      
+      @include media-breakpoint-down(md) {
+        margin-left: auto;
+        padding-left: 8.3333%;
+        width: 25%;
+      }
+      
+      @include media-breakpoint-up(md) {
+        margin-left: 1.875rem;
+        padding-left: 1.25rem;              
+      }
+    }
+  }
+  
+  img[name="seal"] {
+    @include media-breakpoint-down(md) {
+      margin-left: 15%;      
+      width: 50%;
+    }
+    
+    @include media-breakpoint-up(md) {
+      margin-left: 1.25rem;      
     }
   }
 }

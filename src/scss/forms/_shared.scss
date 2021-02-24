@@ -1,8 +1,20 @@
-//@include placeholder {
-  //  color: $gray-600;
-//}
-
 .form {
+  position: relative;
+  
+  &:first-child:last-child {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 45rem;
+  }
+  
+  h1 {
+    margin-bottom: 2rem;
+  }
+  
+  h5 + p {
+    margin-bottom: 1.3333rem;
+  }
+  
   a {
     text-decoration: underline;
     text-transform: none;
@@ -21,41 +33,42 @@
   .en__component--copyblock:not(.hero):not(.form-heading) {
     margin-top: 2.25rem; 
   }
+
+  .en__component--formblock + .en__component--formblock {
+    margin-top: 1.3333rem;
+  }
 }
 
 .form-heading {
-  margin-top: 4.35rem;
+  margin-top: 4.75rem;
 
-  h5 {
+  h5,
+  .h5 {
     @extend %form-heading;
   }
 
-  p + h5 {
+  p + h5,
+  p + .h5 {
     margin-top: 1.75rem;
   }
 }
 
-label {
-  font-size: 1rem;
-  font-weight: $font-weight-medium;
-  line-height: 1.875;
-}
-
+input[type="date"]::-webkit-calendar-picker-indicator,
+input::-webkit-clear-button,
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type=number] {
+input[type="date"],
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
-textarea {
-  &.form-control {
-    height: calc(6.875rem + 2px);
-    padding: .75rem 1.25rem;
-  }
+input[type="date"]:not([value])::-webkit-datetime-edit-fields-wrapper,
+input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper { 
+  visibility: hidden;
 }
 
 .form-select {
@@ -82,11 +95,39 @@ textarea {
   &:last-child:not(:first-child) {
     @extend .col-lg-4;
   }
+}
 
-  //&:first-child:last-child {
-  //  flex: none;
-  //  width: 100%;
-  //}
+.en__mandatory {
+  > .en__field__label::before {
+    content: "* ";
+    margin-right: .25rem;
+  }
+}
+
+.en__field__label {
+  font-size: 1rem;
+  font-weight: $font-weight-medium;
+  line-height: 1.875;
+  
+  &[for] {
+    cursor: pointer;    
+  }
+}
+
+.en__field__element--calendar,
+.en__field__element--checkbox,
+.en__field__element--email,
+.en__field__element--number,
+.en__field__element--password,
+.en__field__element--radio,
+.en__field__element--range,
+.en__field__element--rating,
+.en__field__element--select,
+.en__field__element--telephone,
+.en__field__element--text,
+.en__field__element--textarea,
+.en__field__item {
+  position: relative;
 }
 
 .en__field__input--calendar,
@@ -100,11 +141,7 @@ textarea {
 .en__field__input--text,
 .en__field__input--textarea,
 .en__field__input--tripletext {
-  @extend .form-control;
-
-  &:focus {
-    border-width: 2px;
-  }
+  @extend %input;
 }
 
 .en__field__input--splittext,
@@ -121,8 +158,18 @@ textarea {
   }
 }
 
-.en__field--checkbox:not(:last-child) {
+.en__field__input--textarea {
+  height: calc(6.875rem + 1px);
+  padding: .75rem 1.25rem;
+}
+
+.en__field--checkbox:not(:last-child):not(.en__field--payment-method-paypal) {
   margin-bottom: .75rem;
+
+  .en__component--formblock > &:first-child {
+    margin-bottom: 2rem;
+    margin-top: 1.75rem;
+  }
 }
 
 .en__field__input--checkbox {
@@ -152,10 +199,16 @@ textarea {
 
   > .en__field__label {
     margin-bottom: .5rem;
-  }
+  }  
 }
 
-.en__field--radio:not(.en__field--donationAmt) {  
+.en__field--radio {
+  .en__field__label {
+    display: flex;
+  }  
+}
+
+.en__field--radio:not(.en__field--donationAmt):not([class*="en__field--payment-method"]) {  
   .en__field__item {
     @extend .form-check;
     
@@ -177,6 +230,216 @@ textarea {
     line-height: 1.375;
     margin-bottom: .75rem;
   }
+}
+
+.en__field--postcode {
+  .en__field__input--text {
+    max-width: 12rem; 
+  }  
+}
+
+.en__field--radio[class*="en__field--payment-method"] {
+  margin-bottom: 2rem;
+  
+  .en__field__element--radio {
+    margin-top: .5rem;
+  }
+}
+
+.en__field--payment-method-3-button- {
+  .en__field__element--radio {
+    @extend .row;
+    @extend .gx-sm-2;
+    @extend .gx-md-3;
+    @extend .gx-lg-4;
+  }
+
+  .en__field__item {
+    @extend .col-8;
+    @extend .col-sm-4;
+    position: relative;
+
+    @include media-breakpoint-down(sm) {
+      width: 60.666667%;
+
+      &:not(:last-child) {
+        margin-bottom: .5rem;        
+      }
+    }
+
+    .en__field__label {
+      @extend .btn;
+      @include button-variant($white, $gray-500, $body-color, $white, $primary, $body-color, $white, $primary, $body-color);
+      align-items: center;
+      display: flex;
+      font-size: $font-size-base;
+      font-weight: $font-weight-normal;
+      height: 3.75rem;
+      margin: 0;
+      padding-left: calc(#{$font-size-sm} + 18%);
+      padding-right: 1rem;
+      text-align: left;
+      text-transform: none;
+      width: 100%;
+
+      &:hover {
+        border-width: 2px;
+      }
+
+      @include media-breakpoint-up(sm) {
+        padding-left: calc(#{$font-size-sm} + 16%);
+      }
+    }
+  }
+
+  .en__field__input--radio {
+    @extend .form-check-input;
+    bottom: 0;
+    left: calc(#{$font-size-sm} + 10%);
+    margin: auto;
+    position: absolute;
+    top: 0;
+
+    @include media-breakpoint-up(sm) {
+      left: calc(#{$font-size-sm} + 5%);
+    }
+
+    @include media-breakpoint-up(md) {
+      left: calc(#{$font-size-sm} + 9%);
+    }
+
+    &:checked + .en__field__label {
+      border-color: $primary;
+      border-width: 2px;
+    }
+  }
+}
+
+.en__field--payment-method-2-button-,
+.en__field--payment-method-cc-and-ach- {
+  .en__field__element--radio {
+    @extend .btn-group;
+    width: 100%;
+  }
+
+  .en__field__item {
+    width: 50%;
+    
+    .en__field__label {
+      @extend .btn;
+      @include button-variant($white, $primary, $primary, $white, $primary, $primary, $white, $primary, $body-color);
+      white-space: nowrap;
+      width: 100%;
+    }     
+  }
+
+  .en__field__input--radio {
+    @extend .visually-hidden;
+    
+    &:checked {
+      + .en__field__label {
+        @include button-variant($primary, $primary, $white, $primary, $primary, $white, $white, $primary, $body-color);
+      }
+    }
+  }  
+}
+
+.en__field__input--radio[value="Paypal"],
+.en__field__input--radio[value="PayPal"] {
+  + .en__field__label {    
+    font-size: 0;
+    
+    &:hover {
+      color: transparent;
+    }
+
+    &::after {
+      content: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/PayPal_logo.svg?v=1612990808000);      
+    }
+  }
+  
+  .en__field--payment-method-2-button- & {
+    + .en__field__label {   
+      height: 3.75rem;      
+    }
+    
+    &:checked {
+      + .en__field__label {
+        &::after {
+          content: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/PayPal_logo_white.svg?v=1613059310000);      
+        }                
+      }
+    }  
+  }
+}
+
+.en__field--payment-method-paypal {
+  margin-bottom: 1.75rem !important;
+  margin-top: 1.25rem;
+
+  .en__field__input--checkbox {
+    @extend .visually-hidden;
+  }
+
+  .en__field__label--item {
+    @extend .btn;
+    @include button-variant($white, $gray-500, $white, $white, $gray-500, $white);
+    background: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/PayPal_logo.svg?v=1612990808000) no-repeat center;
+    border-radius: .25rem;
+    font-size: 0;
+    height: 3.4375rem;
+    width: 100%;
+    
+    @include media-breakpoint-down(md) {
+      background-size: 20%;
+    }
+    
+    @include media-breakpoint-up(md) {
+      height: 4.1875rem;
+    }
+
+    &:hover {
+      color: transparent;
+    }
+
+    &::before {
+      display: none;
+    }
+  }
+  
+  .en__field__input--checkbox:checked {
+    + .en__field__label--item {
+      background-color: $yellow;
+      border-color: $yellow;
+      border-width: 2px;
+    }
+  }  
+}
+
+.paypal-selected {
+  #en__digitalWallet {
+    display: none !important;   
+  }
+
+  + .en__component--copyblock {
+    display: none !important;
+    
+    + .en__component--formblock {
+      display: none !important;      
+    }
+  }
+  
+  ~ .en__component--copyblock.p-0 {
+    display: none !important;
+
+    + .en__component--copyblock {
+      display: none !important;      
+    }
+  }
+}
+
+.en__field--paymenttype {
+  @extend .visually-hidden;
 }
 
 .en__submit {

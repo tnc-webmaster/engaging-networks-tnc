@@ -1,7 +1,96 @@
 .aside {
+  @include media-breakpoint-down(lg) {
+    margin-top: 3.5rem !important;
+  }    
+
+  img {
+    display: block;
+    height: auto !important;
+  }
+
   .en__component--imageblock {
+    img {
+      max-width: 100%;
+    }
+
     @include media-breakpoint-down(lg) {
       display: none;
     }
+    
+    + .en__component--copyblock {
+      border: 1px solid $border-color;
+      padding-left: 2rem;
+      padding-right: 2rem;
+
+      @include media-breakpoint-up(lg) {
+        border-top: 0;
+      }
+    }
+    
+    + .listicle {
+      padding-bottom: 2.75rem;
+      padding-top: 1.75rem;
+      
+      p:not(:last-child) {
+        margin-bottom: 1.5rem;        
+      }
+
+      h4 {
+        margin-bottom: 1rem;        
+        
+        &:first-of-type {
+          margin-bottom: 1.75rem;                  
+        }
+      }
+      
+      ul {
+       margin-bottom: 1.75rem; 
+      }
+      
+      li {
+        border-bottom: 1px solid $border-color;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1.35rem;             
+      }
+      
+      .row {
+        margin-top: 3rem;
+        
+        + p {
+          margin-top: 1.25rem;
+        }
+      }
+    }
+
+    + .text-image {
+      padding-bottom: 4.25rem;
+      padding-top: 2.5rem;
+      
+      h4 {
+        margin-bottom: 1.25rem;        
+      }
+
+      img {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 2.5rem;
+        max-width: 280px;
+
+        @include media-breakpoint-up(lg) {
+          max-width: 80.2926%;          
+        }
+      }
+    }
+  }
+  
+  .en__component--formblock:not(:first-child) {
+    margin-top: 1.5rem;    
+  }
+  
+  .en__field {
+    > .popover-container {
+      margin-bottom: -.25rem;
+      margin-top: .5rem;
+    }    
   }
 }

@@ -1,0 +1,22 @@
+
+@mixin dp-header-button-common {
+  border-color: transparent;
+  font-weight: bold;
+  height: 3.75rem;
+}
+
+@mixin dp-footer-button-common {  
+  @include button-variant(transparent, transparent, $primary, transparent, transparent, $primary, $primary, $primary, $white);
+  align-items: center;
+  display: inline-flex;
+  font-size: 0;
+  height: 1.125rem;
+  justify-content: center;
+  padding: 0;
+  width: 1.125rem;
+    
+  &::after {
+   content: $btn-close-icon;
+   stroke: $primary;
+  }
+}

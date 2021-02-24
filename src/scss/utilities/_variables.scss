@@ -37,7 +37,7 @@ $purple: #6f42c1 !default;
 $pink: #d63384 !default;
 $red: #c5351c;
 $orange: #c5351c;
-$yellow: #ffc107 !default;
+$yellow: #ffca3a;
 $green: #007931;
 $green-light: #45812b;
 $teal: #20c997 !default;
@@ -68,7 +68,7 @@ $info: $cyan !default;
 $warning: $orange;
 $danger: $orange;
 $light: $gray-100 !default;
-$dark: $black;
+$dark: $gray-900;
 $disabled: $gray-400;
 
 // scss-docs-start theme-colors-map
@@ -142,7 +142,7 @@ $spacers: (
  1: $spacer / 4,
  2: $spacer / 2,
  3: $spacer,
- 4: $spacer * 1.5,
+ 4: $spacer * 2,
  5: $spacer * 3,
  6: $spacer * 4,
  7: $spacer * 5,
@@ -215,7 +215,7 @@ $container-max-widths: (
  md: 720px,
  lg: 960px,
  xl: 1290px,
- xxl: 1310px
+ xxl: 1330px
 ) !default;
 // scss-docs-end container-max-widths
 
@@ -234,7 +234,7 @@ $gutters: $spacers !default;
 
 // Container padding
 
-$container-padding-x: $grid-gutter-width / 2 !default;
+$container-padding-x: 1.25rem;
 
 
 // Components
@@ -507,6 +507,7 @@ $btn-border-radius-lg: 0;
 
 $btn-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out !default;
 
+$btn-close-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><circle cx='14' cy='14' r='14' fill='#ececec'/><g transform='translate(9 9)'><g transform='translate(5.071 -2) rotate(45)'><path d='M0,0H10' transform='translate(0 5)' fill='none' stroke='#1a1a1a' stroke-linecap='square' stroke-miterlimit='10' stroke-width='2'/><path d='M0,0H10' transform='translate(5 0) rotate(90)' fill='none' stroke='#1a1a1a' stroke-linecap='square' stroke-miterlimit='10' stroke-width='2'/></g></g></svg>");
 
 // Forms
 
@@ -567,6 +568,8 @@ $input-height: add($input-line-height * 1em, add($input-padding-y * 2, $input-he
 $input-height-sm: add($input-line-height * 1em, add($input-padding-y-sm * 2, $input-height-border, false)) !default;
 $input-height-lg: add($input-line-height * 1em, add($input-padding-y-lg * 2, $input-height-border, false)) !default;
 
+$input-height-total: calc(3.4375rem + 1px);
+
 $input-transition: border-color .3s ease-in-out, box-shadow .3s ease-in-out;
 
 $input-idicator-error-icon: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='18'%3E%3Cpath fill='%23C5351C' d='M19.9078,16.98,10.6291.348a.7428.7428,0,0,0-1.2584,0L.0931,16.98a.6521.6521,0,0,0,.0052.68.73.73,0,0,0,.623.34H19.2786a.7294.7294,0,0,0,.6229-.34A.654.654,0,0,0,19.9078,16.98ZM11.0417,16H8.9582V14h2.0835Zm0-3.5H8.9582V6h2.0835Z'/%3E%3C/svg%3E");
@@ -583,7 +586,7 @@ $form-check-transition: background-color .15s ease-in-out, background-position .
 $form-check-input-active-filter: brightness(90%) !default;
 
 $form-check-input-bg: $body-bg !default;
-$form-check-input-border: 1px solid rgba(0, 0, 0, .25) !default;
+$form-check-input-border: 1px solid $gray-500;
 $form-check-input-border-radius: .25em !default;
 $form-check-radio-border-radius: 50% !default;
 $form-check-input-focus-border: $input-focus-border-color !default;
@@ -640,9 +643,10 @@ $form-select-bg-position: right $form-select-padding-x center !default;
 $form-select-bg-size: 12px 7px; // In pixels because image dimensions
 $form-select-indicator-color: url-friendly-colour($primary);
 $form-select-indicator-warning-color: url-friendly-colour($warning);
-$form-select-indicator: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'><path d='M10,0,5,5,0,0' fill='none' stroke='#{$form-select-indicator-color}' stroke-miterlimit='10' stroke-width='2'/></svg>");
-$form-select-indicator-open: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'><path d='M10,5,5,0,0,5' fill='none' stroke='#{$form-select-indicator-color}' stroke-miterlimit='10' stroke-width='2'/></svg>");
-$form-select-indicator-error: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'><path d='M10,0,5,5,0,0' fill='none' stroke='#{$form-select-indicator-warning-color}' stroke-miterlimit='10' stroke-width='2'/></svg>");
+$form-select-indicator: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='11.414' height='7.121' viewBox='0 0 11.414 7.121'><g transform='translate(10.707 5.707) rotate(-180)'><path d='M10,0,5,5,0,0' transform='translate(10 5) rotate(-180)' fill='none' stroke='#{$form-select-indicator-color}' stroke-miterlimit='10' stroke-width='2'/></g></svg>");
+$form-select-indicator-open: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='11.414' height='7.121' viewBox='0 0 11.414 7.121'><path d='M10,0,5,5,0,0' transform='translate(10.707 6.414) rotate(-180)' fill='none' stroke='#{$form-select-indicator-color}' stroke-miterlimit='10' stroke-width='2'/></svg>");
+$form-select-indicator-open-white: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='11.414' height='7.121' viewBox='0 0 11.414 7.121'><path d='M10,0,5,5,0,0' transform='translate(10.707 6.414) rotate(-180)' fill='none' stroke='#{$white}' stroke-miterlimit='10' stroke-width='2'/></svg>");
+$form-select-indicator-error: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='11.414' height='7.121' viewBox='0 0 11.414 7.121'><g transform='translate(10.707 5.707) rotate(-180)'><path d='M10,0,5,5,0,0' transform='translate(10 5) rotate(-180)' fill='none' stroke='#{$form-select-indicator-warning-color}' stroke-miterlimit='10' stroke-width='2'/></g></svg>");
 
 $form-select-feedback-icon-padding-end: add(1em * .75, (2 * $form-select-padding-y * .75) + $form-select-padding-x + $form-select-indicator-padding) !default;
 $form-select-feedback-icon-position: center right ($form-select-padding-x + $form-select-indicator-padding) !default;
@@ -923,15 +927,14 @@ $accordion-button-active-icon: url("data:image/svg+xml,<svg xmlns='http://www.w3
 
 // Tooltips
 
-$tooltip-font-size: $font-size-sm !default;
-$tooltip-max-width: 200px !default;
-$tooltip-color: $white !default;
-$tooltip-bg: $black !default;
-$tooltip-border-radius: $border-radius !default;
-$tooltip-opacity: .9 !default;
-$tooltip-padding-y: $spacer / 4 !default;
-$tooltip-padding-x: $spacer / 2 !default;
-$tooltip-margin: 0 !default;
+$tooltip-font-size: $font-size-sm;
+$tooltip-max-width: 100%;
+$tooltip-color: $white;
+$tooltip-bg: rgba(0,0,0,0.75);
+$tooltip-border-radius: 0;
+$tooltip-opacity: 1;
+$tooltip-padding-y: .875rem;
+$tooltip-padding-x: 1.333rem;
 
 $tooltip-arrow-width: .8rem !default;
 $tooltip-arrow-height: .4rem !default;
@@ -948,14 +951,14 @@ $form-feedback-tooltip-border-radius: $tooltip-border-radius !default;
 
 // Popovers
 
-$popover-font-size: $font-size-sm !default;
+$popover-font-size: $font-size-base;
 $popover-bg: $white !default;
-$popover-max-width: 276px !default;
+$popover-max-width: 20.625rem;
 $popover-border-width: $border-width !default;
-$popover-border-color: rgba($black, .2) !default;
-$popover-border-radius: $border-radius-lg !default;
-$popover-inner-border-radius: subtract($popover-border-radius, $popover-border-width) !default;
-$popover-box-shadow: $box-shadow !default;
+$popover-border-color: #979797;
+$popover-border-radius: 0;
+$popover-inner-border-radius: 0;
+$popover-box-shadow: none;
 
 $popover-header-bg: shade-color($popover-bg, 6%) !default;
 $popover-header-color: $headings-color !default;
@@ -1222,8 +1225,4 @@ $choices-text-color: $body-color;
 $choices-keyline-color: $gray-500;
 $choices-primary-color: $primary;
 $choices-highlight-color: $primary;
-$choices-button-dimension: 8px !default;
-$choices-button-offset: 8px !default;
-$choices-icon-cross: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjRkZGIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==) !default;
-$choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==) !default;
 $choices-z-index: 1;

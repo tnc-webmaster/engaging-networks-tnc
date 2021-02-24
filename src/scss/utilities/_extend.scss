@@ -1,8 +1,9 @@
 %form-heading {
   border-bottom: $hr;
   color: $primary;
+  display: block;
   padding-bottom: 1rem;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.25rem;
 }
 
 %styled-checkbox {
@@ -21,4 +22,49 @@
 %styled-checkbox-checked {
   background: $body-color url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10.822' height='8.414' viewBox='0 0 10.822 8.414'><path d='M6,8,0,2,2.438,0' transform='translate(1.407 7.414) rotate(-90)' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-miterlimit='10' stroke-width='2'/></svg>") center no-repeat;  
   border-color: $body-color;
+}
+
+%input {
+  @extend .form-control;
+  height: $input-height-total;
+  position: relative;
+  
+  &:focus {
+    border-width: 2px;
+  }  
+}
+
+%donation-amount {
+  height: calc(3.75rem + 1px);
+  padding-left: 2rem;
+
+  @include media-breakpoint-up(xl) {
+    padding-left: 2.8333rem;
+  }  
+}
+
+%dollar-sign {
+  &::before {
+    color: $gray-600;
+    content: "$";
+    left: 1.5rem;
+    position: absolute;
+    top: 1.1875rem;
+    transition: $transition-base;
+    z-index: 1;
+
+    @include media-breakpoint-up(xl) {
+      left: 1.75rem;
+    }
+  }
+
+  &.is-active {
+    &::before {
+      color: $body-color;
+    }
+  }
+}
+
+%photo-info {
+  content: url("data:image/svg+xml,<svg id='Icon_Information' data-name='Icon / Information' xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 18 18'><circle id='Oval_2' data-name='Oval 2' cx='9' cy='9' r='9' fill='#fff'/><text id='i' transform='translate(7 1)' fill='#171717' font-size='13' font-family='SegoeUI, Segoe UI' letter-spacing='0.056em'><tspan x='-1.574' y='14'>i</tspan></text></svg>");  
 }

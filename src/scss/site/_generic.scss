@@ -15,3 +15,8 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+body:not(#en__pagebuilder) .en__component--page {
+  opacity: 0;
+  transition: $transition-base;
+}

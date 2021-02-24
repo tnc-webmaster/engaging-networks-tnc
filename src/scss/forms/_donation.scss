@@ -6,99 +6,91 @@
       ~ .en__component--formblock,
       ~ .en__component--copyblock:not(.form-heading) {
         padding-right: 35%;
-      }     
+      }
     }
 
     &.cols-4 {
       padding-right: 12.5%;
-      
+
       ~ .en__component--formblock,
       ~ .en__component--copyblock:not(.form-heading) {
         padding-right: 12.5%;
-      }     
+      }
     }
   }
 }
 
-.en__field--donationAmt .en__field__element--radio {
-  @extend .row;
-  @extend .row-cols-2;
-  @extend .g-2;
-  @extend .g-md-3;
-  
-  .cols-3 & {
-    @extend .row-cols-md-3;    
-  }
+.en__field--donationAmt.en__field--radio {
+  margin-top: 1.75rem;
 
-  .cols-4 & {
-    @extend .row-cols-md-4;    
-  }
+  .en__field__element--radio {
+    @extend .row;
+    @extend .row-cols-2;
+    @extend .g-2;
+    @extend .g-md-3;
 
-  .en__field__item {
-    &:nth-last-child(2) {
+    .cols-3 & {
+      @extend .row-cols-md-3;
+    }
+
+    .cols-4 & {
+      @extend .row-cols-md-4;
+    }
+
+    .en__field__item {
+      &:nth-last-child(2) {
+        @extend .visually-hidden;
+      }
+
+      &.en__field__item--other {
+        display: block;
+        position: relative;
+        width: 100%;
+        @extend %dollar-sign;
+
+        p {
+          font-size: $font-size-sm;
+          line-height: 1.4285;
+          margin-top: .25rem;
+        }
+      }
+    }
+
+    .en__field__input--radio {
       @extend .visually-hidden;
+
+      &:checked {
+        + .en__field__label {
+          background-color: $primary;
+          border-color: $primary;
+          color: $white;
+        }
+      }
     }
 
-    &.en__field__item--other {
-      display: block;
-      position: relative;
+    .en__field__label {
+      @extend .btn;
+      @include button-variant($white, $gray-500, $primary, $primary, $primary, $white, $primary, $primary, $white);
+      font-size: $font-size-base;
+      height: 3.75em;
+      line-height: 1;
+      padding: 1.2887rem 0;
       width: 100%;
-
-      &::before {
-        color: $gray-600;
-        content: "$";
-        left: 1.5rem;
-        position: absolute;
-        top: 1.1875rem;
-        transition: $transition-base;
-        
-        @include media-breakpoint-up(xl) {
-          left: 1.75rem;          
-        }
-      }
-      
-      &.is-active {
-        &::before {
-          color: $body-color;
-        }
-      }
-      
-      p {
-        font-size: $font-size-sm;
-        line-height: 1.4285;
-        margin-top: .25rem;
-      }
     }
   }
 
-  .en__field__input--radio {
-    @extend .visually-hidden;
-
-    &:checked {
-      + .en__field__label {
-        background-color: $primary;
-        border-color: $primary;
-        color: $white;
-      }
-    }
-  }
-
-  .en__field__label {
-    @extend .btn;
-    @include button-variant($white, $gray-500, $primary, $primary, $primary, $white, $primary, $primary, $white);
-    font-size: $font-size-base;
-    height: 3.75em;
-    line-height: 1;
-    padding: 1.2887rem 0;
-    width: 100%;
+  .en__field__input--other {
+    @extend %donation-amount;
   }
 }
 
-.en__field__input--other {
-  padding-left: 2rem;
+.en__field--donationAmt.en__field--text {
+  .en__field__element--text {
+    @extend %dollar-sign;
+  }
   
-  @include media-breakpoint-up(xl) {
-    padding-left: 1.8333rem;    
+  .en__field__input--text {
+    @extend %donation-amount;    
   }
 }
 
@@ -110,15 +102,83 @@
 }
 
 .en__field--ccnumber {
-  &::after {    
-    content: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_CCs.png?v=1612719763000);
+  &::after {
+    background: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_CCs.png?v=1612719763000) no-repeat;
+    content: "";
     display: block;
+    height: 30px;
     margin-top: 1rem;
+    transition: $transition-base;
   }
+  
+  &.amex::after {
+    background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_CC-AmericanExpress.png?v=1613243081000);    
+  }
+  
+  &.discover::after {
+    background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_CC-Discover.png?v=1613243082000);    
+  }
+  
+  &.mastercard::after {
+    background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_CC-MasterCard.png?v=1613243083000);    
+  }
+  
+  &.visa::after {
+    background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_CC-Visa.png?v=1613243083000);    
+  }
+}
+
+.en__field--question:first-child:last-child {
+  margin-top: 2rem;
 }
 
 .en__field--tip-jar {
   border: 1px solid $gray-500;
   margin-top: 1.333rem;
   padding: 1.25rem;
+}
+
+.js-total-gift {
+  font-weight: 700;
+
+  p & {
+    display: block;
+  }
+}
+
+.en__field--ecard-select-an-ecard {  
+  >.en__field__label {
+    margin-bottom: 1.75rem !important; 
+  }
+  
+  .en__field__item {
+    margin-bottom: 1.25rem !important;
+  }
+
+  .en__field__label--item {
+    font-size: 0;
+  }
+  
+  img {
+    display: block;
+    height: auto;
+    max-width: 256px;
+    transition: $transition-base;
+    width: 100%;
+
+    @include media-breakpoint-up(lg) {
+      width: 50%;
+    }    
+  }
+  
+  .en__field__input--radio:checked + .en__field__label--item img {
+    border: .3125rem solid $primary;
+    padding: .3125rem;
+    
+  }
+}
+
+// untagged field for calculated gift amount
+.en__field--NOT_TAGGED_9 {
+  @extend .visually-hidden;
 }

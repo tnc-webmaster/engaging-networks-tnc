@@ -23,6 +23,10 @@ $choices-icon-cross: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdod
 $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==) !default;
 $choices-z-index: 1;
 
+.choices__input--cloned {
+  @extend .visually-hidden;
+}
+
 .#{$choices-selector} {
   position: relative;
   overflow: hidden;
@@ -106,9 +110,10 @@ $choices-z-index: 1;
   }
 }
 
-
 .#{$choices-selector}__inner {
   @extend .form-select;
+  height: $input-height-total;
+
   overflow: hidden;
   .is-focused &,
   .is-open & {
@@ -116,7 +121,7 @@ $choices-z-index: 1;
     border-width: 2px;
   }
   .is-open & {
-    background-image: $form-select-indicator-open;
+    //background-image: $form-select-indicator-open;
   }
   .is-flipped.is-open & {
     border-radius: 0 0 $choices-border-radius $choices-border-radius;

@@ -3,7 +3,7 @@
   padding: 0;
   
   &:not(:last-child) {
-    margin-bottom: 1.3333rem;    
+    margin-bottom: 1.125rem;    
   }
 }
 
@@ -12,8 +12,8 @@
 }
 
 .en__field__label {
-  display: block;
-  margin-bottom: .25rem;
+  display: inline-flex;
+  margin-bottom: .333rem;
   padding: 0;
   width: auto;
 }

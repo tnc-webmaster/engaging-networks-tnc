@@ -1,0 +1,44 @@
+.advocacy-share-bar-block {
+  display: flex;
+  align-items: center;
+  padding-top: 1.5rem;
+  border-bottom: 1px solid $border-color;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
+
+  h5 {
+    margin: 0;
+  }
+
+  .en__socialShare {
+    align-items: center;
+    display: flex;
+    margin-left: 1.25rem !important;
+    padding: 0 !important;
+
+    &:not(:last-child) {
+      margin-right: 1.5rem !important;
+
+      &::after {
+        border-left: 1px solid $border-color;
+        content: "";
+        height: 100%;
+        margin-left: calc(1.25rem + 1px);
+      }
+    }
+
+    &:hover {
+      border-bottom: 0;
+    }
+  }
+
+  .en__socialShare--facebook {
+    height: 20px !important;
+    width: 10px !important;
+  }
+
+  .en__socialShare--twitter {
+    height: 20px !important;
+    width: 24px !important;
+  }
+}

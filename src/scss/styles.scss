@@ -3,7 +3,7 @@
 @import "site/en-overrides";
 
 /*!
- * Bootstrap v5.0.0-beta1 (https://getbootstrap.com/)
+ * Bootstrap v5.0.0-beta2 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
  * Copyright 2011-2020 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
@@ -57,17 +57,28 @@
 // Utilities
 @import "../../node_modules/bootstrap/scss/utilities/api";
 
+
 // Site
-@import "utilities/extend";
 @import "font/type";
 @import "site/generic";
 @import "site/header";
+@import "site/footer";
+
+@import "utilities/extend";
+
 @import "components/aside";
 @import "components/buttons";
 @import "components/hero";
+@import "components/image";
+@import "components/popover";
+
 @import "forms/shared";
-@import "vendor/choices";
+@import "forms/advocacy";
 @import "forms/donation";
 @import "forms/validation";
-@import "site/footer";
+
+@import "vendor/choices";
+@import "vendor/datepicker-bs4";
+@import "vendor/stripe";
+
 @import "helpers/colors";

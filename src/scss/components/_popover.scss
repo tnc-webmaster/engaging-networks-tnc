@@ -1,0 +1,74 @@
+.en__field > .popover-container {
+  margin-bottom: -.5rem;  
+  margin-top: 1.5rem;
+}
+
+[data-bs-toggle="popover"] {
+  color: $primary !important;
+  text-decoration: underline !important;
+  
+  &:hover {
+    color: $primary !important;
+  }
+}
+
+.popover {
+  left: 0 !important;
+  transform: translateY(var(--popperTranslateY)) !important;
+
+  @include media-breakpoint-down(sm) {
+    max-width: 280px;    
+  }
+}
+
+.bs-popover-top {
+  bottom: 100% !important;  
+  transform: none !important;
+}
+
+.popover-control {
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  right: 1.25rem;
+  top: 1.5rem;
+}
+
+.popover-close {
+  display: inline-block;
+  height: .9375rem;
+  position: relative;
+  width: .9375rem;
+
+  &::before,
+  &::after {
+    background-color: $body-color;
+    content: "";
+    height: 2px;
+    position: absolute;
+    transform-origin: center;
+    width: 120%;
+  }
+
+  &::before {
+    transform: rotate(45deg)
+  }
+
+  &::after {
+    transform: rotate(-45deg)
+  }
+}
+
+.popover-body {
+  padding: 2.125rem 3.375rem 2.3125rem 1.875rem;
+
+  p {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.en__field__label {
+  .popover-container {
+    margin-left: .5rem;
+  }
+}
