@@ -40,12 +40,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var supporterEmailAddressSelector = '#en__field_supporter_emailAddress';
   var supporterStateSelector = '#en__field_supporter_region';
   var supporterZipCodeSelector = '#en__field_supporter_postcode';
+  var tipJarSelector = '.en__field--tip-jar';
   var totalAmountSelector = '.js-total-gift'; // Elements
 
   var theForm = document.querySelector('.en__component--page');
   var calculatedDonationAmountInput = theForm.querySelector('[name="supporter.NOT_TAGGED_9"]'); // Widgets
 
-  var cleave = null;
+  var cleave = null; // Constants
+
+  var tipJarPct = 0.03;
   /**
   * Form interface enhancements
   */
@@ -158,21 +161,28 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         addEl(el, 'p', '$' + minAmountValidator[0].format.split('~')[0] + ' minimum');
       }
     } // The upsell amount is in a hidden untaggged field that updates according to form dependencies
+    //if (calculatedDonationAmountInput) {
+    //  updateTotalGift(calculatedDonationAmountInput.value);
+    //  calculatedDonationAmountInput.addEventListener('change', e => {
+    //    updateTotalGift(e.target.value);
+    //  });
+    //
+    //  // Changing donation amount need to trigger a change for calculated donation amount
+    //  getAll('[name="transaction.donationAmt"]').forEach(el => {
+    //    el.addEventListener('click', e => {
+    //      setTimeout(() => {
+    //        triggerEvent(calculatedDonationAmountInput, 'change');
+    //      }, 100);
+    //    });
+    //  });
+    //}
+    // Display tip jar amount
 
 
-    if (calculatedDonationAmountInput) {
-      updateTotalGift(calculatedDonationAmountInput.value);
-      calculatedDonationAmountInput.addEventListener('change', function (e) {
-        updateTotalGift(e.target.value);
-      }); // Changing donation amount need to trigger a change for calculated donation amount
+    el = theForm.querySelector(tipJarSelector);
 
-      getAll('[name="transaction.donationAmt"]').forEach(function (el) {
-        el.addEventListener('click', function (e) {
-          setTimeout(function () {
-            triggerEvent(calculatedDonationAmountInput, 'change');
-          }, 100);
-        });
-      });
+    if (el) {
+      updateTotalGift(getTipJar(getOriginalDonationAmount()));
     } // Other amount field is always visible, so the corresponding radio need to be button clicked here even though hidden
 
 
@@ -186,14 +196,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           otherRadio.click();
         }
       }); // Changing donation amount needs to trigger a change for calculated donation amount
-
-      if (calculatedDonationAmountInput) {
-        el.addEventListener('change', function (e) {
-          setTimeout(function () {
-            triggerEvent(calculatedDonationAmountInput, 'change');
-          }, 100);
-        });
-      }
+      //if (calculatedDonationAmountInput) {        
+      //  el.addEventListener('change', e => {
+      //    setTimeout(() => {
+      //      triggerEvent(calculatedDonationAmountInput, 'change');
+      //    }, 100);
+      //  });
+      //}
     } // Paypal checkbox needs to hide credit card blocks
 
 
@@ -318,6 +327,76 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     window.closePopover = closePopover;
   };
+
+  var donationForm = function donationForm() {
+    var donationAmt = theForm.querySelector('.en__field--donationAmt');
+    var donationAmtRadios = null;
+    var otherAmountInput = theForm.querySelector(otherAmountInputSelector);
+    var tipJar = theForm.querySelector('.en__field--tip-jar');
+    var tipJarCheckbox = void 0;
+
+    var increaseDonationAmounts = function increaseDonationAmounts() {
+      if (otherAmountInput) {
+        if (otherAmountInput.value !== '') {
+          otherAmountInput.dataset.tipjar = getTipJar(otherAmountInput.value);
+          return;
+        }
+      }
+
+      getAll('.en__field__input--radio:not([value=""])', donationAmt).forEach(function (el) {
+        if (!el.dataset.original) {
+          el.dataset.original = el.value;
+        }
+
+        el.value = getTipJar(el.value);
+      });
+    };
+
+    var restoreDonationAmounts = function restoreDonationAmounts() {
+      getAll('.en__field__input--radio:not([value=""])', donationAmt).forEach(function (el) {
+        el.value = el.dataset.original;
+      });
+    };
+
+    var updateDonationAmounts = function updateDonationAmounts(el, fieldType) {
+      if (el.checked) {
+        increaseDonationAmounts();
+      } else {
+        restoreDonationAmounts();
+      }
+    };
+
+    if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber !== pageJson.pageCount) {
+      // Donation amount
+      if (donationAmt) {
+        donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
+
+        if (tipJar && tipJarPct) {
+          tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox');
+          tipJarCheckbox.addEventListener('click', function (e) {
+            updateDonationAmounts(e.target);
+          });
+
+          if (tipJarCheckbox.checked) {
+            updateDonationAmounts(tipJarCheckbox);
+          }
+
+          donationAmtRadios.forEach(function (el) {
+            el.addEventListener('click', function (e) {
+              updateTotalGift(tipJarCheckbox.checked ? e.target.value : getTipJar(getOriginalDonationAmount()));
+            });
+          });
+
+          if (otherAmountInput) {
+            otherAmountInput.addEventListener('input', function (e) {
+              updateDonationAmounts(tipJarCheckbox);
+              updateTotalGift(getTipJar(getOriginalDonationAmount()));
+            });
+          }
+        }
+      }
+    }
+  };
   /**
   * Form validation enhancements
   */
@@ -427,19 +506,32 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var formSubmit = function formSubmit() {
+    var submitButton = theForm.querySelector('.en__submit button');
+    var otherAmountInput = theForm.querySelector(otherAmountInputSelector);
+    var otherAmountOriginal = null;
+
+    if (submitButton) {
+      submitButton.addEventListener('click', function (e) {
+        if (otherAmountInput) {
+          if (otherAmountInput.value !== '') {
+            otherAmountOriginal = otherAmountInput.value;
+            otherAmountInput.value = otherAmountInput.dataset.tipjar ? otherAmountInput.dataset.tipjar : otherAmountInput.value;
+          }
+        }
+      });
+    }
+
     theForm.addEventListener('submit', function (e) {
       var tipJar = theForm.querySelector('.en__field--tip-jar');
-      var tipJarAmount = theForm.querySelector(totalAmountSelector);
-      var donationAmount = getDonationAmount();
       var extraAmount = 0;
       var donationData = {};
 
-      if (tipJar && tipJarAmount) {
-        // Update other donation amount field with added amount unless there are errors on the form
-        if (tipJar.querySelector('.en__field__input--checkbox').checked && tipJarAmount.textContent !== '') {
+      if (tipJar) {
+        if (tipJar.querySelector('.en__field__input--checkbox').checked) {
           var errorList = theForm.querySelector('.en__errorList');
           var invalidFields = getAll('.en__field--validationFailed');
-          var otherAmountInput = theForm.querySelector(otherAmountInputSelector);
+          var totalDonationAmount = getTotalDonationAmount();
+          var originalDonationAmount = otherAmountOriginal || getOriginalDonationAmount();
           var formIsValid = true; // Looking for form errors
 
           if (errorList) {
@@ -450,19 +542,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
           if (invalidFields.length > 0) {
             formIsValid = false;
-          } // Set other amount to upsell amount
-
+          }
 
           if (formIsValid) {
-            triggerEvent(otherAmountInput, 'focus');
-            otherAmountInput.value = tipJarAmount.textContent.replace(/\$/, '').replace(/,/g, '');
-            extraAmount = otherAmountInput.value - donationAmount;
+            extraAmount = (totalDonationAmount - originalDonationAmount).toFixed(2);
+            donationData.originalDonationAmount = originalDonationAmount;
           }
         }
-      } // Save non-pageJson date for data layer on confirmation page 
+      } // Save non-pageJson date for data layer on confirmation page
 
 
-      donationData.donationAmount = donationAmount;
       donationData.extraAmount = extraAmount;
       donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : '';
       donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : '';
@@ -678,11 +767,29 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   };
   /**
    * Returns Donation amount without upsell fee or null
-   *
    */
 
 
-  var getDonationAmount = function getDonationAmount() {
+  var getOriginalDonationAmount = function getOriginalDonationAmount() {
+    var selectedAmount = theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked') || theForm.querySelector(otherAmountInputSelector);
+    return selectedAmount ? selectedAmount.dataset.original ? selectedAmount.dataset.original : selectedAmount.value : null;
+  };
+  /**
+   * Returns Donation amount with tip jar added
+   *
+   * @param {string} amt Daontion amount to add tip to
+   */
+
+
+  var getTipJar = function getTipJar(amt) {
+    return !isNaN(amt) ? (parseFloat(amt) + parseFloat(amt) * tipJarPct).toFixed(2) : '';
+  };
+  /**
+   * Returns Donation amount with or without upsell fee or null
+   */
+
+
+  var getTotalDonationAmount = function getTotalDonationAmount() {
     var selectedAmount = theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked') || theForm.querySelector(otherAmountInputSelector);
     return selectedAmount ? selectedAmount.value : null;
   };
@@ -874,10 +981,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   document.addEventListener('DOMContentLoaded', function () {
     ui();
+    donationForm();
     validation();
     formSubmit();
 
-    if (pageJson.pageNumber == pageJson.pageCount) {
+    if (pageJson.pageNumber === pageJson.pageCount) {
       confirmation();
     }
   });

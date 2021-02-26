@@ -10,7 +10,7 @@ var utag_data={
   'site_section_3' : 'engaging networks|' + pageJson.pageType,
   'site_section_4' : 'engaging networks|' + pageJson.pageType,
   'hier1' : 'preserve.nature.org|' + pageJson.pageType,
-  'constituent_id' : ''  //if available. otherwise blank.
+  'constituent_id' : pageJson.supporterId ? pageJson.supporterId : ''  //if available. otherwise blank.
 };
 // Add on to data layer for specific page types
 

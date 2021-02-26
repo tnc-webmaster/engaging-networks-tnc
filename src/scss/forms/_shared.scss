@@ -383,8 +383,10 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
 
   .en__field__label--item {
     @extend .btn;
-    @include button-variant($white, $gray-500, $white, $white, $gray-500, $white);
-    background: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/PayPal_logo.svg?v=1612990808000) no-repeat center;
+    @include button-variant($yellow, $yellow, $white, $yellow, $yellow, $white);
+    background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/PayPal_logo.svg?v=1612990808000);
+    background-repeat: no-repeat;
+    background-position: center;
     border-radius: .25rem;
     font-size: 0;
     height: 3.4375rem;

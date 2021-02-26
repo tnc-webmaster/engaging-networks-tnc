@@ -61,6 +61,30 @@ h5,
   transition: $transition-base;
 }
 
+h1,
+.h1,
+h2,
+.h2,  
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5 {
+  a {
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-transform: inherit;
+    
+    &:hover {
+      color: $primary;
+      border-bottom: 0;
+    }
+  }
+}
+
 p {
   &:last-child {
     margin-bottom: 0;

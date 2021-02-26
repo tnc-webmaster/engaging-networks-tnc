@@ -42,3 +42,50 @@
     width: 24px !important;
   }
 }
+
+.advocacy-related-actions {
+  .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    
+    &:hover {
+      .card-title a {
+        color: $primary;
+      }
+    }
+
+    a {
+      color: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: inherit;
+      text-transform: inherit;      
+      
+      &:hover {
+        border-bottom: 0;
+      }
+    }
+
+    > a:first-child::after {
+      bottom: 0;
+      content: "";
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  .card-body {
+    border-bottom: 1px solid $border-color;
+    border-left: 1px solid $border-color;
+    border-right: 1px solid $border-color;
+    flex-grow: 1;
+    padding-bottom: 8%;
+    padding-left: 7.25%;
+    padding-right: 7.25%;
+    padding-top: 5%;        
+  }
+}

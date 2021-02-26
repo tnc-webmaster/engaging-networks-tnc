@@ -28,6 +28,7 @@
   const supporterEmailAddressSelector = '#en__field_supporter_emailAddress';
   const supporterStateSelector = '#en__field_supporter_region';
   const supporterZipCodeSelector = '#en__field_supporter_postcode';
+  const tipJarSelector = '.en__field--tip-jar';
   const totalAmountSelector = '.js-total-gift';
   
   // Elements
@@ -36,6 +37,9 @@
   
   // Widgets
   let cleave = null;
+  
+  // Constants
+  const tipJarPct = 0.03;
   
   /**
   * Form interface enhancements
@@ -155,20 +159,27 @@
     }
 
     // The upsell amount is in a hidden untaggged field that updates according to form dependencies
-    if (calculatedDonationAmountInput) {
-      updateTotalGift(calculatedDonationAmountInput.value);
-      calculatedDonationAmountInput.addEventListener('change', e => {
-        updateTotalGift(e.target.value);
-      });
-
-      // Changing donation amount need to trigger a change for calculated donation amount
-      getAll('[name="transaction.donationAmt"]').forEach(el => {
-        el.addEventListener('click', e => {
-          setTimeout(() => {
-            triggerEvent(calculatedDonationAmountInput, 'change');
-          }, 100);
-        });
-      });
+    //if (calculatedDonationAmountInput) {
+    //  updateTotalGift(calculatedDonationAmountInput.value);
+    //  calculatedDonationAmountInput.addEventListener('change', e => {
+    //    updateTotalGift(e.target.value);
+    //  });
+    //
+    //  // Changing donation amount need to trigger a change for calculated donation amount
+    //  getAll('[name="transaction.donationAmt"]').forEach(el => {
+    //    el.addEventListener('click', e => {
+    //      setTimeout(() => {
+    //        triggerEvent(calculatedDonationAmountInput, 'change');
+    //      }, 100);
+    //    });
+    //  });
+    //}
+    
+    // Display tip jar amount
+    el = theForm.querySelector(tipJarSelector);
+    if (el) {
+      updateTotalGift(getTipJar(getOriginalDonationAmount()));
+      
     }
 
     // Other amount field is always visible, so the corresponding radio need to be button clicked here even though hidden
@@ -183,13 +194,13 @@
       });
       
       // Changing donation amount needs to trigger a change for calculated donation amount
-      if (calculatedDonationAmountInput) {        
-        el.addEventListener('change', e => {
-          setTimeout(() => {
-            triggerEvent(calculatedDonationAmountInput, 'change');
-          }, 100);
-        });
-      }
+      //if (calculatedDonationAmountInput) {        
+      //  el.addEventListener('change', e => {
+      //    setTimeout(() => {
+      //      triggerEvent(calculatedDonationAmountInput, 'change');
+      //    }, 100);
+      //  });
+      //}
     }
 
     // Paypal checkbox needs to hide credit card blocks
@@ -310,6 +321,75 @@
     // Globalize for inline onclick
     window.closePopover = closePopover;
   };
+  
+  const donationForm = () => {
+    const donationAmt = theForm.querySelector('.en__field--donationAmt');
+    let donationAmtRadios = null;
+    const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
+    const tipJar = theForm.querySelector('.en__field--tip-jar');
+    let tipJarCheckbox;
+        
+    const increaseDonationAmounts = () => {      
+      if (otherAmountInput) {
+        if (otherAmountInput.value !== '') {
+          otherAmountInput.dataset.tipjar = getTipJar(otherAmountInput.value);          
+          return;
+        }
+      }
+      
+      getAll('.en__field__input--radio:not([value=""])', donationAmt).forEach(el => {
+        if (!el.dataset.original) {
+          el.dataset.original = el.value;
+        }
+        el.value = getTipJar(el.value);
+      });
+    };
+    
+    const restoreDonationAmounts = () => {
+      getAll('.en__field__input--radio:not([value=""])', donationAmt).forEach(el => {
+        el.value = el.dataset.original;
+      });      
+    };    
+    
+    const updateDonationAmounts = (el, fieldType) => {
+      if (el.checked) {
+        increaseDonationAmounts();
+      } else {
+        restoreDonationAmounts();
+      }
+    };    
+    
+    if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber !== pageJson.pageCount) {
+      // Donation amount
+      if (donationAmt) {
+        donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
+        if (tipJar && tipJarPct) {
+
+          tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox');
+          tipJarCheckbox.addEventListener('click', e => {
+            updateDonationAmounts(e.target);
+          });          
+          
+          if (tipJarCheckbox.checked) {
+            updateDonationAmounts(tipJarCheckbox);            
+          }
+          
+          donationAmtRadios.forEach(el => {
+            el.addEventListener('click', e => {
+              updateTotalGift(tipJarCheckbox.checked ? e.target.value : getTipJar(getOriginalDonationAmount()));              
+            });
+          });
+
+          if (otherAmountInput) {
+            otherAmountInput.addEventListener('input', e => {
+              updateDonationAmounts(tipJarCheckbox);                
+              updateTotalGift(getTipJar(getOriginalDonationAmount()));          
+            });
+          }
+        }              
+      }
+    }    
+  };
 
   /**
   * Form validation enhancements
@@ -416,19 +496,32 @@
   * Form submit enhancements
   */
   const formSubmit = () => {
+    const submitButton = theForm.querySelector('.en__submit button');
+    const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
+    let otherAmountOriginal = null;
+
+    if (submitButton) {
+      submitButton.addEventListener('click', e => {
+        if (otherAmountInput) {
+          if (otherAmountInput.value !== '') {
+            otherAmountOriginal = otherAmountInput.value;
+            otherAmountInput.value = otherAmountInput.dataset.tipjar ? otherAmountInput.dataset.tipjar : otherAmountInput.value;
+          }
+        }
+      });
+    }
+
     theForm.addEventListener('submit', e => {
       const tipJar = theForm.querySelector('.en__field--tip-jar');
-      const tipJarAmount = theForm.querySelector(totalAmountSelector);
-      const donationAmount = getDonationAmount();
       let extraAmount = 0;
       let donationData = {};
 
-      if (tipJar && tipJarAmount) {
-        // Update other donation amount field with added amount unless there are errors on the form
-        if (tipJar.querySelector('.en__field__input--checkbox').checked && tipJarAmount.textContent !== '') {          
+      if (tipJar) {
+        if (tipJar.querySelector('.en__field__input--checkbox').checked) {
           const errorList = theForm.querySelector('.en__errorList');
           const invalidFields = getAll('.en__field--validationFailed');
-          const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
+          const totalDonationAmount = getTotalDonationAmount();
+          const originalDonationAmount = otherAmountOriginal || getOriginalDonationAmount();
           let formIsValid = true;
 
           // Looking for form errors
@@ -441,17 +534,14 @@
             formIsValid = false;
           }
 
-          // Set other amount to upsell amount
           if (formIsValid) {
-            triggerEvent(otherAmountInput, 'focus');
-            otherAmountInput.value = tipJarAmount.textContent.replace(/\$/, '').replace(/,/g, '');
-            extraAmount = otherAmountInput.value - donationAmount;
+            extraAmount = (totalDonationAmount - originalDonationAmount).toFixed(2);
+            donationData.originalDonationAmount = originalDonationAmount;
           }
         }
       }
-      
-      // Save non-pageJson date for data layer on confirmation page 
-      donationData.donationAmount = donationAmount;
+
+      // Save non-pageJson date for data layer on confirmation page
       donationData.extraAmount = extraAmount;
       donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : '';
       donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : '';
@@ -653,9 +743,26 @@
 
   /**
    * Returns Donation amount without upsell fee or null
-   *
    */
-  const getDonationAmount = () => {
+  const getOriginalDonationAmount = () => {
+    const selectedAmount = theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked') || theForm.querySelector(otherAmountInputSelector);
+    
+    return selectedAmount ? (selectedAmount.dataset.original ? selectedAmount.dataset.original : selectedAmount.value) : null;    
+  };
+
+  /**
+   * Returns Donation amount with tip jar added
+   *
+   * @param {string} amt Daontion amount to add tip to
+   */
+  const getTipJar = amt => {
+    return !isNaN(amt) ? (parseFloat(amt) + (parseFloat(amt) * tipJarPct)).toFixed(2) : '';
+  };
+
+  /**
+   * Returns Donation amount with or without upsell fee or null
+   */
+  const getTotalDonationAmount = () => {
     const selectedAmount = theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked') || theForm.querySelector(otherAmountInputSelector);
     
     return selectedAmount ? selectedAmount.value : null;    
@@ -789,7 +896,7 @@
   *
   * @param {string} amt Total donation amount
   */
-  const updateTotalGift = (amt) => {
+  const updateTotalGift = amt => {
     getAll(totalAmountSelector).forEach(el => {
       el.textContent = '$' + amt;
     });
@@ -824,9 +931,10 @@
   // On load
   document.addEventListener('DOMContentLoaded', () => {
     ui();
+    donationForm();
     validation();
     formSubmit();    
-    if (pageJson.pageNumber == pageJson.pageCount) {
+    if (pageJson.pageNumber === pageJson.pageCount) {
       confirmation();
     }
   });
