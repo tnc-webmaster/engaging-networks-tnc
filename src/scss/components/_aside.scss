@@ -87,6 +87,12 @@
     margin-top: 1.5rem;    
   }
   
+  > .form-heading {
+    &:first-child {
+      margin-top: 0;
+    }    
+  }
+  
   .en__field {
     > .popover-container {
       margin-bottom: -.25rem;

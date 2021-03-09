@@ -3,7 +3,8 @@
   
   // Classes
   const activeClass = 'is-active';
-  const advocacyShareClass = 'advocacy-share-bar-block';
+  const advocacyShareClass = 'advocacy-share-bar-block';  
+  const collapseShowClass = 'show';
   const errorBoxClass = 'error-box';
   const paypalSelectedClass = 'paypal-selected';
   const photoInfoClass = 'photo-info';
@@ -11,20 +12,24 @@
   const popoverContainerClass = 'popover-container';
   const validClass = 'is-active';
   const validationFailedClass = 'en__field--validationFailed';
+  const visuallyHiddenClass = 'visually-hidden';
 
   // Selectors
   const ccNumberFieldSelector = '.en__field--ccnumber';
   const ccNumberInputSelector = '#en__field_transaction_ccnumber';
-  const dateInputSelector = '.en__field[class*="date"] .en__field__input--text, .en__field--888858 .en__field__input--text';
+  const countrySelect = '#en__field_supporter_country';
+  const dateInputSelector = '.en__field[class*="date"] .en__field__input--text, .en__field--888858 .en__field__input--text';  
   const donationAmountSelector = '.en__field--donationAmt .en__field__element--text';
   const enFieldSelector = '.en__field';
   const enFieldItemSelector = '.en__field__item';
+  const giftDesignationSelect = '#en__field_transaction_dirgift';
   const otherAmountSelector = '.en__field--donationAmt .en__field__item--other';
   const otherAmountInputSelector = '.en__field__input--other';
   const paymentMethodSelector = '[class*="en__field--payment-method"]';
   const paymentMethodRadioSelector = '[class*="en__field--payment-method"].en__field--radio';
   const paymentTypeSelector = '[name="transaction.paymenttype"]';
   const paypalInputSelector = '.en__field--payment-method-paypal .en__field__input--checkbox';
+  const stateProvinceSelect = '#en__field_supporter_region';
   const supporterEmailAddressSelector = '#en__field_supporter_emailAddress';
   const supporterStateSelector = '#en__field_supporter_region';
   const supporterZipCodeSelector = '#en__field_supporter_postcode';
@@ -48,22 +53,36 @@
     let el = null;
     let els = null;
     let _parent = null;
-    
-    // Set the value of choices when autofill is detected
-    const handleChoicesChange = (choices, e) => {
-      choices.setValue([
-      {
-        value: e.target.value,
-        label: e.target.querySelector('option[value="' + e.target.value + '"]').textContent,
-      }
-      ]);
-      resetSelect(choices);
-    };
+    let stateProvinceChoices;
+    let currentChoices;
 
-    // choices.js removes <options> form the native select
-    // Restoring the <options> allows choices.js to work with browser autofill
-    const resetSelect = (choices) => {
-      const selectOne = choices.passedElement.element;
+    /**
+     * Set the value of choices when autofill is detected
+     *
+     * @param {choices} choices choices.js instance to set value for
+     * @param {event} e
+     */
+    const handleChoicesChange = e => {
+      const _target = e.target;
+      
+      _target.choices.setValue([
+        {
+          value: _target.value,
+          label: _target.querySelector('option[value="' + _target.value + '"]').textContent,
+        }
+      ]);
+      resetSelect(currentChoices);
+    };
+    
+    /**
+    * choices.js removes <options> form the native select
+    * Restoring the <options> allows choices.js to work with browser autofill
+    *
+    * @param {choices} choices choices.js instance to restore options to
+    */
+    
+    const resetSelect = (_choices) => {
+      const selectOne = _choices.passedElement.element;
       const selectValue = selectOne.value;
       let html = '';
       let index = 1;
@@ -71,7 +90,7 @@
       // Clear the native select
       selectOne.innerHTML = '';
       // Re-add all <options> to native select
-      getAll('.choices__item', choices.choiceList.element).forEach(el => {
+      getAll('.choices__item', _choices.choiceList.element).forEach(el => {
         let choiceSelected = el.dataset.value === selectValue ? true : false;
         let opt = document.createElement('option');
 
@@ -80,24 +99,96 @@
         opt.selected = choiceSelected;
         selectOne.add(opt, null);
       });
+      currentChoices = _choices;
+      selectOne.choices = _choices;
       // Listen for an autofill (change event)
-      selectOne.removeEventListener('change', handleChoicesChange.bind(null, choices), false);
-      selectOne.addEventListener('change', handleChoicesChange.bind(null, choices), false);
+      selectOne.removeEventListener('change', handleChoicesChange);
+      selectOne.addEventListener('change', handleChoicesChange);
     };
-    
-    // Initiate choices.js
-    getAll('select').forEach(el => {
-      choices = new Choices(el, {
+
+    /**
+    * Creates choices.js instance
+    *
+    * @param {node} el Target to apply choices to
+    */
+    const createChoices = el => {
+      return new Choices(el, {
         silent: true,
+        duplicateItemsAllowed: false,
         itemSelectText: '',
+        shouldSort: false,
         callbackOnInit: function() {
-          resetSelect(this);
+          const _choices = this;
+          const label = theForm.querySelector('label[for="' + _choices.passedElement.element.id + '"]');
+
+          if (label) {
+            _choices.containerOuter.element.setAttribute('aria-label', label.textContent);            
+            _choices.choiceList.element.setAttribute('aria-label', 'Select ' + label.textContent.replace(/Select/, ''));            
+          }
+          getAll('[role="textbox"]', _choices.containerOuter.element).forEach(el => {
+            el.removeAttribute('role');            
+          });
+          resetSelect(_choices);
         },
       });
+    };
+
+    /**
+    * Destroys a choices.js instance
+    *
+    * @param {choices} choices choices.js instance to destroy
+    */
+    const destroyChoices = (_choices, selector) => {
+      _choices.clearInput();
+      _choices.destroy();
+      _choices = null;
+    };
+        
+    // Initiate choices.js
+    getAll('select:not(' +  stateProvinceSelect + '):not(' +  giftDesignationSelect + ')').forEach(el => {
+      createChoices(el);
     });
     
+    // Allow EN swap lists for state/province field
+    el = theForm.querySelector(stateProvinceSelect);
+    if (el) {      
+      stateProvinceChoices = createChoices(el);      
+    }
+    
+    // Allow EN swap lists on country field change
+    el = theForm.querySelector(countrySelect);
+    if (el) {
+      if (stateProvinceChoices) {
+        el.addEventListener('change', e => {
+          // Rebuild state/province choices
+          destroyChoices(stateProvinceChoices);
+          setTimeout( function () {
+            stateProvinceChoices = createChoices(theForm.querySelector(stateProvinceSelect));      
+          }, 100);
+        });        
+      }
+    }
+    
+    // Allow EN swap value for gift designation field
+    el = theForm.querySelector(giftDesignationSelect);
+    if (el) {      
+      giftDesignationChoices = createChoices(el);      
+
+      getAll('.en__field--gift-designation-managed-donors-yn .en__field__input--radio').forEach(el => {
+        if (giftDesignationChoices) {
+          el.addEventListener('click', e => {
+            // Rebuild gift designation choices
+            destroyChoices(giftDesignationChoices);
+            setTimeout( function () {
+              giftDesignationChoices = createChoices(theForm.querySelector(giftDesignationSelect));      
+            }, 100);
+          });        
+        }        
+      });
+    }   
+    
     // Is there a full bleed hero?
-    addClass(theForm, maybeHasHero());
+    addClass(document.body, maybeHasHero());
 
     // Is there a processing error?
     els = getAll('.en__errorHeader, .en__errorList');
@@ -110,7 +201,7 @@
     if (els.length > 0) {
       wrapAll(els, 'div', advocacyShareClass);
     }
-
+    
     // Placeholders for some inputs
     getAll(otherAmountInputSelector).forEach(el => {
       const fieldItem = getClosestEl(el, enFieldItemSelector);
@@ -124,6 +215,63 @@
     getAll(dateInputSelector).forEach(el => {
       addPlaceholder(el, 'Select Date');
     });
+
+    // Missing Other Amount label
+    el = theForm.querySelector(otherAmountInputSelector);
+    _parent = theForm.querySelector(otherAmountSelector);
+    if (el && _parent) {
+      placeholderToLabel(el, _parent);      
+    }
+    
+    const addLabel = (el, _parent, txt) => {
+      el.id = el.id ? el.id : el.name.replace(/\./g, '');
+      label = document.createElement('label');
+      label.id = 'label' + uuidv4();
+      label.setAttribute('for', el.id);
+      label.textContent = txt;
+      addClass(label, visuallyHiddenClass);
+      _parent.insertBefore(label, el);
+      return label.id;      
+    };
+    
+    // Missing CC expiration year label
+    el = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child .en__field__input--splitselect');
+    _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
+    if (el && _parent) {
+     const labelId = addLabel(el, el.parentElement, 'Credit card expiration year');
+
+     getAll('[role="combobox"], [role="listbox"]').forEach(el => {
+        el.setAttribute('aria-labelledby', labelId);      
+     });
+    }
+    
+    const addAriaLabelledBy = el => {
+      const maybeLabel = el.firstElementChild;
+
+      if (maybeLabel.nodeName.toLowerCase() === 'label') {
+        labelId = 'label' + uuidv4();
+        maybeLabel.id = labelId;
+        el.setAttribute('aria-labelledby', labelId);      
+      }
+    };
+    
+    // Aria role for radio groups
+    getAll('.en__field--radio').forEach(el => {
+      let labelId;
+      
+      el.setAttribute('role', 'radiogroup');
+      if (hasClass(el, 'en__field--donationAmt')) {
+        el.setAttribute('aria-labelledby', 'giftAmountLabel');
+      } else { 
+        addAriaLabelledBy(el);
+      }        
+    });
+    
+    // Aria role for split selects
+    getAll('.en__field--splitselect').forEach(el => {
+      el.setAttribute('role', 'group');
+      addAriaLabelledBy(el);
+    });    
 
     // Convert URL strings to images for dummy select ecard radios
     el = theForm.querySelector('.en__field--ecard-select-an-ecard');
@@ -146,6 +294,7 @@
     // Display minimum donation amount
     el = theForm.querySelector(donationAmountSelector) || theForm.querySelector(otherAmountSelector);
     if (el) {
+      // Getting the minimum amount from the EN validator
       const minAmountValidator = EngagingNetworks.validators.filter(obj => {
         if (obj.format) {
           return obj.format.indexOf('~') > -1;
@@ -154,32 +303,14 @@
       });
       if (minAmountValidator[0]) {
         // Add paragraph with min amount underneath Other Amount field
-        addEl(el, 'p', '$' + minAmountValidator[0].format.split('~')[0] + ' minimum');
+        addEl(el, 'p', '$' + minAmountValidator[0].format.split('~')[0] + ' minimum', 'fw-medium');
       }
     }
-
-    // The upsell amount is in a hidden untaggged field that updates according to form dependencies
-    //if (calculatedDonationAmountInput) {
-    //  updateTotalGift(calculatedDonationAmountInput.value);
-    //  calculatedDonationAmountInput.addEventListener('change', e => {
-    //    updateTotalGift(e.target.value);
-    //  });
-    //
-    //  // Changing donation amount need to trigger a change for calculated donation amount
-    //  getAll('[name="transaction.donationAmt"]').forEach(el => {
-    //    el.addEventListener('click', e => {
-    //      setTimeout(() => {
-    //        triggerEvent(calculatedDonationAmountInput, 'change');
-    //      }, 100);
-    //    });
-    //  });
-    //}
     
     // Display tip jar amount
     el = theForm.querySelector(tipJarSelector);
     if (el) {
-      updateTotalGift(getTipJar(getOriginalDonationAmount()));
-      
+      updateTotalGift(getTipJar(getOriginalDonationAmount()));      
     }
 
     // Other amount field is always visible, so the corresponding radio need to be button clicked here even though hidden
@@ -191,16 +322,7 @@
         if (otherRadio) {
           otherRadio.click();
         }
-      });
-      
-      // Changing donation amount needs to trigger a change for calculated donation amount
-      //if (calculatedDonationAmountInput) {        
-      //  el.addEventListener('change', e => {
-      //    setTimeout(() => {
-      //      triggerEvent(calculatedDonationAmountInput, 'change');
-      //    }, 100);
-      //  });
-      //}
+      });      
     }
 
     // Paypal checkbox needs to hide credit card blocks
@@ -258,7 +380,7 @@
       const maxDate = new Date(today);
 
       // Restrict date selection to one year out
-      maxDate.setDate(maxDate.getDate() + 365);
+      maxDate.setDate(maxDate.getDate() + 90);
 
       return new Datepicker(el, {
         autohide: true,
@@ -285,6 +407,17 @@
         createPopover(translation.field, translation.placement, translation[pageJson.locale].label, translation[pageJson.locale].text);
       });
     }
+        
+    // Init accordions
+    getAll('.accordion').forEach(accordion => {
+      getAll('.accordion-button').forEach(el => {
+        el.addEventListener('click', e => {
+          setTimeout(function() {
+            addAriaCollapsedAttr(document.getElementById(e.target.dataset.bsTarget.replace(/#/, '')), getAll('.accordion-collapse', accordion));            
+          }, 500);
+        });      
+      });
+    });
     
     //Init popovers
     const popoverTriggerList = [].slice.call(theForm.querySelectorAll('.popover-container [data-bs-toggle="popover"]'));
@@ -424,7 +557,7 @@
       switch (el.type) {
         case 'email':
           // Check for valid email
-          el.setAttribute('pattern', '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$');
+          el.setAttribute('pattern', '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-z]{2,}$');
           el.addEventListener('input', handleInput);
           break;
         case 'number':
@@ -540,8 +673,14 @@
           }
         }
       }
+      
+      // Looking for URL tracking params to pass to data layer on confirmation page
+      const trackingParams = new URLSearchParams(location.search);
+      donationData.src = trackingParams.has('src') ? trackingParams.get('src') : '';
+      donationData.vid = trackingParams.has('vid') ? trackingParams.get('vid') : '';
+      donationData.vid2 = trackingParams.has('vid2') ? trackingParams.get('vid2') : '';
 
-      // Save non-pageJson date for data layer on confirmation page
+      // Save non-pageJson data for data layer on confirmation page
       donationData.extraAmount = extraAmount;
       donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : '';
       donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : '';
@@ -570,6 +709,26 @@
     addClass((el.target || el).parentElement, activeClass);
   };
 
+
+  /**
+   * Adds aria-expanded attribute to collapsible elements
+   *
+   * @param {node} el Target element
+   * @param {nodeList} collapsibles List of collapsibles in same comnponent as target
+   */
+  const addAriaCollapsedAttr = (el, collapsibles) => {
+    if (el) {
+      const isOpen = hasClass(el, collapseShowClass) ? 'true' : 'false';
+
+      if (collapsibles.length) {
+        collapsibles.forEach(collapsible => {
+          collapsible.setAttribute('aria-expanded', 'false');
+        });
+      }
+      el.setAttribute('aria-expanded', isOpen);
+    }
+  };
+
   /**
    * Adds a specified class
    *
@@ -591,13 +750,16 @@
    * @param {string} elType The type of element to add
    * @param {string} textContent Text to add to new element
    */
-  const addEl = (parentEl, elType, textContent) => {
+  const addEl = (parentEl, elType, textContent, cls) => {
     let el = document.createElement(elType);
-
+    
+    if (cls) {
+      addClass(el, cls);
+    }
     el.textContent = textContent;
     parentEl.append(el);
   };
-
+    
   /**
    * Adds placeholder attribute
    *
@@ -747,7 +909,7 @@
   const getOriginalDonationAmount = () => {
     const selectedAmount = theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked') || theForm.querySelector(otherAmountInputSelector);
     
-    return selectedAmount ? (selectedAmount.dataset.original ? selectedAmount.dataset.original : selectedAmount.value) : null;    
+    return selectedAmount ? (selectedAmount.dataset.original ? selectedAmount.dataset.original : selectedAmount.value.replace(/\,/g, '')) : null;    
   };
 
   /**
@@ -767,6 +929,7 @@
     
     return selectedAmount ? selectedAmount.value : null;    
   };
+
 
   /**
    * Returns Element has specified class
@@ -798,6 +961,25 @@
   };
 
   /**
+  * Creates a label from placeholder value and associates it with an input
+  *
+  * @param {node} el The input element before which the new label is inserted.
+  * @param {node} _parent The parent of the newly inserted label.
+  */
+  const placeholderToLabel = (el, _parent) => {
+    let label;
+    
+    if (el && _parent) {
+      el.id = el.id ? el.id : el.name.replace(/\./g, '');
+      label = document.createElement('label');
+      label.setAttribute('for', el.id);
+      label.textContent = el.getAttribute('placeholder');
+      addClass(label, visuallyHiddenClass);
+      _parent.insertBefore(label, el);
+    }
+  };
+
+  /**
    * Removes multiple attributes
    *
    * @param {node} el The field to remove attributes from
@@ -807,17 +989,17 @@
     attrs.forEach(attr => el.removeAttribute(attr));
   };
   
-   /**
-   * Remove a specified class
-   *
-   * @param {node} el Node to clear class from
-   * @param {Array || string} cls Class to remove
-   */
+  /**
+  * Remove a specified class
+  *
+  * @param {node} el Node to clear class from
+  * @param {Array || string} cls Class to remove
+  */
   const removeClass = (el, _classes) => {
     if (Array.isArray(_classes)) {
       el.classList.remove(..._classes);
     } else {
-      el.classList.remove(_classes);      
+      el.classList.remove(_classes);
     }
   };
 
@@ -900,6 +1082,15 @@
     getAll(totalAmountSelector).forEach(el => {
       el.textContent = '$' + amt;
     });
+  };
+
+  /**
+  * Generates a unique ID
+  */
+  const uuidv4 = () => {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
   };
 
   /**

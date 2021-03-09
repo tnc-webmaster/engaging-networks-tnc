@@ -42,13 +42,12 @@
 .form-heading {
   margin-top: 4.75rem;
 
-  h5,
-  .h5 {
+  h3 {    
+    @extend .h5;
     @extend %form-heading;
   }
 
-  p + h5,
-  p + .h5 {
+  p + h3 {
     margin-top: 1.75rem;
   }
 }
@@ -83,17 +82,6 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
   @include media-breakpoint-up(lg) {
     display: flex;
     justify-content: space-between;
-  }
-}
-
-.en__component--column.en__component--advcolumn {
-  &:first-child:not(:last-child) {
-    @extend .col-lg-6;
-    @extend .offset-lg-1;
-  }
-
-  &:last-child:not(:first-child) {
-    @extend .col-lg-4;
   }
 }
 

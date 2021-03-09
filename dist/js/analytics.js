@@ -1,6 +1,6 @@
-var enPageName_clear = pageJson.pageName.replace(/;|,|(|)/g, '');   //strip semicolons, commas, parentheses
+var enPageName_clear = pageJson.pageName.replace(/;|,|(|)/g, '');
 var utag_data={
-  'channel' : 'preserve.nature.org',
+  'channel' : 'preserve.nature.org', 
   'locale' : pageJson.locale,
   'page_id' : pageJson.campaignPageId,
   'page_name' : pageJson.pageType + ':' + pageJson.campaignPageId + ':' + enPageName_clear,
@@ -10,7 +10,7 @@ var utag_data={
   'site_section_3' : 'engaging networks|' + pageJson.pageType,
   'site_section_4' : 'engaging networks|' + pageJson.pageType,
   'hier1' : 'preserve.nature.org|' + pageJson.pageType,
-  'constituent_id' : pageJson.supporterId ? pageJson.supporterId : ''  //if available. otherwise blank.
+  'constituent_id' : pageJson.supporterId ? pageJson.supporterId : ''
 };
 // Add on to data layer for specific page types
 
@@ -43,15 +43,18 @@ if (pageJson.pageType == 'donation' && pageJson.pageNumber == pageJson.pageCount
   utag_data.customer_postal_code = donationData ? donationData.zipCode : '';
   utag_data.customer_country = pageJson.country;
   utag_data.donation_type = pageJson.recurring;
-  utag_data.payment_method_dl = pageJson.paymentType;  //what are the possible results for this?
+  utag_data.payment_method_dl = pageJson.paymentType;
   utag_data.order_currency_code = 'USD';  //always USD, even on international forms
-  utag_data.order_id = pageJson.donationLogId;
-  utag_data.order_total = pageJson.amount;  // stripped of currency symbol and commas. includes tipjar amount in total.
+  utag_data.order_id = pageJson.donationLogId.toString();
+  utag_data.order_total = pageJson.amount.toString();
   utag_data.product_quantity = ['1'];
   utag_data.product_unit_price = [utag_data.order_total];
-  utag_data.tip_jar = donationData ? donationData.extraAmount : '';  // this can be set mathematically. no currency symbol.
+  utag_data.tip_jar = donationData ? donationData.extraAmount : '';
   utag_data.email = donationData ? donationData.emailAddress : '';
-  utag_data.page_name = utag_data.page_name + '-complete';  //update page_name, must come after form_name & product_id
+  utag_data.page_name = utag_data.page_name + '-complete';
+  utag_data.campaign_tag = donationData ? donationData.src : '';
+  utag_data.pixel_id = donationData ? donationData.vid : '';
+  utag_data.pixel_id2 = donationData ? donationData.vid2 : '';
 }
 
 (function(a,b,c,d){

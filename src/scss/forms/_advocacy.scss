@@ -1,3 +1,55 @@
+.en__component--page[action*="petition"] {
+  .en__component--advcolumn {
+    &:first-child:not(:last-child) {
+      @extend .col-lg-5;
+
+      .en__component--imageblock {
+        img {
+          width: 100% !important;
+        }
+      }
+      
+      h2 {
+        font-family: $font-family-sans-serif;
+        margin-bottom: 2.5rem;
+      }
+
+      p {
+        big {
+          font-size: 1.375rem !important;
+          line-height: 1.8181 !important;
+        }
+        
+        &:not(:last-child) {
+          margin-bottom: 2.75rem;
+        }
+      }
+    }
+
+    &:last-child:not(:first-child) {      
+      @include media-breakpoint-up(lg) {
+        border: 1px solid $border-color;  
+        flex: 0 0 auto;
+        margin-right: 1%;
+        padding: 4% 8.5% 6%;
+        width: 48%;
+      }
+      
+      .enWidget--progressBar {
+        margin-bottom: 2.5rem;
+      }
+      
+      .enWidget__copy--above {
+        margin-bottom: 1rem;
+      }
+
+      .en__submit {
+        margin-top: 2.125rem;
+      }
+    }
+  }    
+}
+
 .advocacy-share-bar-block {
   display: flex;
   align-items: center;
@@ -44,6 +96,16 @@
 }
 
 .advocacy-related-actions {
+  margin-top: 3rem;
+  
+  @include media-breakpoint-up(lg) {
+    margin-top: 6.25rem;    
+  }
+  
+  > h5 {
+    margin-bottom: 1.75rem;  
+  }
+  
   .card {
     display: flex;
     flex-direction: column;
@@ -56,19 +118,7 @@
       }
     }
 
-    a {
-      color: inherit;
-      font-size: inherit;
-      font-weight: inherit;
-      line-height: inherit;
-      text-transform: inherit;      
-      
-      &:hover {
-        border-bottom: 0;
-      }
-    }
-
-    > a:first-child::after {
+    a::after {
       bottom: 0;
       content: "";
       left: 0;
@@ -83,9 +133,6 @@
     border-left: 1px solid $border-color;
     border-right: 1px solid $border-color;
     flex-grow: 1;
-    padding-bottom: 8%;
-    padding-left: 7.25%;
-    padding-right: 7.25%;
-    padding-top: 5%;        
+    padding: 5% 7.25% 8%;
   }
 }

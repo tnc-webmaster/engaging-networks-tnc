@@ -1,3 +1,16 @@
+.en__component--page[action*="donate"] {
+  .en__component--advcolumn {
+    &:first-child:not(:last-child) {
+      @extend .col-lg-6;
+      @extend .offset-lg-1;
+    }
+
+    &:last-child:not(:first-child) {
+      @extend .col-lg-4;
+    }
+  }  
+}
+
 @include media-breakpoint-up(xl) {
   .en__component--formblock {
     &.cols-3 {
@@ -15,6 +28,10 @@
       ~ .en__component--formblock,
       ~ .en__component--copyblock:not(.form-heading) {
         padding-right: 12.5%;
+      }
+
+      .en__field__item--other {
+        padding-right: calc(25% + .5rem) !important;      
       }
     }
   }

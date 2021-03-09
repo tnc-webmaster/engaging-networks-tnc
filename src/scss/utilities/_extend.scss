@@ -4,6 +4,10 @@
   display: block;
   padding-bottom: 1rem;
   margin-bottom: 1.25rem;
+  
+  > p:first-child {
+    margin-bottom: -.25rem;    
+  }
 }
 
 %styled-checkbox {

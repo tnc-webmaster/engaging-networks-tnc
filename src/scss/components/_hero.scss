@@ -1,4 +1,4 @@
-.en__component--column.en__component--advcolumn.hero-full-bleed {
+body:not(#en__pagebuilder) .en__component--column.en__component--advcolumn.hero-full-bleed {
   flex: none;
   margin-left: 50%;
   max-width: none;
@@ -13,14 +13,30 @@
     height: auto !important;
     width: 100% !important;
   }  
-
-  .en__component--copyblock {
-    color: $white;
-    position: absolute;
-    text-align: center;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 100%;
+    
+  body:not(#en__pagebuilder) & {
+    &::after {
+      bottom: 0;
+      background-color: rgba(0,0,0,.5);
+      content: "";
+      display: block;
+      left: 0;
+      position: absolute;
+      right: 0;
+      
+      top: 0;
+      z-index: 1;
+    }
+    
+    .en__component--copyblock {
+      color: $white;
+      position: absolute;
+      text-align: center;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      z-index: 10;    
+    }
   }
   
   h1 {
@@ -48,7 +64,8 @@
     padding-top: 1.7rem;  
   }
 
-  h3 {
+  h2 {
+    @extend .h3;
     margin-bottom: 1rem;
     
     @include media-breakpoint-down(lg) {
@@ -79,7 +96,19 @@
   
   @include media-breakpoint-up(lg) {
     > div {
+      align-items: flex-start;
       display: flex;
     }    
+  }
+}
+
+.has-hero {
+  .main {
+    margin-top: 0;
+  }
+
+
+  .en__component--advrow:first-of-type + .en__component--advrow {
+    margin-top: 5.5rem;
   }
 }

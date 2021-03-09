@@ -66,15 +66,22 @@
 
 @import "utilities/extend";
 
+@import "components/accordion";
 @import "components/aside";
 @import "components/buttons";
+@import "components/display-widget";
 @import "components/hero";
 @import "components/image";
 @import "components/popover";
+@import "components/progress-bar";
+@import "components/video";
+@import "components/visual-listing";
 
 @import "forms/shared";
 @import "forms/advocacy";
+@import "forms/data-capture";
 @import "forms/donation";
+@import "forms/lead-gen";
 @import "forms/validation";
 
 @import "vendor/choices";

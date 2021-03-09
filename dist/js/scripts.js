@@ -17,26 +17,31 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var activeClass = 'is-active';
   var advocacyShareClass = 'advocacy-share-bar-block';
+  var collapseShowClass = 'show';
   var errorBoxClass = 'error-box';
   var paypalSelectedClass = 'paypal-selected';
   var photoInfoClass = 'photo-info';
   var popoverClass = 'popover';
   var popoverContainerClass = 'popover-container';
   var validClass = 'is-active';
-  var validationFailedClass = 'en__field--validationFailed'; // Selectors
+  var validationFailedClass = 'en__field--validationFailed';
+  var visuallyHiddenClass = 'visually-hidden'; // Selectors
 
   var ccNumberFieldSelector = '.en__field--ccnumber';
   var ccNumberInputSelector = '#en__field_transaction_ccnumber';
+  var countrySelect = '#en__field_supporter_country';
   var dateInputSelector = '.en__field[class*="date"] .en__field__input--text, .en__field--888858 .en__field__input--text';
   var donationAmountSelector = '.en__field--donationAmt .en__field__element--text';
   var enFieldSelector = '.en__field';
   var enFieldItemSelector = '.en__field__item';
+  var giftDesignationSelect = '#en__field_transaction_dirgift';
   var otherAmountSelector = '.en__field--donationAmt .en__field__item--other';
   var otherAmountInputSelector = '.en__field__input--other';
   var paymentMethodSelector = '[class*="en__field--payment-method"]';
   var paymentMethodRadioSelector = '[class*="en__field--payment-method"].en__field--radio';
   var paymentTypeSelector = '[name="transaction.paymenttype"]';
   var paypalInputSelector = '.en__field--payment-method-paypal .en__field__input--checkbox';
+  var stateProvinceSelect = '#en__field_supporter_region';
   var supporterEmailAddressSelector = '#en__field_supporter_emailAddress';
   var supporterStateSelector = '#en__field_supporter_region';
   var supporterZipCodeSelector = '#en__field_supporter_postcode';
@@ -56,51 +61,148 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var ui = function ui() {
     var el = null;
     var els = null;
-    var _parent = null; // Set the value of choices when autofill is detected
+    var _parent = null;
+    var stateProvinceChoices = void 0;
+    var currentChoices = void 0;
+    /**
+     * Set the value of choices when autofill is detected
+     *
+     * @param {choices} choices choices.js instance to set value for
+     * @param {event} e
+     */
 
-    var handleChoicesChange = function handleChoicesChange(choices, e) {
-      choices.setValue([{
-        value: e.target.value,
-        label: e.target.querySelector('option[value="' + e.target.value + '"]').textContent
+    var handleChoicesChange = function handleChoicesChange(e) {
+      var _target = e.target;
+
+      _target.choices.setValue([{
+        value: _target.value,
+        label: _target.querySelector('option[value="' + _target.value + '"]').textContent
       }]);
-      resetSelect(choices);
-    }; // choices.js removes <options> form the native select
-    // Restoring the <options> allows choices.js to work with browser autofill
+
+      resetSelect(currentChoices);
+    };
+    /**
+    * choices.js removes <options> form the native select
+    * Restoring the <options> allows choices.js to work with browser autofill
+    *
+    * @param {choices} choices choices.js instance to restore options to
+    */
 
 
-    var resetSelect = function resetSelect(choices) {
-      var selectOne = choices.passedElement.element;
+    var resetSelect = function resetSelect(_choices) {
+      var selectOne = _choices.passedElement.element;
       var selectValue = selectOne.value;
       var html = '';
       var index = 1; // Clear the native select
 
       selectOne.innerHTML = ''; // Re-add all <options> to native select
 
-      getAll('.choices__item', choices.choiceList.element).forEach(function (el) {
+      getAll('.choices__item', _choices.choiceList.element).forEach(function (el) {
         var choiceSelected = el.dataset.value === selectValue ? true : false;
         var opt = document.createElement('option');
         opt.value = el.dataset.value;
         opt.text = el.textContent;
         opt.selected = choiceSelected;
         selectOne.add(opt, null);
-      }); // Listen for an autofill (change event)
+      });
+      currentChoices = _choices;
+      selectOne.choices = _choices; // Listen for an autofill (change event)
 
-      selectOne.removeEventListener('change', handleChoicesChange.bind(null, choices), false);
-      selectOne.addEventListener('change', handleChoicesChange.bind(null, choices), false);
+      selectOne.removeEventListener('change', handleChoicesChange);
+      selectOne.addEventListener('change', handleChoicesChange);
+    };
+    /**
+    * Creates choices.js instance
+    *
+    * @param {node} el Target to apply choices to
+    */
+
+
+    var createChoices = function createChoices(el) {
+      return new Choices(el, {
+        silent: true,
+        duplicateItemsAllowed: false,
+        itemSelectText: '',
+        shouldSort: false,
+        callbackOnInit: function callbackOnInit() {
+          var _choices = this;
+
+          var label = theForm.querySelector('label[for="' + _choices.passedElement.element.id + '"]');
+
+          if (label) {
+            _choices.containerOuter.element.setAttribute('aria-label', label.textContent);
+
+            _choices.choiceList.element.setAttribute('aria-label', 'Select ' + label.textContent.replace(/Select/, ''));
+          }
+
+          getAll('[role="textbox"]', _choices.containerOuter.element).forEach(function (el) {
+            el.removeAttribute('role');
+          });
+          resetSelect(_choices);
+        }
+      });
+    };
+    /**
+    * Destroys a choices.js instance
+    *
+    * @param {choices} choices choices.js instance to destroy
+    */
+
+
+    var destroyChoices = function destroyChoices(_choices, selector) {
+      _choices.clearInput();
+
+      _choices.destroy();
+
+      _choices = null;
     }; // Initiate choices.js
 
 
-    getAll('select').forEach(function (el) {
-      choices = new Choices(el, {
-        silent: true,
-        itemSelectText: '',
-        callbackOnInit: function callbackOnInit() {
-          resetSelect(this);
+    getAll('select:not(' + stateProvinceSelect + '):not(' + giftDesignationSelect + ')').forEach(function (el) {
+      createChoices(el);
+    }); // Allow EN swap lists for state/province field
+
+    el = theForm.querySelector(stateProvinceSelect);
+
+    if (el) {
+      stateProvinceChoices = createChoices(el);
+    } // Allow EN swap lists on country field change
+
+
+    el = theForm.querySelector(countrySelect);
+
+    if (el) {
+      if (stateProvinceChoices) {
+        el.addEventListener('change', function (e) {
+          // Rebuild state/province choices
+          destroyChoices(stateProvinceChoices);
+          setTimeout(function () {
+            stateProvinceChoices = createChoices(theForm.querySelector(stateProvinceSelect));
+          }, 100);
+        });
+      }
+    } // Allow EN swap value for gift designation field
+
+
+    el = theForm.querySelector(giftDesignationSelect);
+
+    if (el) {
+      giftDesignationChoices = createChoices(el);
+      getAll('.en__field--gift-designation-managed-donors-yn .en__field__input--radio').forEach(function (el) {
+        if (giftDesignationChoices) {
+          el.addEventListener('click', function (e) {
+            // Rebuild gift designation choices
+            destroyChoices(giftDesignationChoices);
+            setTimeout(function () {
+              giftDesignationChoices = createChoices(theForm.querySelector(giftDesignationSelect));
+            }, 100);
+          });
         }
       });
-    }); // Is there a full bleed hero?
+    } // Is there a full bleed hero?
 
-    addClass(theForm, maybeHasHero()); // Is there a processing error?
+
+    addClass(document.body, maybeHasHero()); // Is there a processing error?
 
     els = getAll('.en__errorHeader, .en__errorList');
 
@@ -126,6 +228,65 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     getAll(dateInputSelector).forEach(function (el) {
       addPlaceholder(el, 'Select Date');
+    }); // Missing Other Amount label
+
+    el = theForm.querySelector(otherAmountInputSelector);
+    _parent = theForm.querySelector(otherAmountSelector);
+
+    if (el && _parent) {
+      placeholderToLabel(el, _parent);
+    }
+
+    var addLabel = function addLabel(el, _parent, txt) {
+      el.id = el.id ? el.id : el.name.replace(/\./g, '');
+      label = document.createElement('label');
+      label.id = 'label' + uuidv4();
+      label.setAttribute('for', el.id);
+      label.textContent = txt;
+      addClass(label, visuallyHiddenClass);
+
+      _parent.insertBefore(label, el);
+
+      return label.id;
+    }; // Missing CC expiration year label
+
+
+    el = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child .en__field__input--splitselect');
+    _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
+
+    if (el && _parent) {
+      var _labelId = addLabel(el, el.parentElement, 'Credit card expiration year');
+
+      getAll('[role="combobox"], [role="listbox"]').forEach(function (el) {
+        el.setAttribute('aria-labelledby', _labelId);
+      });
+    }
+
+    var addAriaLabelledBy = function addAriaLabelledBy(el) {
+      var maybeLabel = el.firstElementChild;
+
+      if (maybeLabel.nodeName.toLowerCase() === 'label') {
+        labelId = 'label' + uuidv4();
+        maybeLabel.id = labelId;
+        el.setAttribute('aria-labelledby', labelId);
+      }
+    }; // Aria role for radio groups
+
+
+    getAll('.en__field--radio').forEach(function (el) {
+      var labelId = void 0;
+      el.setAttribute('role', 'radiogroup');
+
+      if (hasClass(el, 'en__field--donationAmt')) {
+        el.setAttribute('aria-labelledby', 'giftAmountLabel');
+      } else {
+        addAriaLabelledBy(el);
+      }
+    }); // Aria role for split selects
+
+    getAll('.en__field--splitselect').forEach(function (el) {
+      el.setAttribute('role', 'group');
+      addAriaLabelledBy(el);
     }); // Convert URL strings to images for dummy select ecard radios
 
     el = theForm.querySelector('.en__field--ecard-select-an-ecard');
@@ -148,6 +309,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     el = theForm.querySelector(donationAmountSelector) || theForm.querySelector(otherAmountSelector);
 
     if (el) {
+      // Getting the minimum amount from the EN validator
       var minAmountValidator = EngagingNetworks.validators.filter(function (obj) {
         if (obj.format) {
           return obj.format.indexOf('~') > -1;
@@ -158,25 +320,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       if (minAmountValidator[0]) {
         // Add paragraph with min amount underneath Other Amount field
-        addEl(el, 'p', '$' + minAmountValidator[0].format.split('~')[0] + ' minimum');
+        addEl(el, 'p', '$' + minAmountValidator[0].format.split('~')[0] + ' minimum', 'fw-medium');
       }
-    } // The upsell amount is in a hidden untaggged field that updates according to form dependencies
-    //if (calculatedDonationAmountInput) {
-    //  updateTotalGift(calculatedDonationAmountInput.value);
-    //  calculatedDonationAmountInput.addEventListener('change', e => {
-    //    updateTotalGift(e.target.value);
-    //  });
-    //
-    //  // Changing donation amount need to trigger a change for calculated donation amount
-    //  getAll('[name="transaction.donationAmt"]').forEach(el => {
-    //    el.addEventListener('click', e => {
-    //      setTimeout(() => {
-    //        triggerEvent(calculatedDonationAmountInput, 'change');
-    //      }, 100);
-    //    });
-    //  });
-    //}
-    // Display tip jar amount
+    } // Display tip jar amount
 
 
     el = theForm.querySelector(tipJarSelector);
@@ -195,14 +341,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         if (otherRadio) {
           otherRadio.click();
         }
-      }); // Changing donation amount needs to trigger a change for calculated donation amount
-      //if (calculatedDonationAmountInput) {        
-      //  el.addEventListener('change', e => {
-      //    setTimeout(() => {
-      //      triggerEvent(calculatedDonationAmountInput, 'change');
-      //    }, 100);
-      //  });
-      //}
+      });
     } // Paypal checkbox needs to hide credit card blocks
 
 
@@ -263,7 +402,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var today = new Date();
       var maxDate = new Date(today); // Restrict date selection to one year out
 
-      maxDate.setDate(maxDate.getDate() + 365);
+      maxDate.setDate(maxDate.getDate() + 90);
       return new Datepicker(el, {
         autohide: true,
         buttonClass: 'btn btn-link',
@@ -286,8 +425,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       popoverTranslations.forEach(function (translation) {
         createPopover(translation.field, translation.placement, translation[pageJson.locale].label, translation[pageJson.locale].text);
       });
-    } //Init popovers
+    } // Init accordions
 
+
+    getAll('.accordion').forEach(function (accordion) {
+      getAll('.accordion-button').forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          setTimeout(function () {
+            addAriaCollapsedAttr(document.getElementById(e.target.dataset.bsTarget.replace(/#/, '')), getAll('.accordion-collapse', accordion));
+          }, 500);
+        });
+      });
+    }); //Init popovers
 
     var popoverTriggerList = [].slice.call(theForm.querySelectorAll('.popover-container [data-bs-toggle="popover"]'));
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
@@ -432,7 +581,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       switch (el.type) {
         case 'email':
           // Check for valid email
-          el.setAttribute('pattern', '[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$');
+          el.setAttribute('pattern', '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-z]{2,}$');
           el.addEventListener('input', handleInput);
           break;
 
@@ -549,8 +698,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             donationData.originalDonationAmount = originalDonationAmount;
           }
         }
-      } // Save non-pageJson date for data layer on confirmation page
+      } // Looking for URL tracking params to pass to data layer on confirmation page
 
+
+      var trackingParams = new URLSearchParams(location.search);
+      donationData.src = trackingParams.has('src') ? trackingParams.get('src') : '';
+      donationData.vid = trackingParams.has('vid') ? trackingParams.get('vid') : '';
+      donationData.vid2 = trackingParams.has('vid2') ? trackingParams.get('vid2') : ''; // Save non-pageJson data for data layer on confirmation page
 
       donationData.extraAmount = extraAmount;
       donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : '';
@@ -582,6 +736,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     addClass((el.target || el).parentElement, activeClass);
   };
   /**
+   * Adds aria-expanded attribute to collapsible elements
+   *
+   * @param {node} el Target element
+   * @param {nodeList} collapsibles List of collapsibles in same comnponent as target
+   */
+
+
+  var addAriaCollapsedAttr = function addAriaCollapsedAttr(el, collapsibles) {
+    if (el) {
+      var isOpen = hasClass(el, collapseShowClass) ? 'true' : 'false';
+
+      if (collapsibles.length) {
+        collapsibles.forEach(function (collapsible) {
+          collapsible.setAttribute('aria-expanded', 'false');
+        });
+      }
+
+      el.setAttribute('aria-expanded', isOpen);
+    }
+  };
+  /**
    * Adds a specified class
    *
    * @param {node} el Node to add class to
@@ -607,8 +782,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
    */
 
 
-  var addEl = function addEl(parentEl, elType, textContent) {
+  var addEl = function addEl(parentEl, elType, textContent, cls) {
     var el = document.createElement(elType);
+
+    if (cls) {
+      addClass(el, cls);
+    }
+
     el.textContent = textContent;
     parentEl.append(el);
   };
@@ -772,7 +952,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var getOriginalDonationAmount = function getOriginalDonationAmount() {
     var selectedAmount = theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked') || theForm.querySelector(otherAmountInputSelector);
-    return selectedAmount ? selectedAmount.dataset.original ? selectedAmount.dataset.original : selectedAmount.value : null;
+    return selectedAmount ? selectedAmount.dataset.original ? selectedAmount.dataset.original : selectedAmount.value.replace(/\,/g, '') : null;
   };
   /**
    * Returns Donation amount with tip jar added
@@ -824,6 +1004,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var maybeHasHero = function maybeHasHero() {
     return theForm.querySelector('.hero-full-bleed') ? 'has-hero' : 'not-has-hero';
+  };
+  /**
+  * Creates a label from placeholder value and associates it with an input
+  *
+  * @param {node} el The input element before which the new label is inserted.
+  * @param {node} _parent The parent of the newly inserted label.
+  */
+
+
+  var placeholderToLabel = function placeholderToLabel(el, _parent) {
+    var label = void 0;
+
+    if (el && _parent) {
+      el.id = el.id ? el.id : el.name.replace(/\./g, '');
+      label = document.createElement('label');
+      label.setAttribute('for', el.id);
+      label.textContent = el.getAttribute('placeholder');
+      addClass(label, visuallyHiddenClass);
+
+      _parent.insertBefore(label, el);
+    }
   };
   /**
    * Removes multiple attributes
@@ -948,6 +1149,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var updateTotalGift = function updateTotalGift(amt) {
     getAll(totalAmountSelector).forEach(function (el) {
       el.textContent = '$' + amt;
+    });
+  };
+  /**
+  * Generates a unique ID
+  */
+
+
+  var uuidv4 = function uuidv4() {
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, function (c) {
+      return (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16);
     });
   };
   /**

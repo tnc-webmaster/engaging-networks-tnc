@@ -1,0 +1,106 @@
+.en__component--page[action*="data"] {
+  .en__component--advcolumn {
+    &.lead-gen {
+      h2 {
+        font-family: $font-family-sans-serif;
+      }
+
+      p {
+        big {
+          font-size: 1.375rem !important;
+          line-height: 1.8181 !important;
+        }
+
+        &:not(:last-child) {
+          margin-bottom: 2.75rem;
+        }
+      }
+
+      &:first-child:not(:last-child) {
+        @extend .col-lg-6;
+
+        h2 {
+          margin-bottom: 2.5rem;
+        }
+      }
+
+      &:first-child:last-child {
+        > .en__component--copyblock:first-child {
+          border-bottom: 1px solid $border-color;
+          padding-bottom: 2.5rem;
+
+          @include media-breakpoint-up(lg) {
+            flex: 0 0 auto !important;
+            margin-left: auto;
+            margin-right: auto;
+            width: 66.667% !important;
+          }
+
+          h2 {
+            margin-bottom: 1rem;
+          }
+        }
+        
+        > .en__component--copyblock:not(:first-child),
+        > .en__component--formblock {
+          @include media-breakpoint-up(lg) {
+            @extend .col-lg-6;
+            margin-left: auto;
+            margin-right: auto;
+            padding-right: 7.75rem;
+          }          
+        }
+        
+        > .en__component--copyblock:nth-last-child(2) {
+          margin-bottom: 3.25rem;
+          margin-top: 2rem;
+          
+          p big {
+            font-size: $font-size-lg !important;
+            line-height: 1.6666 !important;            
+          }
+        }
+
+        .form-heading {
+          margin-top: 4.25rem;
+        }
+
+        .en__field--radio {
+          margin-top: 2.25rem;
+        }
+      }
+
+      .accordion {
+        margin-top: 2.25rem;
+      }
+
+      .visual-listing {
+        margin-top: 4.25rem;
+      }
+
+      .en__component--imageblock {
+        margin-top: 3rem;
+
+        img {
+          min-width: 65%;
+        }
+      }
+
+      .video {
+        margin-bottom: 4.4167rem;
+        margin-top: 4.4167rem;
+      }
+    }
+
+    &.aside {
+      @include media-breakpoint-up(lg) {
+        flex: 0 0 auto;
+        width: 41.5%;
+      }
+
+      .en__submit {
+        margin-top: 3.5rem;
+      }
+    }
+  }
+}

@@ -49,7 +49,6 @@ h3,
 h4,
 .h4 {
   line-height: 1.308;
-  color: $gray-800;
 }
 
 h5,
@@ -85,7 +84,9 @@ h5,
   }
 }
 
-p {
+p,
+blockquote,
+li {
   &:last-child {
     margin-bottom: 0;
   }
@@ -100,22 +101,45 @@ p {
     line-height: 1.7 !important;
   }
   
-  big {
-    display: inline-block;
+  span[style="font-size:18px;"] {
+    display: block;
     font-size: 1.125rem !important;
     line-height: 1.667 !important;        
-
-    em {
-      font-size: 1.0625rem; 
-      font-weight: $font-weight-medium;
+    
+    @include media-breakpoint-down(lg) {
+      font-size: 1rem;
+    }
+    
+    a {
+      font-weight: inherit;
+      text-transform: inherit; 
     }
   }  
+
+
+  > em {
+    font-size: 1.125rem; 
+    font-weight: $font-weight-medium;
+    
+    span[style="font-size:18px;"] {
+      font-size: inherit;
+    }
+  }
 
   small {
     display: inline-block;
     font-size: $font-size-sm !important;
     line-height: 1.5 !important;
   }
+}
+
+cite {
+  display: block;
+  font-size: .75rem;
+  font-style: normal;
+  font-weight: $font-weight-medium;
+  line-height: 1.25;
+  text-transform: uppercase;  
 }
 
 a {
@@ -137,7 +161,7 @@ a {
     }
   }
   
-  big {
+  span[style="font-size:18px;"] {
     display: inline-block;
     font-size: 1.5rem;
     line-height: 1.2083;    
@@ -165,7 +189,7 @@ small {
 
 
 p[style="text-align: center;"] {
-  strong {
+  span[style="font-size:18px;"] {
     display: block;
     margin-bottom: 1.5rem;
     position: relative;
@@ -180,17 +204,23 @@ p[style="text-align: center;"] {
       position: absolute;
       top: 0;
       width: 100%;
+      z-index: 1;
     }
   }
 
-  big {
+  strong {
     background-color: $white;
+    display: inline-block;
     padding-left: .5rem;
     padding-right: .5rem;
     position: relative;
     text-transform: uppercase;
-    z-index: 1;
+    z-index: 10;
   }  
+}
+
+.fw-medium {
+  font-weight: $font-weight-medium !important;
 }
 
 
