@@ -1,3 +1,12 @@
+.enWidget--progressBar {
+  .raised,
+  .remaining {
+    > div {
+      @extend .h5;
+    }
+  }
+}
+
 .enWidget__progress {
   border-radius: 0;  
   min-height: 1rem;

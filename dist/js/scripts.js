@@ -238,16 +238,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     var addLabel = function addLabel(el, _parent, txt) {
-      el.id = el.id ? el.id : el.name.replace(/\./g, '');
-      label = document.createElement('label');
-      label.id = 'label' + uuidv4();
-      label.setAttribute('for', el.id);
-      label.textContent = txt;
-      addClass(label, visuallyHiddenClass);
+      return new Promise(function (resolve, reject) {
+        el.id = el.id ? el.id : el.name.replace(/\./g, '');
+        label = document.createElement('label');
+        label.setAttribute('for', el.id);
+        label.textContent = txt;
+        addClass(label, visuallyHiddenClass);
+        label.id = 'label' + uuidv4();
 
-      _parent.insertBefore(label, el);
+        _parent.insertBefore(label, el);
 
-      return label.id;
+        resolve(label.id);
+      });
     }; // Missing CC expiration year label
 
 
@@ -255,10 +257,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
 
     if (el && _parent) {
-      var _labelId = addLabel(el, el.parentElement, 'Credit card expiration year');
+      //const labelId = addLabel(el, el.parentElement, 'Credit card expiration year');
+      addLabel(el, el.parentElement, 'Credit card expiration year').then(function (labelId) {
+        var _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
 
-      getAll('[role="combobox"], [role="listbox"]').forEach(function (el) {
-        el.setAttribute('aria-labelledby', _labelId);
+        getAll('[role="combobox"], [role="listbox"]', _parent).forEach(function (el) {
+          el.setAttribute('aria-labelledby', labelId);
+        });
       });
     }
 
@@ -266,9 +271,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var maybeLabel = el.firstElementChild;
 
       if (maybeLabel.nodeName.toLowerCase() === 'label') {
-        labelId = 'label' + uuidv4();
-        maybeLabel.id = labelId;
-        el.setAttribute('aria-labelledby', labelId);
+        setTimeout(function () {
+          labelId = 'label' + uuidv4();
+          maybeLabel.id = labelId;
+          el.setAttribute('aria-labelledby', labelId);
+        }, 100);
       }
     }; // Aria role for radio groups
 
@@ -342,8 +349,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           otherRadio.click();
         }
       });
-    } // Paypal checkbox needs to hide credit card blocks
+    } // Reposition help text found in labels
 
+
+    getAll('.field__help').forEach(function (el) {
+      var _parent = getClosestEl(el, enFieldSelector);
+
+      _parent.append(el);
+    }); // Paypal checkbox needs to hide credit card blocks
 
     el = theForm.querySelector(paypalInputSelector);
     _parent = theForm.querySelector(paymentMethodSelector);
@@ -657,7 +670,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var formSubmit = function formSubmit() {
     var submitButton = theForm.querySelector('.en__submit button');
     var otherAmountInput = theForm.querySelector(otherAmountInputSelector);
-    var otherAmountOriginal = null;
+    var otherAmountOriginal = null; // Don't submit form on ENTER if focused on an input
+
+    window.addEventListener('keydown', function (e) {
+      if (e.keyIdentifier == 'U+000A' || e.keyIdentifier == 'Enter' || e.keyCode == 13) {
+        if (e.target.nodeName == 'INPUT') {
+          e.preventDefault();
+          return false;
+        }
+      }
+    }, true); // Set the final gift amount
 
     if (submitButton) {
       submitButton.addEventListener('click', function (e) {
@@ -962,6 +984,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var getTipJar = function getTipJar(amt) {
+    amt = amt.replace(/\,/g, '');
     return !isNaN(amt) ? (parseFloat(amt) + parseFloat(amt) * tipJarPct).toFixed(2) : '';
   };
   /**
@@ -1157,9 +1180,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var uuidv4 = function uuidv4() {
-    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, function (c) {
-      return (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16);
-    });
+    //return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    //  (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    //);
+    //return '_' + Math.random().toString(36).substr(2, 9);
+    return Math.round(new Date().getTime() + Math.random() * 100);
   };
   /**
    * Returns wrapped nodes.

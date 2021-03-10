@@ -224,24 +224,30 @@
     }
     
     const addLabel = (el, _parent, txt) => {
-      el.id = el.id ? el.id : el.name.replace(/\./g, '');
-      label = document.createElement('label');
-      label.id = 'label' + uuidv4();
-      label.setAttribute('for', el.id);
-      label.textContent = txt;
-      addClass(label, visuallyHiddenClass);
-      _parent.insertBefore(label, el);
-      return label.id;      
+      return new Promise((resolve, reject) => {
+        el.id = el.id ? el.id : el.name.replace(/\./g, '');
+        label = document.createElement('label');
+        label.setAttribute('for', el.id);
+        label.textContent = txt;
+        addClass(label, visuallyHiddenClass);
+        label.id = 'label' + uuidv4();
+        _parent.insertBefore(label, el);
+        resolve(label.id);                      
+      });
     };
     
     // Missing CC expiration year label
     el = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child .en__field__input--splitselect');
     _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
     if (el && _parent) {
-     const labelId = addLabel(el, el.parentElement, 'Credit card expiration year');
+     //const labelId = addLabel(el, el.parentElement, 'Credit card expiration year');
+     
+     addLabel(el, el.parentElement, 'Credit card expiration year').then(labelId => {
+       const _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
 
-     getAll('[role="combobox"], [role="listbox"]').forEach(el => {
-        el.setAttribute('aria-labelledby', labelId);      
+       getAll('[role="combobox"], [role="listbox"]', _parent).forEach(el => {
+          el.setAttribute('aria-labelledby', labelId);      
+       });      
      });
     }
     
@@ -249,9 +255,11 @@
       const maybeLabel = el.firstElementChild;
 
       if (maybeLabel.nodeName.toLowerCase() === 'label') {
-        labelId = 'label' + uuidv4();
-        maybeLabel.id = labelId;
-        el.setAttribute('aria-labelledby', labelId);      
+        setTimeout(function() {
+          labelId = 'label' + uuidv4();
+          maybeLabel.id = labelId;
+          el.setAttribute('aria-labelledby', labelId);                
+        }, 100);
       }
     };
     
@@ -324,6 +332,13 @@
         }
       });      
     }
+    
+    // Reposition help text found in labels
+    getAll('.field__help').forEach(el => {
+      const _parent = getClosestEl(el, enFieldSelector);
+      
+      _parent.append(el);
+    });
 
     // Paypal checkbox needs to hide credit card blocks
     el = theForm.querySelector(paypalInputSelector);
@@ -632,7 +647,18 @@
     const submitButton = theForm.querySelector('.en__submit button');
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
     let otherAmountOriginal = null;
-
+    
+    // Don't submit form on ENTER if focused on an input
+    window.addEventListener('keydown', e => {
+      if (e.keyIdentifier=='U+000A' || e.keyIdentifier=='Enter' || e.keyCode==13) {
+        if (e.target.nodeName=='INPUT') {
+          e.preventDefault();
+          return false;
+        }
+      }
+    }, true);
+    
+    // Set the final gift amount
     if (submitButton) {
       submitButton.addEventListener('click', e => {
         if (otherAmountInput) {
@@ -918,6 +944,7 @@
    * @param {string} amt Daontion amount to add tip to
    */
   const getTipJar = amt => {
+    amt = amt.replace(/\,/g, '');
     return !isNaN(amt) ? (parseFloat(amt) + (parseFloat(amt) * tipJarPct)).toFixed(2) : '';
   };
 
@@ -1088,9 +1115,12 @@
   * Generates a unique ID
   */
   const uuidv4 = () => {
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    );
+    //return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    //  (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    //);
+    //return '_' + Math.random().toString(36).substr(2, 9);
+      return Math.round(new Date().getTime() + (Math.random() * 100));
+    
   };
 
   /**

@@ -76,7 +76,8 @@
     .en__field__input--radio {
       @extend .visually-hidden;
 
-      &:checked {
+      &:checked,
+      &:focus {
         + .en__field__label {
           background-color: $primary;
           border-color: $primary;
@@ -93,6 +94,12 @@
       line-height: 1;
       padding: 1.2887rem 0;
       width: 100%;
+      
+      &:focus {
+        background-color: $primary;
+        border-color: $primary;
+        color: $white;        
+      }
     }
   }
 

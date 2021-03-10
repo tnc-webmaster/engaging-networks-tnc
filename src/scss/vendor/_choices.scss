@@ -35,7 +35,7 @@ $choices-z-index: 1;
   font-weight: $form-select-font-weight;
   text-transform: uppercase;
   &:focus {
-    outline: none;
+    outline: 1px solid $primary;
   }
   &:last-child {
     margin-bottom: 0;

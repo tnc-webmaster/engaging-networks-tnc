@@ -22,10 +22,15 @@ h2,
 }
 
 h3,
-.h3 {
+.h3 {  
   display: table;
   line-height: 1.235;
   transition: $transition-base;
+
+  @include media-breakpoint-down(lg) {
+    font-size: 1.75rem;
+    line-height: 1.2142;
+  }
 
   &:hover {
     color: $green;
@@ -40,6 +45,11 @@ h3,
     margin-bottom: 1rem;
     margin-top: 1rem;
     
+    @include media-breakpoint-down(lg) {
+      font-size: 1.125rem;
+      line-height: 1.4444;
+    }
+
     &:hover {
       color: $body-color;
     }
@@ -107,7 +117,23 @@ li {
     line-height: 1.667 !important;        
     
     @include media-breakpoint-down(lg) {
-      font-size: 1rem;
+      font-size: 1rem !important;
+    }
+    
+    a {
+      font-weight: inherit;
+      text-transform: inherit; 
+    }
+  }  
+
+  span[style="font-size:22px;"] {
+    display: block;
+    font-size: 1.375rem !important;
+    line-height: 1.8181 !important;        
+    
+    @include media-breakpoint-down(lg) {
+      font-size: 1.125rem !important;
+      line-height: 1.6667 !important;
     }
     
     a {

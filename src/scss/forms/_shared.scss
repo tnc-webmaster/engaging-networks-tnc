@@ -432,6 +432,14 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
   @extend .visually-hidden;
 }
 
+.field__help {
+  display: block;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  line-height: 1.4285;
+  margin-top: .667rem;
+}
+
 .en__submit {
   margin-top: 2.75rem;
 
