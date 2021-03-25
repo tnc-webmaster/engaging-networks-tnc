@@ -2,7 +2,10 @@
   --bs-gutter-x: 1.75rem;
 
   h3 {
+    @extend .text-md-start;
     margin-bottom: 2rem;
+    text-align: center;
+    width: 100%;
     
     .visual-listing--no-images & {
       margin-bottom: 1.5rem;      
@@ -10,9 +13,15 @@
   }
 
   li {
-    border-bottom: 1px solid $border-color;
+    border-bottom: $border-default;
     margin-bottom: 2.5rem;
     padding-bottom: 2.333rem;
+  }
+  
+  img {
+    display: block;
+    margin: 0 auto 1.5rem;
+    width: 190px;
   }
   
   > p:last-child {
@@ -22,6 +31,13 @@
     .visual-listing--no-images & {
       text-transform: none;      
     }
+  }
+  
+  blockquote span[style="font-size:18px;"] {
+    @include media-breakpoint-down(lg) {
+      font-size: 1.125rem !important;
+      line-height: 1.5555 !important;
+    }    
   }
   
   .col {

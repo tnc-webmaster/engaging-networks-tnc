@@ -1,16 +1,15 @@
 .footer {
   border-top: $hr;
   font-weight: $font-weight-medium;  
-  margin: 9.375rem auto 0;
+  margin: 3.125rem auto 0;
   max-width: $max-content-width;
   padding-bottom: 6.625rem;
-  padding-top: 2rem;
+  padding: 2rem 1.25rem 6.625rem;
   
-  .row {
-    margin-left: 0;
-    margin-right: 0;    
+  @include media-breakpoint-up(lg) {
+    margin-top: 9.375rem;
   }
-    
+      
   a {
     text-transform: none;
   }

@@ -42,11 +42,13 @@
 .form-heading {
   margin-top: 4.75rem;
 
+  h2,
   h3 {    
     @extend .h5;
     @extend %form-heading;
   }
 
+  p + h2,
   p + h3 {
     margin-top: 1.75rem;
   }
@@ -82,6 +84,10 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
   @include media-breakpoint-up(lg) {
     display: flex;
     justify-content: space-between;
+  }
+  
+  > .modal {
+    flex: none;
   }
 }
 
@@ -128,14 +134,14 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
 .en__field__input--telephone,
 .en__field__input--text,
 .en__field__input--textarea,
-.en__field__input--tripletext {
+.en__field__input--tripletext,
+.en__additional__input,
+.en__additional__code {
   @extend %input;
 }
 
-.en__field__input--splittext,
-.en__field__input--tripletext,
-.en__field__element--splitselect,
-.en__field__input--tripleselect {
+.en__field__element--splittext,
+.en__field__element--splitselect {
   @extend .row;
   @extend .gx-2;
   @extend .gx-md-3;
@@ -145,6 +151,19 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
     @extend .col;
   }
 }
+
+.en__field__element--tripletext,
+.en__field__element--tripleselect {
+  @extend .row;
+  @extend .gx-2;
+  @extend .gx-md-3;
+  @extend .gx-lg-4;
+
+  .en__field__item {
+    @extend .col-2;
+  }
+}
+
 
 .en__field__input--textarea {
   height: calc(6.875rem + 1px);
@@ -170,7 +189,7 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
   }
   
   .en__field__label {
-    display: flex;
+    display: inline-flex;
     line-height: 1.375;
     margin: 0;
 
@@ -192,7 +211,7 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
 
 .en__field--radio {
   .en__field__label {
-    display: flex;
+    display: inline-flex;
   }  
 }
 
@@ -446,7 +465,10 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
   button {
     @extend .btn;
     @extend .btn-lg;
-    @extend .btn-primary;
     min-width: 11.875rem !important;
+    
+    &:not([class*="btn-outline"]) {
+      @extend .btn-primary;      
+    }
   }
 }

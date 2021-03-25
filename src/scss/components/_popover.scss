@@ -17,7 +17,7 @@
   transform: translateY(var(--popperTranslateY)) !important;
 
   @include media-breakpoint-down(sm) {
-    max-width: 280px;    
+    max-width: 100%;    
   }
 }
 

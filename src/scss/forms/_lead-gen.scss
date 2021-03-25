@@ -26,7 +26,7 @@
 
       &:first-child:last-child {
         > .en__component--copyblock:first-child {
-          border-bottom: 1px solid $border-color;
+          border-bottom: $border-default;
           padding-bottom: 2.5rem;
 
           @include media-breakpoint-up(lg) {

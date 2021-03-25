@@ -40,6 +40,7 @@ $orange: #c5351c;
 $yellow: #ffca3a;
 $green: #007931;
 $green-light: #45812b;
+$green-lighter: #49A942;
 $teal: #20c997 !default;
 $cyan: #0dcaf0 !default;
 
@@ -252,11 +253,15 @@ $border-widths: (
 ) !default;
 
 $border-color: $gray-300 !default;
+$border-color-light: #979797;
 
 $border-radius: .25rem !default;
 $border-radius-sm: .2rem !default;
 $border-radius-lg: .3rem !default;
 $border-radius-pill: 50rem !default;
+
+$border-default: 1px solid $border-color;
+$border-light: 1px solid $border-color-light;
 
 $box-shadow: 0 .5rem 1rem rgba($black, .15) !default;
 $box-shadow-sm: 0 .125rem .25rem rgba($black, .075) !default;
@@ -955,7 +960,7 @@ $popover-font-size: $font-size-base;
 $popover-bg: $white !default;
 $popover-max-width: 20.625rem;
 $popover-border-width: $border-width !default;
-$popover-border-color: #979797;
+$popover-border-color: $border-color-light;
 $popover-border-radius: 0;
 $popover-inner-border-radius: 0;
 $popover-box-shadow: none;
@@ -1007,38 +1012,38 @@ $badge-border-radius: $border-radius !default;
 // Modals
 
 // Padding applied to the modal body
-$modal-inner-padding: $spacer !default;
+$modal-inner-padding: 0;
 
 // Margin between elements in footer, must be lower than or equal to 2 * $modal-inner-padding
-$modal-footer-margin-between: .5rem !default;
+$modal-footer-margin-between: 0;
 
-$modal-dialog-margin: .5rem !default;
+$modal-dialog-margin: 1.25rem;
 $modal-dialog-margin-y-sm-up: 1.75rem !default;
 
 $modal-title-line-height: $line-height-base !default;
 
 $modal-content-color: null !default;
 $modal-content-bg: $white !default;
-$modal-content-border-color: rgba($black, .2) !default;
+$modal-content-border-color: $border-color;
 $modal-content-border-width: $border-width !default;
-$modal-content-border-radius: $border-radius-lg !default;
-$modal-content-inner-border-radius: subtract($modal-content-border-radius, $modal-content-border-width) !default;
+$modal-content-border-radius: 0;
+$modal-content-inner-border-radius: 0;
 $modal-content-box-shadow-xs: $box-shadow-sm !default;
 $modal-content-box-shadow-sm-up: $box-shadow !default;
 
 $modal-backdrop-bg: $black !default;
 $modal-backdrop-opacity: .5 !default;
-$modal-header-border-color: $border-color !default;
-$modal-footer-border-color: $modal-header-border-color !default;
-$modal-header-border-width: $modal-content-border-width !default;
-$modal-footer-border-width: $modal-header-border-width !default;
+$modal-header-border-color: transparent;
+$modal-footer-border-color: transparent;
+$modal-header-border-width: 0;
+$modal-footer-border-width: 0;
 $modal-header-padding-y: $modal-inner-padding !default;
 $modal-header-padding-x: $modal-inner-padding !default;
 $modal-header-padding: $modal-header-padding-y $modal-header-padding-x !default; // Keep this for backwards compatibility
 
 $modal-sm: 300px !default;
 $modal-md: 500px !default;
-$modal-lg: 800px !default;
+$modal-lg: 850px;
 $modal-xl: 1140px !default;
 
 $modal-fade-transform: translate(0, -50px) !default;
@@ -1186,10 +1191,10 @@ $spinner-border-width-sm: .2em !default;
 
 $btn-close-width: 1em !default;
 $btn-close-height: $btn-close-width !default;
-$btn-close-padding-x: .25em !default;
-$btn-close-padding-y: $btn-close-padding-x !default;
-$btn-close-color: $black !default;
-$btn-close-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$btn-close-color}'><path d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/></svg>") !default;
+$btn-close-padding-x: 0;
+$btn-close-padding-y: 0;
+$btn-close-color: $body-color;
+$btn-close-bg: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 15 15'><g transform='translate(7.607 -3) rotate(45)'><path d='M0,.5H15' transform='translate(0 7)' fill='none' stroke='#1a1a1a' stroke-linecap='square' stroke-miterlimit='10' stroke-width='2'/><path d='M0,.5H15' transform='translate(8 0) rotate(90)' fill='none' stroke='#1a1a1a' stroke-linecap='square' stroke-miterlimit='10' stroke-width='2'/></g></svg>");
 $btn-close-focus-shadow: $input-btn-focus-box-shadow !default;
 $btn-close-opacity: .5 !default;
 $btn-close-hover-opacity: .75 !default;
@@ -1212,6 +1217,7 @@ $pre-color: null !default;
 
 
 // Choices
+
 $choices-font-size-lg: 1rem;
 $choices-font-size-md: 1rem;
 $choices-font-size-sm: 1rem;
@@ -1226,3 +1232,20 @@ $choices-keyline-color: $gray-500;
 $choices-primary-color: $primary;
 $choices-highlight-color: $primary;
 $choices-z-index: 1;
+
+// Spinners
+
+$spinner-width: 2rem !default;
+$spinner-height: $spinner-width !default;
+$spinner-border-width: 0.25em !default;
+$spinner-animation-speed: 0.75s !default;
+
+$spinner-width-sm: 1rem !default;
+$spinner-height-sm: $spinner-width-sm !default;
+$spinner-border-width-sm: 0.2em !default;
+
+// Other icons
+$icon-back: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='8px' height='11px' viewBox='0 0 8 11'><g stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'><g transform='translate(4.000000, 5.500000) rotate(-180.000000) translate(-4.000000, -5.500000) translate(1.000000, 0.000000)' stroke='#007931' stroke-width='2'><polyline transform='translate(3.000000, 5.500000) rotate(-90.000000) translate(-3.000000, -5.500000) ' points='8 3 3 8 -2 3'></polyline></g></g></svg>");
+$icon-date: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='15.938' height='15' viewBox='0 0 15.938 15'><g itransform='translate(0 0)'><path d='M13.985,14.245H1.952A1.9,1.9,0,0,1,0,12.4V3.034A1.9,1.9,0,0,1,1.952,1.188H4.311v-.5a.726.726,0,0,1,1.45,0v.5h4.291v-.5a.726.726,0,0,1,1.45,0v.5h2.484a1.9,1.9,0,0,1,1.952,1.846V12.4A1.9,1.9,0,0,1,13.985,14.245ZM1.45,5.994V12.4a.49.49,0,0,0,.5.475H13.985a.49.49,0,0,0,.5-.475V5.994Zm.5-3.436a.49.49,0,0,0-.5.476v1.59H14.488V3.034a.49.49,0,0,0-.5-.476H11.5v.293a.726.726,0,0,1-1.45,0V2.558H5.76v.293a.726.726,0,0,1-1.45,0V2.558Z' fill='#1a1a1a'/></g></svg>");
+$icon-location: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='13.339' height='16.5' viewBox='0 0 13.339 16.5'><g transform='translate(0.75 0.75)'><path d='M4.554,2.344A2.311,2.311,0,0,1,2.277,4.688,2.311,2.311,0,0,1,0,2.344,2.311,2.311,0,0,1,2.277,0,2.311,2.311,0,0,1,4.554,2.344Z' transform='translate(3.59 3.75)' fill='none' stroke='#1a1a1a' stroke-miterlimit='10' stroke-width='1.5'/><path d='M2.195,10.727A13.189,13.189,0,0,1,.688,8.516,5.55,5.55,0,0,1,.1,7.032.3.3,0,0,1,.086,6.97a5.92,5.92,0,1,1,11.667,0c0,.019,0,.043-.01.063A10.708,10.708,0,0,1,9.92,10.337l-3.944,4.6a.183.183,0,0,1-.279,0Z' fill='none' stroke='#1a1a1a' stroke-miterlimit='10' stroke-width='1.5'/></g></svg>");
+$icon-time: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='15' height='15' viewBox='0 0 15 15'><g transform='translate(0 0)'><path d='M7.5,15A7.5,7.5,0,1,1,15,7.5,7.509,7.509,0,0,1,7.5,15Zm0-13.714A6.214,6.214,0,1,0,13.714,7.5,6.221,6.221,0,0,0,7.5,1.286Z' fill='#1a1a1a'/><path d='M.933,5.625a.82.82,0,0,1-.826-.8L0,.666A.651.651,0,0,1,1.3.632l.095,3.7H4.5a.649.649,0,1,1,0,1.3Z' transform='translate(6.562 3.281)' fill='#1a1a1a'/></g></svg>");

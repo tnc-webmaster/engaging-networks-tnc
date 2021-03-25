@@ -82,7 +82,7 @@
 
     &:last-child:not(:first-child) {
       @include media-breakpoint-up(lg) {
-        border: 1px solid $border-color;
+        border: $border-default;
         flex: 0 0 auto;
         margin-right: 1%;
         padding: 4% 8.5% 6%;
@@ -108,7 +108,7 @@
   display: flex;
   align-items: center;
   padding-top: 1.5rem;
-  border-bottom: 1px solid $border-color;
+  border-bottom: $border-default;
   padding-bottom: 1.5rem;
   margin-bottom: 2.5rem;
 
@@ -127,7 +127,7 @@
       margin-right: 1.5rem !important;
 
       &::after {
-        border-left: 1px solid $border-color;
+        border-left: $border-default;
         content: "";
         height: 100%;
         margin-left: calc(1.25rem + 1px);
@@ -153,10 +153,6 @@
 .advocacy-related-actions {
   margin-top: 3rem;
 
-  @include media-breakpoint-down(lg) {
-    display: none;
-  }
-
   @include media-breakpoint-up(lg) {
     margin-top: 6.25rem;
   }
@@ -164,6 +160,12 @@
   > h3 {
     @extend .h5;
     margin-bottom: 1.75rem;
+  }
+  
+  [class*="col"]:not(:last-child) {
+    @include media-breakpoint-down(lg) {
+      margin-bottom: 1.875rem;
+    }
   }
 
   .card {
@@ -189,10 +191,29 @@
   }
 
   .card-body {
-    border-bottom: 1px solid $border-color;
-    border-left: 1px solid $border-color;
-    border-right: 1px solid $border-color;
+    border-bottom: $border-default;
+    border-left: $border-default;
+    border-right: $border-default;
     flex-grow: 1;
-    padding: 5% 7.25% 8%;
+    padding: 1.625rem 1.25rem;
+    
+    @include media-breakpoint-up(lg) {    
+      padding: 5% 7.25% 8%;
+    }
+  }
+  
+  .card-title {
+    @include media-breakpoint-down(lg) {
+      font-size: 1.25rem;
+      line-height: 1.2;
+    }
+  }
+
+  .btn {
+    margin-top: 2rem;
+    
+    @include media-breakpoint-up(lg) {
+      margin-top: 3.125rem;      
+    }
   }
 }

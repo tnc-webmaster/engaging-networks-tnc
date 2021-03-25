@@ -1,0 +1,14 @@
+#en__pagebuilder {
+  [class*="none"] {
+    display: block !important;
+  }
+
+  .modal {
+    display: block;
+    position: static;
+  }
+
+  .fade:not(.show) {
+    opacity: 1;
+  }
+}

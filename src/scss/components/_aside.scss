@@ -18,7 +18,7 @@
     }
     
     + .en__component--copyblock {
-      border: 1px solid $border-color;
+      border: $border-default;
       padding-left: 2rem;
       padding-right: 2rem;
 
@@ -48,7 +48,7 @@
       }
       
       li {
-        border-bottom: 1px solid $border-color;
+        border-bottom: $border-default;
         margin-bottom: 1.5rem;
         padding-bottom: 1.35rem;             
       }

@@ -1,0 +1,128 @@
+.en__component--column.en__component--advcolumn.modal {
+  flex: none !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+.modal-content {
+  background-clip: border-box;
+
+  .en__component {
+    margin-left: auto;
+    margin-right: auto;
+    width: 87%;    
+    
+    @include media-breakpoint-up(lg) {
+      width: 75%;
+    }
+  }
+
+  .en__component--formblock {
+    margin-top: 1.5rem;    
+  }  
+  
+  .en__field--radio .en__field__item {
+    margin-bottom: .8333rem !important;
+  }
+
+  .en__submit {
+    margin-top: 2.5rem;
+
+    button {
+      @extend %btn-sm;
+    }
+  }
+}
+
+.modal-header {
+  padding-top: 3.5rem;
+  position: static;
+  
+  @include media-breakpoint-up(lg) {
+    padding-top: 4.5rem;    
+  }
+
+  .btn-close {
+    @extend %btn-text;
+    font-size: .75rem;
+    font-weight: $font-weight-semibold;
+    line-height: 1;
+    margin: 0;
+    min-height: 1.125rem;
+    position: absolute;
+    right: 1.25rem;
+    text-transform: uppercase;
+    top: 1.25rem;
+    
+    @include media-breakpoint-up(lg) {
+      font-size: $font-size-sm;      
+    }
+    
+    &::after {
+      content: $btn-close-bg;
+      margin-left: .5rem;
+    }
+  }
+}
+
+.modal-title {
+  font-family: $font-family-sans-serif;
+  font-size: 1.25rem;
+  font-weight: $font-weight-semibold;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  
+  @include media-breakpoint-up(lg) {
+    font-size: 1.625rem;
+    line-height: 1.3076;
+    margin-bottom: .8125rem;
+    
+  }
+
+  &[style="text-align: center;"] {
+    margin-bottom: 1.4rem;
+  }
+}
+
+.modal-body {
+  p {
+    @extend %serif-lg;
+  }  
+}
+
+.modal-footer {
+  justify-content: flex-start;
+  padding-bottom: 4.5rem;
+  
+  button[data-bs-dismiss]:not(.btn) {
+    @extend %btn-text;    
+    color: $primary;
+    font-weight: $font-weight-semibold;
+    margin-top: 1.25rem;
+    text-align: left;
+    text-decoration: underline;
+  }
+
+  .btn {
+    height: auto;
+    width: 100%;        
+  }
+  
+  .btn-outline-primary {    
+    @include button-variant($white, $primary, $primary, $primary, $primary, $white, $primary, $primary, $white);
+  }
+  
+  .en__submit {
+    flex: none;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.75rem;
+    max-width: 25rem;
+    width: 100%;
+
+    > div:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+}
+

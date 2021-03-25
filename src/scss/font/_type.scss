@@ -8,6 +8,28 @@
 }
 
 h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: $primary;
+    }
+  }  
+}
+
+h1,
 .h1 {
   line-height: 1.167;
   
@@ -30,10 +52,6 @@ h3,
   @include media-breakpoint-down(lg) {
     font-size: 1.75rem;
     line-height: 1.2142;
-  }
-
-  &:hover {
-    color: $green;
   }
   
   + h3,
@@ -102,13 +120,13 @@ li {
   }
   
   *:not([class]) {
-    line-height: 1.5;
+    //line-height: 1.5;
   }
 
   &.is-serif,
   [style="font-family:georgia,serif;"] {
-    font-size: 1.25rem !important;
-    line-height: 1.7 !important;
+    //font-size: 1.25rem !important;
+    //line-height: 1.7 !important;
   }
   
   span[style="font-size:18px;"] {
@@ -142,7 +160,6 @@ li {
     }
   }  
 
-
   > em {
     font-size: 1.125rem; 
     font-weight: $font-weight-medium;
@@ -163,7 +180,7 @@ cite {
   display: block;
   font-size: .75rem;
   font-style: normal;
-  font-weight: $font-weight-medium;
+  font-weight: $font-weight-semibold;
   line-height: 1.25;
   text-transform: uppercase;  
 }

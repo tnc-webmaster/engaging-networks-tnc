@@ -100,20 +100,23 @@ $dp-cell-shrinked-width: $dp-cell-size-base * 7 / 8;
   }
 }
 
-.datepicker-main {
-  padding-left: $dp-padding-x;
-  padding-right: $dp-padding-x;
-}
-
+.datepicker-main,
 .datepicker-header {
-  padding-left: $dp-padding-x;
-  padding-right: $dp-padding-x;
+  @include media-breakpoint-up(sm) {
+    padding-left: $dp-padding-x;
+    padding-right: $dp-padding-x;    
+  }
 }
 
 .datepicker-footer {
   position: absolute;
-  right: 1.25rem;
-  top: 1.25rem;
+  right: .75rem;
+  top: .75rem;
+
+  @include media-breakpoint-up(sm) {
+    right: 1.25rem;
+    top: 1.25rem;
+  }
 }
 
 %flex-container {

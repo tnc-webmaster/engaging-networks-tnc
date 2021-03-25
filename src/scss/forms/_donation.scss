@@ -53,26 +53,7 @@
     .cols-4 & {
       @extend .row-cols-md-4;
     }
-
-    .en__field__item {
-      &:nth-last-child(2) {
-        @extend .visually-hidden;
-      }
-
-      &.en__field__item--other {
-        display: block;
-        position: relative;
-        width: 100%;
-        @extend %dollar-sign;
-
-        p {
-          font-size: $font-size-sm;
-          line-height: 1.4285;
-          margin-top: .25rem;
-        }
-      }
-    }
-
+    
     .en__field__input--radio {
       @extend .visually-hidden;
 
@@ -99,6 +80,27 @@
         background-color: $primary;
         border-color: $primary;
         color: $white;        
+      }
+    }
+  }
+
+  &.en__field--withOther {
+    .en__field__item {
+      &:nth-last-child(2) {
+        @extend .visually-hidden;
+      }
+
+      &.en__field__item--other {
+        display: block;
+        position: relative;
+        width: 100%;
+        @extend %dollar-sign;
+
+        p {
+          font-size: $font-size-sm;
+          line-height: 1.4285;
+          margin-top: .25rem;
+        }
       }
     }
   }
@@ -160,14 +162,24 @@
   border: 1px solid $gray-500;
   margin-top: 1.333rem;
   padding: 1.25rem;
+
+  &.disabled {
+    opacity: .333;
+    pointer-events: none;
+  }
 }
 
-.js-total-gift {
+.js-total-gift,
+.js-total-gift--tipjar {
   font-weight: 700;
 
   p & {
     display: block;
   }
+}
+
+.tip-jar-toggle {
+  display: none;
 }
 
 .en__field--ecard-select-an-ecard {  
@@ -180,6 +192,7 @@
   }
 
   .en__field__label--item {
+    display: block;
     font-size: 0;
   }
   

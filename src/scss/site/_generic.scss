@@ -1,9 +1,18 @@
+html,
 body {
+ height: 100%; 
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;  
 }
 
 .main {
+  flex-grow: 1;
   margin-top: 1.5rem;
 
   @include media-breakpoint-up(lg) {
@@ -16,7 +25,3 @@ body {
   flex-direction: column;
 }
 
-body:not(#en__pagebuilder) .en__component--page {
-  opacity: 0;
-  transition: $transition-base;
-}

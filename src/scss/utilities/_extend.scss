@@ -1,3 +1,18 @@
+%full-bleed {
+  //body:not(:page--confirmation) & {
+    left: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    right: 50%;
+    width: 100vw;    
+  //}
+}
+
+%full-bleed-pseudo {
+  margin-left: calc(-50vw + (var(--scrollbarWidth) / 2));
+  width: calc(100vw - var(--scrollbarWidth));
+}
+
 %form-heading {
   border-bottom: $hr;
   color: $primary;
@@ -8,6 +23,65 @@
   > p:first-child {
     margin-bottom: -.25rem;    
   }
+}
+
+%sans-serif-lg {
+  font-family: $font-family-sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.6666;
+
+  @include media-breakpoint-up(lg) {
+    font-size: 1.125rem;
+    line-height: 1.6666;
+  }
+}
+
+%serif-lg {
+  font-family: $font-family-serif;
+  font-size: 1.125rem;
+  line-height: 1.6666;
+
+  @include media-breakpoint-up(lg) {
+    font-size: 1.25rem;
+    line-height: 1.7;
+  }
+}
+
+%serif-xl {
+  font-family: $font-family-serif;
+  font-size: 1.125rem;
+  line-height: 1.6666;
+
+  @include media-breakpoint-up(lg) {
+    font-size: 1.375rem;
+    line-height: 1.8181;      
+  }
+}
+
+%btn-text {
+  align-items: center;
+  background: 0;
+  border: 0;
+  display: inline-flex;
+  padding: 0;
+}
+
+%btn-sm {
+  font-size: .875rem;
+  font-weight: $font-weight-semibold;
+  height: 4.25em;
+}
+
+%list-flush {
+  padding-left: calc(1rem + 2px);    
+  
+  li {
+    padding-left: .75rem;  
+    
+    &:not(:last-child) {
+      margin-bottom: .125rem;      
+    }
+  }  
 }
 
 %styled-checkbox {
