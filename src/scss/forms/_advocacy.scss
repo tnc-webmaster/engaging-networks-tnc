@@ -53,10 +53,6 @@
     &:first-child:not(:last-child) {
       @extend .col-lg-5;
 
-      @include media-breakpoint-down(lg) {
-        display: none;
-      }
-
       .en__component--imageblock {
         img {
           width: 100% !important;

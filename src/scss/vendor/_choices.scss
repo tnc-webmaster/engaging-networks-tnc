@@ -113,6 +113,11 @@ $choices-z-index: 1;
 .#{$choices-selector}__inner {
   @extend .form-select;
   height: $input-height-total;
+  
+  @include media-breakpoint-down(sm) {
+    background-position: calc(100% - .5rem) center;
+    padding-right: .5rem;
+  }
 
   overflow: hidden;
   .is-focused &,

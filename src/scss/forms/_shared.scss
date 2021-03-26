@@ -101,7 +101,7 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
 .en__field__label {
   font-size: 1rem;
   font-weight: $font-weight-medium;
-  line-height: 1.875;
+  line-height: 1.375;
   
   &[for] {
     cursor: pointer;    
@@ -156,11 +156,10 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
 .en__field__element--tripleselect {
   @extend .row;
   @extend .gx-2;
-  @extend .gx-md-3;
-  @extend .gx-lg-4;
+  @extend .gx-sm-3;
 
   .en__field__item {
-    @extend .col-2;
+    @extend .col;
   }
 }
 
@@ -458,6 +457,18 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
   line-height: 1.4285;
   margin-top: .667rem;
 }
+
+.required-indicator {
+  font-size: 1.125rem;
+  font-style: italic;
+  line-height: 1.6666;
+  margin-top: 3.125rem;
+
+  + .form-heading {
+    margin-top: 2.5rem !important;
+  }
+}
+
 
 .en__submit {
   margin-top: 2.75rem;

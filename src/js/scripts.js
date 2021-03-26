@@ -333,11 +333,10 @@
     });
 
     // Move additional donation fields
-    els = getAll('.en__additional__label, .en__additional__amount');
+    el = theForm.querySelector('.en__additional__amount');
     _parent = theForm.querySelector('.form-heading--additional');
-    if (els.length > 0 && _parent) {
-      wrap = wrapAll(els, 'div', 'd-flex');
-      _parent.append(wrap);
+    if (el && _parent) {
+      _parent.append(el);
     }
 
     // Move promo code field
@@ -345,6 +344,12 @@
     _parent = theForm.querySelector('.form-heading--promo');
     if (el && _parent) {
       _parent.append(el);
+    }
+    
+    // Wrap additional donation and promo code fields
+    els = getAll('.form-heading--additional, .form-heading--promo');
+    if (els.length > 0) {
+      wrapAll(els, 'div', ['row', 'justify-content-between', 'additional-promo']);
     }
 
     // Aria role for radio groups
@@ -838,7 +843,15 @@
       getAll('.js-total-gift').forEach(el => {
         el.textContent = `$${theForm.querySelector('.en__orderSummary__data--totalAmount').textContent}`;
       });      
-    }    
+    }
+    
+    // Customize order summary table
+    getAll('.en__orderSummary__item').forEach(el => {
+      const itemType = el.querySelector('.en__orderSummary__data--type');
+      const itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent;
+      
+      itemType.textContent = `${itemQuantity}x  ${itemType.textContent}`;
+    });
   };
   
   /**
@@ -1203,7 +1216,6 @@
       el.setAttribute('aria-expanded', isOpen);
     }
   };
-
 
   /**
    * Adds aria-labelledby attribute to an untitled element
