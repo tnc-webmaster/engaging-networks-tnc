@@ -48,6 +48,7 @@ $choices-z-index: 1;
     .#{$choices-selector}__input {
       background-color: $choices-bg-color-disabled;
       cursor: not-allowed;
+      opacity: .5;
       user-select: none;
     }
     .#{$choices-selector}__item {

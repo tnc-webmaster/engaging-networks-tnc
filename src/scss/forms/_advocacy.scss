@@ -61,7 +61,13 @@
 
       h2 {
         font-family: $font-family-sans-serif;
+        font-weight: $font-weight-bold;
         margin-bottom: 2.5rem;
+        
+        @include media-breakpoint-down(lg) {
+          font-size: 1.875rem;
+          margin-bottom: 1rem;
+        }
       }
 
       p {
@@ -138,11 +144,19 @@
   .en__socialShare--facebook {
     height: 20px !important;
     width: 10px !important;
+    
+    img {
+      width: 10px !important;
+    }
   }
 
   .en__socialShare--twitter {
     height: 20px !important;
     width: 24px !important;
+    
+    img {
+      width: 24px !important;
+    }
   }
 }
 

@@ -772,6 +772,11 @@
   */
   const events = () => {
     let el = null;
+    let hasPromo = false;
+    let totalAmount = 0;
+    let totalDiscount = 0;
+    const savedTotalAmount = sessionStorage.getItem('savedTotalAmount');
+    const pageNumber = pageJson.pageNumber;
 
     /**
      * Updates total amount
@@ -796,7 +801,13 @@
       // Display total amount
       getAll('.js-total-gift').forEach(el => {
         el.textContent = totalAmount.toFixed(2);
-      });      
+      });
+      // Save total for use on billing page
+      sessionStorage.setItem('savedTotalAmount', totalAmount);
+    };
+    
+    const getPromoDiscount = () => {
+      return true;
     };
 
     // Strip currency indicators
@@ -808,50 +819,70 @@
     getAll('.en__orderSummary__header').forEach(el => {
       el.textContent = el.textContent.replace(/\:/, '');
     });
-
-
-    // Listen for additional donation    
-    el = theForm.querySelector('.en__additional__input');
-    if (el) {
-      el.addEventListener('change', e => {
-        updateTotalAmount();        
-      });
-    }
     
-    // Listen for ticket selection
-    getAll('.en__ticket__quantity').forEach(el => {
-      el.addEventListener('change', e => {
-        setTimeout(function() {
-          updateTotalAmount();
-        }, 100);        
-      });      
-    });    
-
-    // Force ticket total cost update
-    getAll('.en__ticket__minus, .en__ticket__plus').forEach(el => {
-      const row = getClosestEl(el, '.en__ticket');
-      const ticketQuantity = row.querySelector('.en__ticket__quantity');
+    
+    // Maybe on page 1
+    if (pageNumber === 1) {
+      // Listen for additional donation    
+      el = theForm.querySelector('.en__additional__input');
+      if (el) {
+        el.addEventListener('change', e => {
+          updateTotalAmount();        
+        });
+      }
       
-      el.addEventListener('click', e => {
-        triggerEvent(ticketQuantity, 'change');
-      });
-    });
-    
-    // Display total amount
-    el = theForm.querySelector('.en__orderSummary__data--totalAmount'); 
-    if (el) {
-      getAll('.js-total-gift').forEach(el => {
-        el.textContent = `$${theForm.querySelector('.en__orderSummary__data--totalAmount').textContent}`;
+      // Listen for ticket selection
+      getAll('.en__ticket__quantity').forEach(el => {
+        el.addEventListener('change', e => {
+          setTimeout(function() {
+            updateTotalAmount();
+          }, 100);        
+        });      
+      });    
+
+      // Init total amount
+      updateTotalAmount();
+
+      // Force ticket total cost update
+      getAll('.en__ticket__minus, .en__ticket__plus').forEach(el => {
+        const row = getClosestEl(el, '.en__ticket');
+        const ticketQuantity = row.querySelector('.en__ticket__quantity');
+        
+        el.addEventListener('click', e => {
+          triggerEvent(ticketQuantity, 'change');
+        });
       });      
-    }
-    
-    // Customize order summary table
-    getAll('.en__orderSummary__item').forEach(el => {
-      const itemType = el.querySelector('.en__orderSummary__data--type');
-      const itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent;
+    // Maybe on page 2      
+    } else if (pageNumber === 2) {
+      // Display total amount
+      el = theForm.querySelector('.en__orderSummary__data--totalAmount'); 
+      if (el) {
+        getAll('.js-total-gift').forEach(el => {
+          el.textContent = `$${el.textContent}`;
+        });      
+      }
       
-      itemType.textContent = `${itemQuantity}x  ${itemType.textContent}`;
-    });
+      // Customize order summary table
+      getAll('.en__orderSummary__item').forEach(el => {
+        const itemType = el.querySelector('.en__orderSummary__data--type');
+        const itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent;
+        
+        itemType.textContent = `${itemQuantity}x  ${itemType.textContent}`;
+        hasPromo = getPromoDiscount(el) || hasPromo;
+      });
+      
+      // Maybe add promo discount line
+      el = theForm.querySelector('.en__orderSummary__data--totalAmount'); 
+      if (savedTotalAmount && hasPromo && el) {
+        totalAmount = Number(el.textContent);      
+        totalDiscount = Number(savedTotalAmount) - totalAmount;      
+        console.log(totalDiscount);
+        // Cleanup
+        theForm.querySelector('.en__submit button').addEventListener('click', e => {
+          sessionStorage.removeItem('savedTotalAmount');
+        });
+      }      
+    }    
   };
   
   /**

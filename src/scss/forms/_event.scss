@@ -709,7 +709,7 @@ a[href="javascript:history.back()"] {
   padding-bottom: .75rem;
   padding-top: 1rem;
   
-  &:not(.en__orderSummary__data--totalLabel):not(.en__orderSummary__data--totalAmount)  
+  &:not(.en__orderSummary__data--totalLabel):not(.en__orderSummary__data--totalAmount) {
     border-bottom: $border-default;
   }
 }

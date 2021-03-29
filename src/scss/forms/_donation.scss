@@ -182,6 +182,21 @@
   display: none;
 }
 
+.en__field--dirgift {
+  &.en__hidden {
+    display: block;
+    
+    .choices {
+      @extend .is-disabled;
+      pointer-events: none;        
+    }
+  }
+  
+  &:not(.en__hidden) {
+    
+  }    
+}
+
 .en__field--ecard-select-an-ecard {  
   >.en__field__label {
     margin-bottom: 1.75rem !important; 
