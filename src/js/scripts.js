@@ -1020,8 +1020,8 @@
       sessionStorage.setItem('savedTotalAmount', totalAmount);
     };
     
-    const getPromoDiscount = () => {
-      return true;
+    const getPromo = (el) => {
+      return el.querySelector('.en__orderSummary__data--promo').textContent !== '';
     };
     
     // Make ticket quantity field readonly to avoid invalid ticket numbers
@@ -1109,7 +1109,7 @@
         const itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent;
         
         itemType.textContent = `${itemQuantity}x  ${itemType.textContent}`;
-        hasPromo = getPromoDiscount(el) || hasPromo;
+        hasPromo = hasPromo || getPromo(el);
       });
       
       // Maybe add promo discount line
@@ -1128,7 +1128,12 @@
         theForm.querySelector('.en__submit button').addEventListener('click', e => {
           sessionStorage.removeItem('savedTotalAmount');
         });
-      }      
+      }
+      
+      // Display total cost
+      getAll('.js-total-gift').forEach(el => {
+        el.textContent = `$${theForm.querySelector('.en__orderSummary__data--totalAmount').textContent}`;
+      });
     }    
   };
   
