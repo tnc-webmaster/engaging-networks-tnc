@@ -1093,8 +1093,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       sessionStorage.setItem('savedTotalAmount', totalAmount);
     };
 
-    var getPromoDiscount = function getPromoDiscount() {
-      return true;
+    var getPromo = function getPromo(el) {
+      return el.querySelector('.en__orderSummary__data--promo').textContent !== '';
     }; // Make ticket quantity field readonly to avoid invalid ticket numbers
 
 
@@ -1172,7 +1172,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         var itemType = el.querySelector('.en__orderSummary__data--type');
         var itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent;
         itemType.textContent = itemQuantity + "x  " + itemType.textContent;
-        hasPromo = getPromoDiscount(el) || hasPromo;
+        hasPromo = hasPromo || getPromo(el);
       }); // Maybe add promo discount line
 
       el = theForm.querySelector('.en__orderSummary__data--totalAmount');
@@ -1195,7 +1195,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         theForm.querySelector('.en__submit button').addEventListener('click', function (e) {
           sessionStorage.removeItem('savedTotalAmount');
         });
-      }
+      } // Display total cost
+
+
+      getAll('.js-total-gift').forEach(function (el) {
+        el.textContent = "$" + theForm.querySelector('.en__orderSummary__data--totalAmount').textContent;
+      });
     }
   };
   /**
