@@ -32,9 +32,12 @@
   const errorSelector = '.en__field__error';
   const enFieldSelector = '.en__field';
   const enFieldItemSelector = '.en__field__item';
-  const giftDesignationSelect = '#en__field_transaction_dirgift';  
+  const giftDesignationSelect = '#en__field_transaction_dirgift';
+  const homePhoneInputSelector = '#en__field_supporter_phoneNumber';  
   const informCountrySelect = '#en__field_transaction_infcountry';
   const informStateProvinceSelect = '#en__field_transaction_infreg';
+  const mobilePhoneSameAsHomeCheckboxSelector = '#en__field_supporter_questions_891102';
+  const mobilePhoneInputSelector = '#en__field_supporter_phoneNumber2';
   const otherAmountSelector = '.en__field--donationAmt .en__field__item--other';
   const otherAmountInputSelector = '.en__field--donationAmt .en__field__input--other';
   const paymentMethodSelector = '[class*="en__field--payment-method"]';
@@ -823,6 +826,47 @@
           otherAmountInput.addEventListener('input', handleDonationAmountChange);
         }
       }
+    }
+
+    const initPhoneFields = () => {
+      let mobilePhoneInput = theForm.querySelector(mobilePhoneInputSelector);
+      let homePhoneInput = theForm.querySelector(homePhoneInputSelector);
+      let mobileSameAsHomeCheckbox = theForm.querySelector(mobilePhoneSameAsHomeCheckboxSelector);
+      let submitButton = theForm.querySelector('.en__submit button');
+      if(mobilePhoneInput.value.length && homePhoneInput.value.length && homePhoneInput.value !== mobilePhoneInput.value && mobileSameAsHomeCheckbox.checked) {
+        mobileSameAsHomeCheckbox.click();
+      } else if(mobilePhoneInput.value.length === 0 && homePhoneInput.value.length && mobileSameAsHomeCheckbox.checked) {
+        mobilePhoneInput.disabled = false;
+        mobilePhoneInput.value = homePhoneInput.value;
+      }
+
+      const setMobilePhoneField = (e) => {
+        if(e.target.checked) {
+          //override EN's diabling of the field
+          setTimeout(syncMobilePhoneField, 500);
+        } else {
+          mobilePhoneInput.value = '';
+        }
+      };
+
+      const syncMobilePhoneField = (e) => {
+        if(mobileSameAsHomeCheckbox.checked) {
+          mobilePhoneInput.disabled = false;
+          mobilePhoneInput.value = homePhoneInput.value;
+        }
+      };
+
+      //attach event handler to the checkbox
+      mobileSameAsHomeCheckbox.addEventListener('change', setMobilePhoneField);
+      //attach event hanfler to the home input
+      homePhoneInput.addEventListener('input', syncMobilePhoneField);
+
+    };
+
+    //if all three fields are present
+    if(theForm.querySelectorAll(mobilePhoneInputSelector).length && theForm.querySelectorAll(homePhoneInputSelector).length && theForm.querySelectorAll(mobilePhoneSameAsHomeCheckboxSelector).length) {
+      //initialize phone field features
+      initPhoneFields();
     }
   };
 

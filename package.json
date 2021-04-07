@@ -33,6 +33,5 @@
     "popper.js": "^1.16.1",
     "reset-css": "^5.0.1",
     "vanillajs-datepicker": "^1.1.4"
-  },
-  "dependencies": {}
+  }
 }
