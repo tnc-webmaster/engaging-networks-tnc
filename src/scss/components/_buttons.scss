@@ -22,4 +22,34 @@
       @include button-outline-variant($disabled, $white, $gray-900, $disabled);      
     }
   }
+  
+  &-text {
+    border: 0;
+    color: $link-color;
+    font-size: 1rem;
+    font-weight: $font-weight-bold;
+    height: auto;
+    line-height: 1.25;
+    padding: 0;
+    text-transform: uppercase;
+    
+    &:hover {
+      color: $link-color;
+      text-decoration: underline;      
+    }
+  }
+  
+  &-collapse {
+    &::after {
+      content: $form-select-indicator;
+      margin-left: .25rem;
+      vertical-align: text-bottom;
+    }
+    
+    &.expanded {
+      &::after {
+        content: $form-select-indicator-open;
+      }
+    }
+  }
 }

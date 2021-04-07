@@ -17,12 +17,7 @@
   
   a {
     text-decoration: underline;
-    text-transform: none;
-    
-    &:hover {
-      border: 0;
-      text-decoration: none;
-    }
+    text-transform: none;    
   }
   
   hr {
@@ -39,6 +34,16 @@
   }
 }
 
+.is-narrow {
+  margin-left: auto;
+  margin-right: auto;  
+  max-width: 35rem !important;
+  
+  .en__component--copyblock + .en__component--formblock {
+    margin-top: 1.5rem;
+  }
+}
+
 .form-heading {
   margin-top: 4.75rem;
 
@@ -46,6 +51,10 @@
   h3 {    
     @extend .h5;
     @extend %form-heading;
+    
+    + p {
+      @extend %sans-serif-normal;
+    }
   }
 
   p + h2,
@@ -197,9 +206,17 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
     }
   }
 
-  & :checked + .en__field__label {
-    &::before {
-      @extend %styled-checkbox-checked;
+  .en__field__input--checkbox {
+    &:focus + .en__field__label {
+      &::before {
+        @extend %styled-checkbox-focus;
+      }
+    }
+
+    &:checked + .en__field__label {
+      &::before {
+        @extend %styled-checkbox-checked;
+      }
     }
   }
 
@@ -249,6 +266,12 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
   
   .en__field__element--radio {
     margin-top: .5rem;
+  }
+}
+
+.en__field--dirgift {
+  > .en__field__label {
+    @extend .visually-hidden;
   }
 }
 
@@ -333,7 +356,7 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
     
     .en__field__label {
       @extend .btn;
-      @include button-variant($white, $primary, $primary, $white, $primary, $primary, $white, $primary, $body-color);
+      @include button-variant($white, $primary, $primary, $white, $dark, $dark, $white, $white, $primary, $primary);
       white-space: nowrap;
       width: 100%;
     }     
@@ -344,14 +367,22 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
     
     &:checked {
       + .en__field__label {
-        @include button-variant($primary, $primary, $white, $primary, $primary, $white, $white, $primary, $body-color);
+        @include button-variant($primary, $primary, $white, $dark, $dark, $white, $primary, $primary, $white);
       }
+    }
+    
+    &:focus {
+      + .en__field__label {
+        background-color: $dark;
+        border-color: $dark;
+        color: $white;
+      }      
     }
   }  
 }
 
 .en__field__input--radio[value="Paypal"],
-.en__field__input--radio[value="PayPal"] {
+.en__field__input--radio[value="PayPal"] {  
   + .en__field__label {    
     font-size: 0;
     
@@ -385,11 +416,19 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
 
   .en__field__input--checkbox {
     @extend .visually-hidden;
+
+    &:checked,
+    &:focus {
+      + .en__field__label--item {
+        border-color: $primary;
+        border-width: 2px;    
+      }
+    }
   }
 
   .en__field__label--item {
     @extend .btn;
-    @include button-variant($yellow, $yellow, $white, $yellow, $yellow, $white);
+    @include button-variant($yellow, $yellow, $white, $yellow, $primary, $white);
     background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/PayPal_logo.svg?v=1612990808000);
     background-repeat: no-repeat;
     background-position: center;
@@ -412,14 +451,6 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
 
     &::before {
       display: none;
-    }
-  }
-  
-  .en__field__input--checkbox:checked {
-    + .en__field__label--item {
-      background-color: $yellow;
-      border-color: $yellow;
-      border-width: 2px;
     }
   }  
 }
@@ -462,13 +493,16 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
   font-size: 1.125rem;
   font-style: italic;
   line-height: 1.6666;
-  margin-top: 3.125rem;
-
-  + .form-heading {
-    margin-top: 2.5rem !important;
+  
+  &:not(:first-child) {
+    margin-top: 3.125rem;    
   }
-}
 
+  + .form-heading,
+  + .en__component--copyblock {
+    margin-top: 2.5rem !important;
+  } 
+}
 
 .en__submit {
   margin-top: 2.75rem;
@@ -482,4 +516,9 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
       @extend .btn-primary;      
     }
   }
+}
+
+// Hide spam trap field
+.en__field--NOT_TAGGED_5 {
+  display: none;
 }

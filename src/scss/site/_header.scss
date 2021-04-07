@@ -26,12 +26,7 @@
   
   .navbar-brand {
     max-width: 200px;
-    width: 36%;
-    
-    &:hover {
-      border-bottom: 0;
-      text-decoration: none;
-    }
+    width: 36%;    
   }
   
   .navbar-text {
@@ -41,10 +36,6 @@
     
     + a {
       border-left: $hr;
-      
-      &:hover {
-        border-bottom: 0;
-      }
       
       @include media-breakpoint-down(md) {
         margin-left: auto;

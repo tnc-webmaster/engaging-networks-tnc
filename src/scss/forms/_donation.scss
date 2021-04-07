@@ -57,11 +57,18 @@
     .en__field__input--radio {
       @extend .visually-hidden;
 
-      &:checked,
-      &:focus {
+      &:checked {
         + .en__field__label {
           background-color: $primary;
           border-color: $primary;
+          color: $white;
+        }
+      }
+
+      &:focus {
+        + .en__field__label {
+          background-color: $dark;
+          border-color: $dark;
           color: $white;
         }
       }
@@ -111,6 +118,10 @@
 }
 
 .en__field--donationAmt.en__field--text {
+  .en__field__label {
+    @extend .visually-hidden;
+  }
+
   .en__field__element--text {
     @extend %dollar-sign;
   }

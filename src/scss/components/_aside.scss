@@ -1,7 +1,7 @@
 .aside {
   @include media-breakpoint-down(lg) {
     margin-top: 3.5rem !important;
-  }    
+  }
 
   img {
     display: block;
@@ -16,46 +16,48 @@
     @include media-breakpoint-down(lg) {
       display: none;
     }
-    
+
     + .en__component--copyblock {
       border: $border-default;
-      padding-left: 2rem;
-      padding-right: 2rem;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
 
       @include media-breakpoint-up(lg) {
         border-top: 0;
+        padding-left: 1.875rem;
+        padding-right: 1.875rem;
       }
     }
-    
+
     + .listicle {
       padding-bottom: 2.75rem;
       padding-top: 1.75rem;
-      
+
       p:not(:last-child) {
-        margin-bottom: 1.5rem;        
+        margin-bottom: 1.5rem;
       }
 
       h4 {
-        margin-bottom: 1rem;        
-        
+        margin-bottom: 1rem;
+
         &:first-of-type {
-          margin-bottom: 1.75rem;                  
+          margin-bottom: 1.75rem;
         }
       }
-      
+
       ul {
-       margin-bottom: 1.75rem; 
+       margin-bottom: 1.75rem;
       }
-      
+
       li {
         border-bottom: $border-default;
         margin-bottom: 1.5rem;
-        padding-bottom: 1.35rem;             
+        padding-bottom: 1.35rem;
       }
-      
+
       .row {
-        margin-top: 3rem;
-        
+        margin-top: 1.875rem;
+
         + p {
           margin-top: 1.25rem;
         }
@@ -65,38 +67,45 @@
     + .text-image {
       padding-bottom: 4.25rem;
       padding-top: 2.5rem;
-      
+
       h4 {
-        margin-bottom: 1.25rem;        
+        margin-bottom: 1.25rem;
+      }
+
+      p {
+        @extend %sans-serif-lg;
       }
 
       img {
         margin-left: auto;
         margin-right: auto;
         margin-top: 2.5rem;
-        max-width: 280px;
+
+        @media(min-width: 400px) {
+          max-width: 280px;
+        }
 
         @include media-breakpoint-up(lg) {
-          max-width: 80.2926%;          
+          max-width: 80.2926%;
         }
       }
     }
   }
-  
+
   .en__component--formblock:not(:first-child) {
-    margin-top: 1.5rem;    
+    margin-top: 1.5rem;
   }
-  
+
   > .form-heading {
     &:first-child {
       margin-top: 0;
-    }    
+    }
   }
-  
+
   .en__field {
     > .popover-container {
       margin-bottom: -.25rem;
       margin-top: .5rem;
-    }    
+    }
   }
 }

@@ -17,12 +17,15 @@
   font-size: 1em;
   font-weight: inherit;
 
-  &:focus {
-    outline: 2px solid !important;
+  &.collapsed:focus {
+    &:after {
+      outline: 2px solid $primary;      
+    }        
   }
 }
 
 .accordion-body {
+  @extend %serif-normal;  
   margin-bottom: 1.25rem;  
   
   @include media-breakpoint-down(lg) {

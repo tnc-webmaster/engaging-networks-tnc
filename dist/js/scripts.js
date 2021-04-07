@@ -25,6 +25,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var displayClass = 'd-block';
   var errorBoxClass = 'error-box';
   var hiddenClass = 'd-none';
+  var hiddenWebOnlyClass = 'd-none--web';
   var paypalSelectedClass = 'paypal-selected';
   var photoInfoClass = 'photo-info';
   var popoverClass = 'popover';
@@ -59,14 +60,28 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var tipJarSelector = '.en__field--tip-jar';
   var tipJarAmountSelector = '.js-total-gift--tipjar';
   var tipJarToggle = '.tip-jar-toggle';
-  var totalAmountSelector = '.js-total-gift'; // Elements
+  var totalAmountSelector = '.js-total-gift';
+  var tributeOptionsSelector = 'select#en__field_transaction_trbopts'; // Elements
 
   var theForm = document.querySelector('.en__component--page'); // Masks
 
+  var numberPipe = IMask.createPipe({
+    mask: 'num',
+    blocks: {
+      num: {
+        mask: Number,
+        thousandsSeparator: ',',
+        padFractionalZeros: true,
+        radix: '.'
+      }
+    }
+  });
   var otherAmountMask = null; // Widgets
 
   var cleave = null; // Constants
 
+  var thermThresholdPct = 80;
+  var thermIncrease = 1.25;
   var tipJarPct = 0.03;
   /**
   * Form interface enhancements
@@ -151,15 +166,25 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         callbackOnInit: function callbackOnInit() {
           var _choices = this;
 
-          var label = theForm.querySelector('label[for="' + _choices.passedElement.element.id + '"]');
+          var label = theForm.querySelector("label[for=\"" + _choices.passedElement.element.id + "\"]");
+          var choicesId = "choices" + generateId();
 
           _choices.enable();
 
           if (label) {
+            // Add aria attributes to combobox
             _choices.containerOuter.element.setAttribute('aria-label', label.textContent);
 
-            _choices.choiceList.element.setAttribute('aria-label', 'Select ' + label.textContent.replace(/Select/, ''));
-          }
+            setAttributes(_choices.containerOuter.element, {
+              'aria-label': label.textContent,
+              'aria-owns': choicesId
+            }); // Add aria attributes to listbox
+
+            _choices.choiceList.element.setAttribute('aria-label', "Select " + label.textContent.replace(/Select/, ''));
+
+            _choices.choiceList.element.id = choicesId;
+          } // role=textbox is unneccesary in our setup
+
 
           getAll('[role="textbox"]', _choices.containerOuter.element).forEach(function (el) {
             el.removeAttribute('role');
@@ -199,7 +224,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     root.style.setProperty('--scrollbarWidth', scrollbarWidth + "px"); // Initiate choices.js
 
-    getAll('select:not(' + stateProvinceSelect + '):not(' + informStateProvinceSelect + '):not(' + giftDesignationSelect + ')').forEach(function (el) {
+    getAll("select:not(" + stateProvinceSelect + "):not(" + informStateProvinceSelect + "):not(" + giftDesignationSelect + ")").forEach(function (el) {
       createChoices(el);
     }); // Structure modals
 
@@ -285,6 +310,44 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           });
         }
       });
+    }
+    /**
+    * Shows tribute headings that match headingClass
+    *
+    * @param {string} headingClass Class of headings to show
+    */
+
+
+    var showTributeHeadings = function showTributeHeadings(headingClass) {
+      // Hide everything
+      getAll('.heading-honor, .heading-memory, .heading-gift').forEach(function (el) {
+        addClass(el, hiddenWebOnlyClass);
+      }); // Show the right heading
+
+      getAll(headingClass).forEach(function (el) {
+        removeClass(el, hiddenWebOnlyClass);
+      });
+    }; // Selecting a tribute option might change headings on the form
+
+
+    el = theForm.querySelector(tributeOptionsSelector);
+
+    if (el) {
+      el.addEventListener('change', function (e) {
+        switch (e.target.value) {
+          case 'In Honor':
+            showTributeHeadings('.heading-honor');
+            break;
+
+          case 'In Memory':
+            showTributeHeadings('.heading-memory');
+            break;
+
+          case 'Gift':
+            showTributeHeadings('.heading-gift');
+            break;
+        }
+      });
     } // Is there a full bleed hero?
 
 
@@ -316,29 +379,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     getAll(dateInputSelector).forEach(function (el) {
       addPlaceholder(el, 'Select Date');
-    }); // Missing Other Amount label
+    }); // Maybe convert event address to Google maps link
 
-    el = theForm.querySelector(otherAmountInputSelector);
-    _parent = theForm.querySelector(otherAmountSelector);
+    getAll('.link-to-map address').forEach(function (el) {
+      var wrap = wrapEl(el, 'a');
 
-    if (el && _parent) {
-      placeholderToLabel(el, _parent);
-    } // Missing CC expiration year label
-
-
-    el = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child .en__field__input--splitselect');
-    _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
-
-    if (el && _parent) {
-      addLabel(el, el.parentElement, 'Credit card expiration year').then(function (labelId) {
-        var _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
-
-        getAll('[role="combobox"], [role="listbox"]', _parent).forEach(function (el) {
-          el.setAttribute('aria-labelledby', labelId);
+      if (wrap) {
+        setAttributes(wrap, {
+          'href': "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(el.textContent),
+          'target': '_blank'
         });
-      });
-    } // Wrap event ticket selector
-
+      }
+    }); // Wrap event ticket selector
 
     getAll('.en__ticket__selector').forEach(function (el) {
       els = getAll('.en__ticket__minus, .en__ticket__quantity, .en__ticket__plus', el);
@@ -346,6 +398,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       if (els.length > 0) {
         wrapAll(els, 'div', 'input-group');
       }
+    }); // Missing event ticket quanity labels
+
+    getAll('.en__ticket__quantity').forEach(function (el) {
+      addLabel(el, el.parentElement, 'Quantity');
+    }); // Missing additional donation label
+
+    getAll('.en__additional__input').forEach(function (el) {
+      addLabel(el, el.parentElement, 'Additional donation (optional)');
+    }); // Missing promo code label
+
+    getAll('.en__additional__code').forEach(function (el) {
+      addLabel(el, el.parentElement, 'Promo code');
     }); // Move additional donation fields
 
     el = theForm.querySelector('.en__additional__amount');
@@ -368,11 +432,37 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (els.length > 0) {
       wrapAll(els, 'div', ['row', 'justify-content-between', 'additional-promo']);
-    } // Aria role for radio groups
+    } // Missing CC expiration year label
+
+
+    el = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child .en__field__input--splitselect');
+    _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
+
+    if (el && _parent) {
+      addLabel(el, el.parentElement, 'Credit card expiration year').then(function (labelId) {
+        var _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
+
+        getAll('[role="combobox"], [role="listbox"]', _parent).forEach(function (el) {
+          el.setAttribute('aria-labelledby', labelId);
+        });
+      });
+    } // Radio element accessibility
 
 
     getAll('.en__field--radio').forEach(function (el) {
-      var labelId = void 0;
+      // Some radio elements have loose labels
+      var looseLabel = el.querySelector('label:first-child');
+      var replaceLabel = null;
+
+      if (looseLabel) {
+        replaceLabel = document.createElement('p');
+        replaceLabel.textContent = looseLabel.textContent;
+        replaceLabel.id = looseLabel.id;
+        replaceLabel.classList = looseLabel.classList;
+        looseLabel.parentNode.replaceChild(replaceLabel, looseLabel);
+      } // Add aria role
+
+
       el.setAttribute('role', 'radiogroup');
 
       if (hasClass(el, 'en__field--donationAmt')) {
@@ -380,11 +470,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } else {
         addAriaLabelledBy(el);
       }
-    }); // Aria role for split selects
+    }); // Missing Other Amount label
+
+    el = theForm.querySelector(otherAmountInputSelector);
+    _parent = theForm.querySelector(otherAmountSelector);
+
+    if (el && _parent) {
+      placeholderToLabel(el, _parent);
+    } // Aria role for split selects
+
 
     getAll('.en__field--splitselect').forEach(function (el) {
       el.setAttribute('role', 'group');
       addAriaLabelledBy(el);
+    }); // Labels are sometimes blank
+
+    getAll('.en__field__label').forEach(function (el) {
+      if (isEmpty(el)) {
+        if (el.parentNode) {
+          el.parentNode.removeChild(el);
+        }
+      }
     }); // Convert URL strings to images for dummy select ecard radios
 
     el = theForm.querySelector('.en__field--ecard-select-an-ecard');
@@ -396,7 +502,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     } // Add mask and inputmode attribute for currency fields
 
 
-    getAll('[name*="Amt"]:not([name*="Amt2"]:not([name*="Amt3"]:not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"])').forEach(function (el) {
+    getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(function (el) {
       otherAmountMask = el.setAttribute('inputmode', 'decimal');
       IMask(el, {
         mask: 'num',
@@ -429,16 +535,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       if (minAmountValidator[0]) {
         // Add paragraph with min amount underneath Other Amount field
-        addEl(el, 'p', '$' + minAmountValidator[0].format.split('~')[0] + ' minimum', 'fw-medium');
+        addEl(el, 'p', "$" + minAmountValidator[0].format.split('~')[0] + " minimum", 'fw-medium');
       }
-    } // Display tip jar amount
-
-
-    el = theForm.querySelector(tipJarSelector);
-
-    if (el) {
-      updateTipJar(getTipJar(getOriginalDonationAmount()));
-      updateTotalGift(getTipJar(getOriginalDonationAmount()));
     } // Other amount field is always visible, so the corresponding radio need to be button clicked here even though hidden
 
 
@@ -457,19 +555,37 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     getAll('.field__help').forEach(function (el) {
       getClosestEl(el, enFieldSelector).append(el);
-    }); // Paypal checkbox needs to hide credit card blocks
+    }); // Paypal checkbox needs to hide credit card blocks and set payment type
 
     el = theForm.querySelector(paypalInputSelector);
     _parent = theForm.querySelector(paymentMethodSelector);
 
     if (el && _parent) {
       el.addEventListener('click', function (e) {
+        var paymentType = theForm.querySelector(paymentTypeSelector);
         _parent = getClosestEl(_parent, '.en__component--formblock');
 
         if (e.target.checked) {
           addClass(_parent, paypalSelectedClass);
+
+          if (paymentType) {
+            paymentType.value = 'Paypal';
+          }
         } else {
           removeClass(_parent, paypalSelectedClass);
+        }
+      });
+    } // ACH button needs to set payment type
+
+
+    el = theForm.querySelector('.en__field--payment-method-cc-and-ach-');
+
+    if (el) {
+      el.addEventListener('click', function (el) {
+        var paymentType = theForm.querySelector(paymentTypeSelector);
+
+        if (paymentType) {
+          paymentType.value = 'ACH';
         }
       });
     } // Provide credit card type feedback
@@ -554,18 +670,32 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           }, 500);
         });
       });
+    }); // Init collapsibles
+
+    getAll('.btn-collapse').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        var _target = e.target;
+
+        if (hasClass(_target, 'expanded')) {
+          removeClass(_target, 'expanded');
+          _target.textContent = 'See more';
+        } else {
+          addClass(_target, 'expanded');
+          _target.textContent = 'See less';
+        }
+      });
     }); //Init popovers
 
-    var popoverTriggerList = [].slice.call(theForm.querySelectorAll('.popover-container [data-bs-toggle="popover"]'));
+    var popoverTriggerList = [].slice.call(theForm.querySelectorAll('[data-bs-toggle="popover"]'));
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
       return new bootstrap.Popover(popoverTriggerEl, {
         boundry: theForm,
-        container: '.popover-container',
+        container: getClosestEl(popoverTriggerEl, '.popover-container') ? getClosestEl(popoverTriggerEl, '.popover-container') : getClosestEl(popoverTriggerEl, enFieldSelector),
         html: true,
         placement: 'bottom',
         fallbackPlacements: ['bottom', 'top'],
         template: '<div class="popover" role="tooltip"><div class="popover-control"><a class="popover-close" role="button" aria-label="close popover" onclick="closePopover(); return false;"></a></div><div class="popover-arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
-        trigger: 'click',
+        trigger: 'click focus',
         sanitize: false
       });
     }); // Workaround for not being able to set popover position explicity
@@ -665,13 +795,23 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     };
 
-    if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber !== pageJson.pageCount) {
-      // Donation amount
+    if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
       if (donationAmt) {
-        donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
+        donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt); // Display tip jar amount
+
+        el = theForm.querySelector(tipJarSelector);
+
+        if (el) {
+          updateTipJar(getTipJar(getOriginalDonationAmount()));
+          updateTotalGift(getTipJar(getOriginalDonationAmount()));
+        } else {
+          updateTotalGift(getOriginalDonationAmount());
+        } // Maybe a tip jar?
+
 
         if (tipJar && tipJarPct) {
-          tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox');
+          tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox'); // Handle tip jar click
+
           tipJarCheckbox.addEventListener('click', function (e) {
             tipJarUserChecked = true;
             toggleTipJar(e.target);
@@ -684,23 +824,26 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           if (tipJarCheckbox.checked) {
             updateDonationAmounts(tipJarCheckbox);
           }
+        } // Handle donation amount change
 
-          donationAmtRadios.forEach(function (el) {
-            el.addEventListener('click', function (e) {
-              maybeUncheckTipJar(getOriginalDonationAmount());
-              updateTipJar(getTipJar(getOriginalDonationAmount()));
-              updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : e.target.value);
-            });
-          });
 
-          if (otherAmountInput) {
-            otherAmountInput.addEventListener('input', function (e) {
-              maybeUncheckTipJar(getOriginalDonationAmount());
-              updateDonationAmounts(tipJarCheckbox);
-              updateTipJar(getTipJar(getOriginalDonationAmount()));
-              updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : e.target.value);
-            });
+        var handleDonationAmountChange = function handleDonationAmountChange(e) {
+          if (tipJarCheckbox) {
+            maybeUncheckTipJar(getOriginalDonationAmount());
+            updateDonationAmounts(tipJarCheckbox);
+            updateTipJar(getTipJar(getOriginalDonationAmount()));
+            updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : e.target.value);
+          } else {
+            updateTotalGift(e.target.value);
           }
+        };
+
+        donationAmtRadios.forEach(function (el) {
+          el.addEventListener('click', handleDonationAmountChange);
+        });
+
+        if (otherAmountInput) {
+          otherAmountInput.addEventListener('input', handleDonationAmountChange);
         }
       }
     }
@@ -711,27 +854,52 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var quiz = function quiz() {
-    var score = 0; // Listen for validation error
+    var leadGenModal = theForm.querySelector('.modal--lead-gen');
+    var el = null;
+    var score = 0; // Maybe display lead gen modal
 
-    var mutationCallback = function mutationCallback(mutationsList, observer) {
-      for (var i = 0; i < mutationsList.length; i++) {
-        if (mutationsList[i].addedNodes.length > 0) {
-          // Move error message to end of form
-          var el = theForm.querySelector(errorSelector);
+    if (leadGenModal) {
+      var modal = new bootstrap.Modal(leadGenModal, {
+        backdrop: 'static',
+        keyboard: false
+      });
+      modal.show(); // Handle modal submit button click
 
-          if (el) {
-            theForm.querySelector('.en__component--formblock').append(el);
+      leadGenModal.querySelector('.btn').addEventListener('click', function (e) {
+        setTimeout(function () {
+          if (formIsValid(leadGenModal)) {
+            modal.hide();
+            focusFirst();
+          }
+        }, 100);
+      });
+    } // Listen for validation error
+
+
+    el = theForm.querySelector('.en__field--survey');
+
+    if (el) {
+      var mutationCallback = function mutationCallback(mutationsList, observer) {
+        for (var i = 0; i < mutationsList.length; i++) {
+          if (mutationsList[i].addedNodes.length > 0) {
+            // Move error message to end of form
+            var _el = theForm.querySelector(errorSelector);
+
+            if (_el) {
+              theForm.querySelector('.en__component--formblock').append(_el);
+            }
           }
         }
-      }
-    };
+      };
 
-    var errorObserver = new MutationObserver(mutationCallback);
-    errorObserver.observe(theForm.querySelector('.en__field--survey'), {
-      attributes: false,
-      childList: true,
-      subtree: false
-    });
+      var errorObserver = new MutationObserver(mutationCallback);
+      errorObserver.observe(el, {
+        attributes: false,
+        childList: true,
+        subtree: false
+      });
+    }
+
     getAll('.en__field__input--radio').forEach(function (el) {
       el.addEventListener('click', function (e) {
         var _target = e.target;
@@ -749,14 +917,21 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var correctAnswer = theForm.querySelector('.correct');
       var incorrectAnswer = theForm.querySelector('.incorrect');
       var selectedAnswerRadio = theForm.querySelector('.en__field__input--radio:checked');
-      var correctAnswerRadio = theForm.querySelector('.en__field__input--radio[value="1"]'); // Prevent more answer clicks
+      var correctAnswerRadio = theForm.querySelector('.en__field__input--radio[value="1"]');
+      var questionCount = sessionStorage.getItem('questionCount') ? sessionStorage.getItem('questionCount') : 0;
+      var quizScore = sessionStorage.getItem('quizScore') ? sessionStorage.getItem('quizScore') : 0;
+      var alreadyAnswered = sessionStorage.getItem('alreadyAnswered') ? sessionStorage.getItem('alreadyAnswered') : 'false'; // Prevent more answer clicks
 
       disableFields(getAll('.en__field__input--radio'));
 
       if (correctAnswer && incorrectAnswer && correctAnswerRadio) {
         // Check for correct answer
         if (selectedAnswerRadio === correctAnswerRadio) {
-          correctAnswer.style.display = 'inline';
+          correctAnswer.style.display = 'inline'; // Update running score
+
+          if (alreadyAnswered === 'false') {
+            quizScore++;
+          }
         } else {
           addClass(selectedAnswerRadio.nextElementSibling, 'is-incorrect');
           incorrectAnswer.style.display = 'inline';
@@ -767,28 +942,69 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         theForm.querySelector('.quiz-answer p').style.display = 'block'; // Show next question button
 
         theForm.querySelector('.en__component--formblock:last-child').style.display = 'block';
-      }
-    };
 
-    theForm.querySelector('.en__submit button[type="button"]').addEventListener('click', function (e) {
-      var fieldError = theForm.querySelector('.en__field__error');
+        if (alreadyAnswered === 'false') {
+          // Update running count of quiz questions
+          questionCount++;
+          sessionStorage.setItem('questionCount', questionCount); // Save running score
 
-      if (theForm.querySelector('.en__field__input--radio:checked')) {
-        addClass(getClosestEl(e.target, '.en__submit'), hiddenClass);
-
-        if (fieldError) {
-          removeClass(fieldError, displayClass);
-          addClass(fieldError, hiddenClass);
-        }
-
-        checkAnswer();
-      } else {
-        if (fieldError) {
-          removeClass(fieldError, hiddenClass);
-          addClass(fieldError, displayClass);
+          sessionStorage.setItem('quizScore', quizScore);
+          sessionStorage.setItem('alreadyAnswered', 'true');
         }
       }
-    });
+    }; // Handle check answer button click
+
+
+    el = theForm.querySelector('.en__submit button[type="button"]');
+
+    if (el) {
+      el.addEventListener('click', function (e) {
+        var fieldError = theForm.querySelector('.en__field__error');
+
+        if (theForm.querySelector('.en__field__input--radio:checked')) {
+          addClass(getClosestEl(e.target, '.en__submit'), hiddenClass);
+
+          if (fieldError) {
+            removeClass(fieldError, displayClass);
+            addClass(fieldError, hiddenClass);
+          }
+
+          checkAnswer();
+        } else {
+          if (fieldError) {
+            removeClass(fieldError, hiddenClass);
+            addClass(fieldError, displayClass);
+          }
+        }
+      });
+    } // Handle submit button click
+
+
+    el = theForm.querySelector('.en__submit button:not([type="button"])');
+
+    if (el) {
+      el.addEventListener('click', function (e) {
+        sessionStorage.setItem('alreadyAnswered', 'false');
+      });
+    } // Display quiz results if on the last page
+
+
+    if (pageJson.pageNumber === pageJson.pageCount) {
+      // Display quiz score
+      if (theForm.querySelector('.js-quiz-score') && sessionStorage.getItem('quizScore')) {
+        theForm.querySelector('.js-quiz-score').textContent = sessionStorage.getItem('quizScore');
+      } // Display number of questions
+
+
+      if (theForm.querySelector('.js-question-count') && sessionStorage.getItem('questionCount')) {
+        theForm.querySelector('.js-question-count').textContent = sessionStorage.getItem('questionCount');
+      } // Clean up
+
+
+      sessionStorage.removeItem('quizScore');
+      sessionStorage.removeItem('questionCount');
+      sessionStorage.removeItem('alreadyAnswered');
+    }
   };
   /**
   * Event form enhancements
@@ -796,12 +1012,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var events = function events() {
+    var pageNumber = pageJson.pageNumber;
+    var savedTotalAmount = sessionStorage.getItem('savedTotalAmount');
+    var waitListLink = theForm.querySelector('.waitlist-link a');
     var el = null;
+    var _parent = null;
     var hasPromo = false;
     var totalAmount = 0;
     var totalDiscount = 0;
-    var savedTotalAmount = sessionStorage.getItem('savedTotalAmount');
-    var pageNumber = pageJson.pageNumber;
     /**
      * Updates total amount
      */
@@ -824,7 +1042,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } // Display total amount
 
 
-      getAll('.js-total-gift').forEach(function (el) {
+      getAll(totalAmountSelector).forEach(function (el) {
         el.textContent = totalAmount.toFixed(2);
       }); // Save total for use on billing page
 
@@ -833,8 +1051,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     var getPromoDiscount = function getPromoDiscount() {
       return true;
-    }; // Strip currency indicators
+    }; // Make ticket quantity field readonly to avoid invalid ticket numbers
 
+
+    getAll('.en__ticket__quantity').forEach(function (el) {
+      el.readOnly = true;
+      el.setAttribute('tabindex', '-1');
+    }); // Add ticket quantity plus/minus to tab order
+
+    getAll('.en__ticket__minus, .en__ticket__plus').forEach(function (el) {
+      el.setAttribute('tabindex', '0');
+    }); // Strip currency indicators
 
     getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(function (el) {
       el.textContent = el.textContent.replace(/USD/, '');
@@ -845,7 +1072,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }); // Maybe on page 1
 
     if (pageNumber === 1) {
-      // Listen for additional donation    
+      // Maybe add waitlist links
+      if (waitListLink) {
+        getAll('.en__ticket__soldout').forEach(function (el) {
+          var clone = waitListLink.cloneNode(true);
+          el.parentElement.append(clone);
+        });
+      } // Listen for additional donation    
+
+
       el = theForm.querySelector('.en__additional__input');
 
       if (el) {
@@ -870,6 +1105,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         var ticketQuantity = row.querySelector('.en__ticket__quantity');
         el.addEventListener('click', function (e) {
           triggerEvent(ticketQuantity, 'change');
+        }); // Add keyboard nav to plus/minus buttons
+
+        el.addEventListener('keyup', function (e) {
+          if (e.key === 'Enter' || e.keyCode === 13) {
+            e.target.click();
+          }
         });
       }); // Maybe on page 2      
     } else if (pageNumber === 2) {
@@ -877,7 +1118,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       el = theForm.querySelector('.en__orderSummary__data--totalAmount');
 
       if (el) {
-        getAll('.js-total-gift').forEach(function (el) {
+        getAll(totalAmountSelector).forEach(function (el) {
           el.textContent = "$" + el.textContent;
         });
       } // Customize order summary table
@@ -891,11 +1132,21 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }); // Maybe add promo discount line
 
       el = theForm.querySelector('.en__orderSummary__data--totalAmount');
+      _parent = theForm.querySelector('.en__orderSummary');
 
-      if (savedTotalAmount && hasPromo && el) {
+      if (savedTotalAmount && hasPromo && el && _parent) {
         totalAmount = Number(el.textContent);
-        totalDiscount = Number(savedTotalAmount) - totalAmount;
-        console.log(totalDiscount); // Cleanup
+        el = document.getElementById('orderSummaryPromo');
+
+        if (el) {
+          totalDiscount = Number(savedTotalAmount) - totalAmount;
+          el.querySelector('.js-applied-promo').textContent = totalDiscount.toFixed(2);
+
+          _parent.insertBefore(el, theForm.querySelector('.en__orderSummary__total'));
+
+          removeClass(el, hiddenWebOnlyClass);
+        } // Cleanup
+
 
         theForm.querySelector('.en__submit button').addEventListener('click', function (e) {
           sessionStorage.removeItem('savedTotalAmount');
@@ -910,7 +1161,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var validation = function validation() {
     var setValidation = function setValidation(el) {
-      var field = el.closest('.en__field'); // Hide/display error formatting
+      var field = el.closest(enFieldSelector); // Hide/display error formatting
 
       if (el.validity.valid) {
         addClass(el, validClass);
@@ -1030,24 +1281,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     }, true);
 
-    var formIsValid = function formIsValid() {
-      var errorList = theForm.querySelector('.en__errorList');
-      var invalidFields = getAll('.en__field--validationFailed');
-      var valid = true; // Looking for form errors
-
-      if (errorList) {
-        if (errorList.textContent.trim() !== '') {
-          valid = false;
-        }
-      }
-
-      if (invalidFields.length > 0) {
-        valid = false;
-      }
-
-      return valid;
-    };
-
     var setMonthlyAmount = function setMonthlyAmount(amt) {
       if (amt >= 10 && amt <= 24) {
         return 5;
@@ -1092,32 +1325,36 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         } // Maybe display upsell modal
 
 
-        if (hasUpsell && donationAmount >= 10 && donationAmount <= 100) {
-          setTimeout(function () {
-            if (formIsValid()) {
-              if (!monthlyCheckbox.checked) {
-                // Open modal
-                var modal = new bootstrap.Modal(upsellModal, {
-                  backdrop: 'static',
-                  keyboard: false
-                });
-                modal.show(); // Handle modal clicks
+        if (hasUpsell) {
+          if (donationAmount >= 10 && donationAmount <= 100) {
+            setTimeout(function () {
+              if (formIsValid()) {
+                if (!monthlyCheckbox.checked) {
+                  // Open modal
+                  var modal = new bootstrap.Modal(upsellModal, {
+                    backdrop: 'static',
+                    keyboard: false
+                  });
+                  modal.show(); // Handle modal clicks
 
-                upsellButton.addEventListener('click', function (e) {
-                  monthlyCheckbox.click();
-                  otherAmountInput.value = setMonthlyAmount(donationAmount);
-                  doSubmit();
-                });
-                getAll('.btn-close, .btn-continue').forEach(function (el) {
-                  el.addEventListener('click', function (e) {
+                  upsellButton.addEventListener('click', function (e) {
+                    monthlyCheckbox.click();
+                    otherAmountInput.value = setMonthlyAmount(donationAmount);
                     doSubmit();
                   });
-                });
-              } else {
-                doSubmit();
+                  getAll('.btn-close, .btn-continue').forEach(function (el) {
+                    el.addEventListener('click', function (e) {
+                      doSubmit();
+                    });
+                  });
+                } else {
+                  doSubmit();
+                }
               }
-            }
-          }, 100);
+            }, 100);
+          } else {
+            doSubmit();
+          }
         }
       });
     }
@@ -1231,7 +1468,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (ecardData) {
       ecardData = JSON.parse(ecardData);
-      document.querySelector('.en__ecarditems__thumb:nth-child(' + ecardData.selectEcard + ')').click();
+      document.querySelector(".en__ecarditems__thumb:nth-child(" + ecardData.selectEcard + ")").click();
       document.querySelector('.en__ecardmessage__default').value = ecardData.message;
       document.querySelector('[name="ecard.schedule"]').value = ecardData.sendDate.replace(/(..).(..).(....)/, '$3-$1-$2');
       ecardData.recipients.forEach(function (recipient) {
@@ -1240,6 +1477,33 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       sessionStorage.removeItem('ecardData');
       document.querySelector('.en__submit button').click();
     }
+  };
+  /**
+  * Thermometer enhancements
+  */
+
+
+  var thermometers = function thermometers() {
+    // Thermometer goals need to dynaically increase once a certain "raised" is reached
+    getAll('.enWidget--progressBar').forEach(function (el) {
+      var fill = el.querySelector('.enWidget__fill');
+      var raisedPct = parseInt(fill.style.width);
+      var raisedNumber = parseInt(el.querySelector('.raised > div').textContent.replace(/\,/g, ''));
+      var newGoal = null; // Calculate and display updated therm numbers
+
+      if (raisedPct >= thermThresholdPct) {
+        // Reset fill width so that animation runs once new width is set
+        fill.style.width = '0';
+        newGoal = Math.ceil(raisedNumber * thermIncrease / 1000) * 1000;
+        el.querySelector('.remaining > div').textContent = numberPipe(String(newGoal - raisedNumber)).replace(/\.00/, '');
+        fill.style.width = raisedNumber / newGoal * 100 + "%";
+      } // Therms are hidden with CSS
+
+
+      setTimeout(function () {
+        addClass(el, activeClass);
+      }, 100);
+    });
   };
   /**
    * Adds active class to element
@@ -1280,11 +1544,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var addAriaLabelledBy = function addAriaLabelledBy(el) {
-    var maybeLabel = el.firstElementChild;
+    var maybeLabel = el.firstElementChild; //if (maybeLabel.nodeName.toLowerCase() === 'label') {
 
-    if (maybeLabel.nodeName.toLowerCase() === 'label') {
+    if (hasClass(maybeLabel, 'en__field__label')) {
       setTimeout(function () {
-        labelId = 'label' + generateId();
+        labelId = "label" + generateId();
         maybeLabel.id = labelId;
         el.setAttribute('aria-labelledby', labelId);
       }, 100);
@@ -1344,7 +1608,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       label.setAttribute('for', el.id);
       label.textContent = txt;
       addClass(label, visuallyHiddenClass);
-      label.id = 'label' + generateId();
+      label.id = "label" + generateId();
 
       _parent.insertBefore(label, el);
 
@@ -1428,7 +1692,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var createPopover = function createPopover(fieldSelector, placement, label, txt) {
-    var field = theForm.querySelector('.' + fieldSelector);
+    var field = theForm.querySelector("." + fieldSelector);
 
     if (field) {
       var popoverContainer = document.createElement('p');
@@ -1437,23 +1701,24 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       setAttributes(popover, {
         'data-bs-content': txt,
         'data-bs-toggle': 'popover',
+        'data-bs-trigger': 'click focus',
         'role': 'button',
         'tabindex': '0'
       });
       popover.textContent = label;
-      popoverContainer.appendChild(popover);
 
       switch (placement) {
         case 'before':
-          field.querySelector('.en__field__label').appendChild(popoverContainer);
+          field.insertBefore(popover, field.querySelector('.en__field__element'));
           break;
 
         case 'after':
-          getClosestEl(field, '.en__field').appendChild(popoverContainer);
+          popoverContainer.appendChild(popover);
+          getClosestEl(field, enFieldSelector).appendChild(popoverContainer);
           break;
 
         default:
-          field.querySelector('.en__field__label').appendChild(popoverContainer);
+          field.insertBefore(popover, fiel.querySelector('.en__field__element'));
       }
     }
   };
@@ -1492,6 +1757,47 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     sentences.forEach(function (sentence) {
       addEl(el, 'p', sentence);
     });
+  };
+  /**
+  * Returns does form pass EN validation
+  *
+  * @param {node} _parent The node to check for validation errors
+  */
+
+
+  var formIsValid = function formIsValid() {
+    var _parent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : theForm;
+
+    var errorList = _parent.querySelector('.en__errorList');
+
+    var invalidFields = getAll('.en__field--validationFailed', _parent);
+    var valid = true; // Looking for form errors
+
+    if (errorList) {
+      if (errorList.textContent.trim() !== '') {
+        valid = false;
+      }
+    }
+
+    if (invalidFields.length > 0) {
+      valid = false;
+    }
+
+    return valid;
+  };
+  /**
+  * Places focus on first focusable element
+  */
+
+
+  var focusFirst = function focusFirst() {
+    var focusables = getAll('button, a, input, select, textarea, [tabindex]:not([tabindex="-1"])');
+
+    if (focusables.length > 0) {
+      setTimeout(function () {
+        focusables[0].focus();
+      }, 500);
+    }
   };
   /**
   * Returns a unique ID
@@ -1751,7 +2057,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var updateTipJar = function updateTipJar(amt) {
     getAll(tipJarAmountSelector).forEach(function (el) {
-      el.textContent = !isNaN(amt) ? '$' + amt : '';
+      el.textContent = !isNaN(amt) ? "$" + numberPipe(amt) : '';
     });
   };
   /**
@@ -1763,7 +2069,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var updateTotalGift = function updateTotalGift(amt) {
     getAll(totalAmountSelector).forEach(function (el) {
-      el.textContent = !isNaN(amt) ? '$' + amt : '';
+      el.textContent = !isNaN(amt) ? "$" + numberPipe(amt) : '';
     });
   };
   /**
@@ -1821,7 +2127,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   } // On load
 
 
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function (e) {
     if (seamlessEcardBlock) {
       seamlessEcard();
     }
@@ -1843,5 +2149,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     validation();
     formSubmit();
+  });
+  window.addEventListener('load', function (e) {
+    thermometers();
   });
 })();

@@ -1,0 +1,32 @@
+body#en__pagebuilder {
+  .collapse {
+    display: block;
+  }
+}
+
+.collapse:not(.accordion-collapse) {
+  @include media-breakpoint-down(lg) {
+    padding-bottom: 2rem;
+    position: relative;    
+  }
+
+  &:not(.show) {
+    display: block;
+    
+    @include media-breakpoint-down(lg) {
+      height: 40vw;
+      overflow: hidden;
+      
+      &::after {
+        background: linear-gradient(180deg, rgba(255,255,255,0) 0%, $white 66.6666%, $white 100%);
+        bottom: 0;
+        content: "";
+        display: block;
+        height: 20%;
+        position: absolute;
+        width: 100%;
+      }      
+    }
+  }
+}
+

@@ -62,11 +62,17 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
     p {
       display: none;
     }
+
+    .form-heading {
+      @include media-breakpoint-down(md) {
+        margin-top: 1.25rem;
+      }
+    }
   }
 
   tr,
   td {
-    @include media-breakpoint-down(lg) {
+    @include media-breakpoint-down(md) {
       display: block;
     }
   }
@@ -96,10 +102,18 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
         }
       }
     }
+
+    @include media-breakpoint-down(md) {
+      padding: 1rem 1.25rem;
+      
+      &:not(:last-child) {
+        border-bottom: $border-default;
+      }
+    }
   }
 
   td {
-    @include media-breakpoint-up(lg) {
+    @include media-breakpoint-up(md) {
       border: $border-default;
       padding: 1.9333% 2%;
     }
@@ -142,13 +156,15 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   }
 
   .aside {
+    font-size: 1.125rem;
+
     @include media-breakpoint-down(lg) {
       margin-bottom: 3.5rem;
-      margin-top: 0;
+      margin-top: 0 !important;
     }
 
     @include media-breakpoint-up(lg) {
-      margin-top: 1.75rem;
+      margin-top: 1.75rem !important;
       max-width: 19rem;
     }
 
@@ -319,10 +335,26 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
       }
     }
   }
-
+  
+  a[href^="https://www.google.com/maps"],
   address,
   time {
-    @extend .col-md-auto;
+    @extend .col-md-auto;    
+  }
+
+  a[href^="https://www.google.com/maps"] {
+    display: block;
+    color: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-transform: inherit;
+
+    &:hover {
+      address {
+        color: $primary;
+        text-decoration: underline;
+      }
+    }
   }
 
   address {
@@ -330,9 +362,11 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
     font-weight: $font-weight-medium;
     line-height: 1.5;
     margin: 0;
+    transition: $transition-base;
 
     @include media-breakpoint-down(md) {
-      margin-bottom: 1.75rem;
+      margin-bottom: 1.25rem;
+      margin-top: .875rem;
     }
 
     &::before {
@@ -371,24 +405,32 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
 }
 
 .event-overview-details--text {
+  h3,
+  h4 {
+    margin-bottom: .9375rem;    
+  }
+
   h3 {
     @extend .h5;
-    margin-bottom: 132m;
+  }
+  
+  h4 {
+    @extend %serif-xl;
+  }
+  
+  ol,
+  ul {
+    margin-bottom: 1.5625rem;    
+  }
+
+  p,
+  li {
+    @extend %serif-xl;
   }
 
   p {
-    @extend %serif-xl;
-    font-family: $font-family-serif;
-    font-size: 1.125rem;
-    line-height: 1.6666;
-
-    @include media-breakpoint-up(lg) {
-      font-size: 1.375rem;
-      line-height: 1.8181;
-    }
-
     &:not(:last-child) {
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.5625rem;
     }
   }
 
@@ -398,10 +440,6 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
     text-decoration: underline;
     text-transform: none;
     white-space: nowrap;
-
-    &:hover {
-      text-decoration: none;
-    }
   }
 }
 
@@ -522,6 +560,14 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   @include media-breakpoint-up(md) {
     width: 10em;
   }
+  
+  a {
+    font-size: 1rem;
+    display: block;
+    line-height: 1.1875;
+    text-decoration: underline;
+    text-transform: none;    
+  }
 }
 
 .en__ticket__quantity {
@@ -529,6 +575,11 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   font-size: $font-size-sm;
   font-weight: $font-weight-bold;
   line-height: 1.1428;
+  
+  &:focus {
+   border: 0;
+   outline: 0;    
+  }
 }
 
 .en__ticket__selector {
@@ -550,7 +601,13 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   height: 3.25rem;
   justify-content: center;
   margin: 0;
+  position: relative;
   width: 2.667rem;
+  
+  &:focus {
+    border: 2px solid $primary;
+    outline: 0;
+  }
 
   &::after {
     color: $primary;
@@ -630,7 +687,6 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   }
 }
 
-
 .form-heading--promo {
   display: flex;
   flex-direction: column;
@@ -682,10 +738,6 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
 a[href="javascript:history.back()"] {
   display: inline-block;
   margin-bottom: 3rem;
-
-  &:hover {
-    border-bottom: 0;
-  }
 
   &::before {
     content: $icon-back;
@@ -740,9 +792,15 @@ a[href="javascript:history.back()"] {
 
 .en__orderSummary__data--cost,
 .en__orderSummary__data--totalAmount {
-  &::before {
+  &:not(.js-applied-promo)::before {
     content: "$";
   }
+}
+
+.js-applied-promo {
+  &::before {
+    content: "-$";
+  }  
 }
 
 .en__registrants {

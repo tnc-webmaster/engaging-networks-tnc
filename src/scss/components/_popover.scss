@@ -1,7 +1,13 @@
+.en__field,
+.popover-container {
+  position: relative;  
+}
+
 .en__field > .popover-container {
   margin-bottom: -.5rem;  
   margin-top: 1.5rem;
 }
+
 
 [data-bs-toggle="popover"] {
   color: $primary !important;
@@ -9,6 +15,14 @@
   
   &:hover {
     color: $primary !important;
+  }
+  
+  .en__field__label + & {
+    display: inline-block;
+    line-height: 1.375;
+    margin-bottom: .5rem;
+    margin-left: .25rem;
+    vertical-align: bottom;
   }
 }
 

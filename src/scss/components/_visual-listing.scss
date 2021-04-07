@@ -3,6 +3,7 @@
 
   h3 {
     @extend .text-md-start;
+    font-family: $font-family-serif;
     margin-bottom: 2rem;
     text-align: center;
     width: 100%;
@@ -33,10 +34,12 @@
     }
   }
   
-  blockquote span[style="font-size:18px;"] {
+  blockquote,
+  p {
+    @extend %serif-normal;
+
     @include media-breakpoint-down(lg) {
-      font-size: 1.125rem !important;
-      line-height: 1.5555 !important;
+      line-height: 1.5555;
     }    
   }
   

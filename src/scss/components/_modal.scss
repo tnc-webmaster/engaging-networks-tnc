@@ -63,6 +63,18 @@
       margin-left: .5rem;
     }
   }
+  
+  .no-close & {
+    padding-top: 2.5rem;
+    
+    @include media-breakpoint-up(lg) {
+      padding-top: 3.5rem;    
+    }
+    
+    .btn-close {
+      display: none;
+    }
+  }
 }
 
 .modal-title {
@@ -87,7 +99,35 @@
 .modal-body {
   p {
     @extend %serif-lg;
-  }  
+  }
+  
+  &.en__component--formblock {
+    &.narrow {
+      max-width: 25rem;      
+    }
+   
+    + .modal-footer {
+      .btn {
+        font-size: 1.25rem;
+        height: 3em;
+        line-height: 1.2;
+        max-width: 10rem;
+        padding-bottom: 1.125rem;
+        padding-top: 1.125rem;        
+      }
+    }
+  }
+
+  .en__field--radio {
+    > .en__field__label {
+      font-family: $font-family-sans-serif;
+      font-size: 1rem;
+    }    
+    
+    .en__field__label {
+      font-weight: $font-weight-medium;
+    }
+  }
 }
 
 .modal-footer {
@@ -98,19 +138,20 @@
     @extend %btn-text;    
     color: $primary;
     font-weight: $font-weight-semibold;
-    margin-top: 1.25rem;
+    margin-top: 1.875rem;
     text-align: left;
     text-decoration: underline;
   }
 
   .btn {
     height: auto;
-    width: 100%;        
+    width: 100%;   
+
+    &-outline-primary {    
+      @include button-variant($white, $primary, $primary, $primary, $primary, $white, $primary, $primary, $white);
+    }    
   }
   
-  .btn-outline-primary {    
-    @include button-variant($white, $primary, $primary, $primary, $primary, $white, $primary, $primary, $white);
-  }
   
   .en__submit {
     flex: none;

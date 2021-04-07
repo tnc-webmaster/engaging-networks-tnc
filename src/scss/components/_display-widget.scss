@@ -3,3 +3,41 @@
   font-size: inherit;
   padding: 0;
 }
+
+.enWidget--progressBar {
+  opacity: 0;
+  transition: $transition-base;
+  
+  &.is-active {
+    opacity: 1 !important;
+
+    .raised,
+    .remaining {
+      > div {
+        &:first-child {
+          > span {
+            color: $primary !important;
+          }
+        }
+
+        &:last-child {
+          > span {
+            color: $body-color !important;
+          }
+        }
+      }
+    }
+
+    .raised {
+      border-color: $border-color !important;    
+    }
+    
+    .enWidget__progress {
+      border-color: $input-border-color !important;
+    }
+    
+    .enWidget__fill {
+      background-color: $primary !important;
+    }
+  }  
+}

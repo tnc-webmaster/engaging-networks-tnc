@@ -1,5 +1,5 @@
 .en__component--page[action*="survey"] {
-  .en__component--column:not(.hero):not(.quiz) {
+  .en__component--column:not(.hero):not(.quiz):not(.modal) {
     .en__component--copyblock {
       border-bottom: $border-default;
       padding-bottom: 2.5rem;

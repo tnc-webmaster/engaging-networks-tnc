@@ -1,12 +1,14 @@
 .en__component--page[action*="petition"] {
   .aside {
     @include media-breakpoint-down(lg) {
-      margin-top: 1.3333rem !important;
+      border-top: $border-default;
+      padding-top: 1.75rem;
+      margin-top: 1.75rem;
     }
 
     h3 {
       @include media-breakpoint-up(xxl) {
-        min-width: 14em;
+        //min-width: 14em;
       }
       
       + h4 {
@@ -134,10 +136,6 @@
         height: 100%;
         margin-left: calc(1.25rem + 1px);
       }
-    }
-
-    &:hover {
-      border-bottom: 0;
     }
   }
 

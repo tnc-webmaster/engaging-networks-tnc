@@ -107,7 +107,6 @@ h5,
     
     &:hover {
       color: $primary;
-      border-bottom: 0;
     }
   }
 }
@@ -190,18 +189,9 @@ a {
   line-height: 1.25;
   text-transform: uppercase;
   transition: $transition-base;
-
-  &:hover {
-    border-bottom: 1px solid;
-  }
   
   &[data-bs-content] {
     text-transform: none;
-
-    &:hover {
-      border: 0;
-      text-decoration: none;
-    }
   }
   
   span[style="font-size:18px;"] {
@@ -231,9 +221,8 @@ small {
 }
 
 
-p[style="text-align: center;"] {
-  span[style="font-size:18px;"] {
-    display: block;
+.or-separator {
+  p {
     margin-bottom: 1.5rem;
     position: relative;
 

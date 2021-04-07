@@ -13,13 +13,8 @@ img {
   width: 1.125rem;
   z-index: $zindex-tooltip + 1;
   
-  &:hover {
-    border-bottom: 0;
-    text-decoration: none;
-  }
-  
   &:focus {
-    outline: 0;    
+    outline: 2px solid;    
   }  
   
   + .tooltip {
@@ -31,7 +26,7 @@ img {
     width: 100%;
     
     .tooltip-inner {
-      padding-right: calc(1.125rem + 10%);
+      padding-right: calc(1.25rem + 10%);
       text-align: left;
     }
   }

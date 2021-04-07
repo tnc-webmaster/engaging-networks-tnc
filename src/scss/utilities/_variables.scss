@@ -723,7 +723,7 @@ $zindex-dropdown: 1000 !default;
 $zindex-sticky: 1020 !default;
 $zindex-fixed: 1030 !default;
 $zindex-modal-backdrop: 1040 !default;
-$zindex-modal: 1050 !default;
+$zindex-modal: 9999;
 $zindex-popover: 1060 !default;
 $zindex-tooltip: 1070 !default;
 // scss-docs-end zindex-stack
@@ -938,7 +938,7 @@ $tooltip-color: $white;
 $tooltip-bg: rgba(0,0,0,0.75);
 $tooltip-border-radius: 0;
 $tooltip-opacity: 1;
-$tooltip-padding-y: .875rem;
+$tooltip-padding-y: 1.25rem;
 $tooltip-padding-x: 1.333rem;
 
 $tooltip-arrow-width: .8rem !default;
