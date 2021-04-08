@@ -176,7 +176,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
 
   .en__submit {
     button {
-      font-weight: $font-weight-semibold;
+      font-weight: $font-weight-bold !important;
 
       &:not([type="reset"]) {
         @extend %btn-sm;
@@ -498,6 +498,10 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
 .en__ticket__name {
   font-size: 1.125rem;
   line-height: 1.4444;
+  
+  @include media-breakpoint-down(md) {
+    padding-top: 1.25rem;
+  }
 }
 
 .en__ticket__desc {

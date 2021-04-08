@@ -149,7 +149,11 @@
   }
 
   .en__component--advrow:first-of-type + .en__component--advrow {
-    margin-top: 5.5rem;
+    margin-top: 2.5rem;
+    
+    @include media-breakpoint-up(md) {      
+      margin-top: 5.5rem;
+    } 
   }
 }
 

@@ -28,6 +28,7 @@
 
 .en__component--advcolumn {
   &.quiz {
+    background-color: $gray-100;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
 
@@ -83,6 +84,8 @@
       }
 
       .en__field__label--item {
+        align-items: center;
+        background-color: $white;
         border: 1px solid $gray-300;
         display: flex;
         padding: 1rem 1.25rem;
@@ -100,6 +103,7 @@
             @extend %styled-checkbox-checked;
             background-color: $primary;
             border-color: $primary;
+            transform: none;
           }
         }
 

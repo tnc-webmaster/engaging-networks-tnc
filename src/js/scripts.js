@@ -359,7 +359,12 @@
         addPlaceholder(el, fieldItem.previousElementSibling.querySelector('label').textContent);
       }
     });
-
+    
+    // Placeholders for address 2 fields
+    getAll('[name*="address2"], [name*="add2"]').forEach(el => {
+      el.setAttribute('placeholder', 'Apt, ste, bldg.');      
+    });
+    
     // Hardcode placeholder for date fields
     getAll(dateInputSelector).forEach(el => {
       addPlaceholder(el, 'Select Date');
@@ -1174,6 +1179,32 @@
         });
       }
       
+      getAll('.en__registrants__ticketHead').forEach(el => {
+        el.textContent = el.textContent.replace(/\d/g, '');
+      });
+      
+      // Remove attendee index number
+      getAll('.en__registrants__registrantHead').forEach(el => {
+        el.textContent = el.textContent.replace(/\d/g, '');
+      });
+      
+      // Re-number attendees
+      getAll('.en__registrants__ticket').forEach(el => {
+        const attendees = getAll('.en__registrants__registrantHead', el);
+        
+        if (attendees.length > 1) {
+          attendees.forEach((el, index) => {
+            el.textContent = `${el.textContent} ${index + 1}`;
+          });                  
+        }
+      });
+      
+      // Adding commas to totals
+      getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(el => {
+        el.textContent = numberPipe(el.textContent);
+      });
+      
+      // Remove ticket index number
       // Display total cost
       getAll('.js-total-gift').forEach(el => {
         el.textContent = `$${theForm.querySelector('.en__orderSummary__data--totalAmount').textContent}`;

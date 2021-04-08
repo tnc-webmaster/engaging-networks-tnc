@@ -27,6 +27,7 @@
 .accordion-body {
   @extend %serif-normal;  
   margin-bottom: 1.25rem;  
+  padding-top: .625rem;
   
   @include media-breakpoint-down(lg) {
     margin-top: -1rem;

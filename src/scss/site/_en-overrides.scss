@@ -49,6 +49,12 @@
   margin: 0;
 }
 
+.en__additional__input,
+.en__additional__promo,
+.en__additional__code {
+  text-align: left;
+}
+
 .en__component--row--2 {
   @extend .row;
 }

@@ -1,6 +1,8 @@
 .en__field--validationFailed {
-  display: flex;
-  flex-direction: column;
+  &:not(.en__hidden) {
+    display: flex;
+    flex-direction: column;    
+  }
 
   .en__field__input--calendar,
   .en__field__input--email,

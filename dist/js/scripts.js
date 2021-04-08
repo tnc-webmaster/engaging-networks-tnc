@@ -378,6 +378,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       if (fieldItem) {
         addPlaceholder(el, fieldItem.previousElementSibling.querySelector('label').textContent);
       }
+    }); // Placeholders for address 2 fields
+
+    getAll('[name*="address2"], [name*="add2"]').forEach(function (el) {
+      el.setAttribute('placeholder', 'Apt, ste, bldg.');
     }); // Hardcode placeholder for date fields
 
     getAll(dateInputSelector).forEach(function (el) {
@@ -1195,8 +1199,30 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         theForm.querySelector('.en__submit button').addEventListener('click', function (e) {
           sessionStorage.removeItem('savedTotalAmount');
         });
-      } // Display total cost
+      }
 
+      getAll('.en__registrants__ticketHead').forEach(function (el) {
+        el.textContent = el.textContent.replace(/\d/g, '');
+      }); // Remove attendee index number
+
+      getAll('.en__registrants__registrantHead').forEach(function (el) {
+        el.textContent = el.textContent.replace(/\d/g, '');
+      }); // Re-number attendees
+
+      getAll('.en__registrants__ticket').forEach(function (el) {
+        var attendees = getAll('.en__registrants__registrantHead', el);
+
+        if (attendees.length > 1) {
+          attendees.forEach(function (el, index) {
+            el.textContent = el.textContent + " " + (index + 1);
+          });
+        }
+      }); // Adding commas to totals
+
+      getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(function (el) {
+        el.textContent = numberPipe(el.textContent);
+      }); // Remove ticket index number
+      // Display total cost
 
       getAll('.js-total-gift').forEach(function (el) {
         el.textContent = "$" + theForm.querySelector('.en__orderSummary__data--totalAmount').textContent;

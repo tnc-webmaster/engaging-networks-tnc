@@ -1,4 +1,16 @@
 .en__component--page[action*="petition"] {
+  .overview {
+    @extend %serif-xl;
+    
+    p,
+    ol,
+    ul {
+      &:not(:last-child) {
+        margin-bottom: 1.5625rem;
+      }     
+    }    
+  }
+
   .aside {
     @include media-breakpoint-down(lg) {
       border-top: $border-default;
@@ -69,17 +81,6 @@
         @include media-breakpoint-down(lg) {
           font-size: 1.875rem;
           margin-bottom: 1rem;
-        }
-      }
-
-      p {
-        big {
-          font-size: 1.375rem !important;
-          line-height: 1.8181 !important;
-        }
-
-        &:not(:last-child) {
-          margin-bottom: 2.75rem;
         }
       }
     }

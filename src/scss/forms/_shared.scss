@@ -112,6 +112,10 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
   font-weight: $font-weight-medium;
   line-height: 1.375;
   
+  &:not([for]) {
+    display: none;
+  }
+  
   &[for] {
     cursor: pointer;    
   }

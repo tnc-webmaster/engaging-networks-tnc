@@ -41,6 +41,10 @@
   @include media-breakpoint-up(lg) {
     padding-top: 4.5rem;    
   }
+  
+  p {
+    
+  }
 
   .btn-close {
     @extend %btn-text;
@@ -65,10 +69,15 @@
   }
   
   .no-close & {
+    display: block;
     padding-top: 2.5rem;
     
     @include media-breakpoint-up(lg) {
-      padding-top: 3.5rem;    
+      padding-top: 4.5rem;    
+    }
+    
+    p {
+      @extend %sans-serif-lg;
     }
     
     .btn-close {
@@ -103,7 +112,7 @@
   
   &.en__component--formblock {
     &.narrow {
-      max-width: 25rem;      
+      max-width: 25rem !important;      
     }
    
     + .modal-footer {
@@ -118,6 +127,10 @@
     }
   }
 
+  .en__field:not(:last-child) {
+    margin-bottom: .833rem;  
+  }
+
   .en__field--radio {
     > .en__field__label {
       font-family: $font-family-sans-serif;
@@ -127,6 +140,10 @@
     .en__field__label {
       font-weight: $font-weight-medium;
     }
+  }
+
+  .en__field--checkbox {
+    margin-top: 1.75rem;
   }
 }
 
