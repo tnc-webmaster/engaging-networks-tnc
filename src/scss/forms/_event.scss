@@ -55,6 +55,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   }
 
   table {
+    border: $border-default;
     border-top: .3125rem solid $primary;
     margin-top: 1.85rem;
     line-height: 1.6666;
@@ -172,6 +173,10 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
       text-decoration: underline;
       text-transform: none;
     }
+  }
+
+  .alert {
+    margin-bottom: -2rem;
   }
 
   .en__submit {
@@ -405,6 +410,8 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
 }
 
 .event-overview-details--text {
+  @extend %serif-xl;
+
   h3,
   h4 {
     margin-bottom: .9375rem;    
@@ -421,11 +428,6 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   ol,
   ul {
     margin-bottom: 1.5625rem;    
-  }
-
-  p,
-  li {
-    @extend %serif-xl;
   }
 
   p {
@@ -818,7 +820,7 @@ a[href="javascript:history.back()"] {
 }
 
 .en__registrants__ticketHead {
-  font-size: 1em;
+  font-size: 1.125rem;
   line-height: 1.4444;
   padding-bottom: 0;
   margin-bottom: .333rem;

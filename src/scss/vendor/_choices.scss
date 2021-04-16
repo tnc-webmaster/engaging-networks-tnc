@@ -113,6 +113,7 @@ $choices-z-index: 1;
 
 .#{$choices-selector}__inner {
   @extend .form-select;
+  font-size: $font-size-sm;
   height: $input-height-total;
   
   overflow: hidden;

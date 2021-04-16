@@ -88,6 +88,15 @@ h5,
   transition: $transition-base;
 }
 
+.h6,
+h6 {
+  font-family: $font-family-sans-serif;
+  font-size: .875rem;
+  font-weight: $font-weight-normal;
+  line-height: 1.5714;
+  margin-bottom: 1.75rem;
+}
+
 h1,
 .h1,
 h2,
@@ -170,13 +179,14 @@ li {
 
   small {
     display: inline-block;
-    font-size: $font-size-sm !important;
-    line-height: 1.5 !important;
+    font-size: $font-size-sm;
+    line-height: 1.5;
   }
 }
 
 cite {
   display: block;
+  font-family: $font-family-sans-serif;
   font-size: .75rem;
   font-style: normal;
   font-weight: $font-weight-semibold;
@@ -223,6 +233,7 @@ small {
 
 .or-separator {
   p {
+    @extend %sans-serif-lg;
     margin-bottom: 1.5rem;
     position: relative;
 
@@ -249,6 +260,10 @@ small {
     text-transform: uppercase;
     z-index: 10;
   }  
+}
+
+.sans-serif-lg {
+  @extend %sans-serif-lg;
 }
 
 .fw-medium {

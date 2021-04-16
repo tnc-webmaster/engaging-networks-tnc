@@ -1,0 +1,27 @@
+.alert {
+  color: $body-color;
+  line-height: 1.4444;
+  font-size: 1.125rem;
+  
+  @include media-breakpoint-down(lg) {
+    padding-bottom: .875rem;
+    padding-left: 1.25rem;
+    padding-top: .875rem;    
+  }
+
+  p:first-of-type:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .btn-close {
+    @extend %btn-close;
+    top: 1.25rem;
+    right: 1.25rem;
+    
+    @include media-breakpoint-up(lg) {
+      top: 50%;
+      transform: translateY(-50%);      
+    }
+
+  }
+}

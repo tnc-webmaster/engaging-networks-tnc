@@ -4,36 +4,57 @@
   }
 
   .en__component--advcolumn {
-    &:first-child:not(:last-child) {
-      padding-left: 0;
-      padding-right: 0;
-
-      .en__component--imageblock {
-        &:first-child {
-          @extend .d-lg-none;
-        }
-
-        &:last-child {
-          @extend .d-none;
-          @extend .d-lg-block;
-        }
-
-        img {
-          width: 100% !important;
-        }
-      }
-    }
   }
 }
 
 .en__component--advcolumn {
+  &.quiz-image {
+    padding-left: 0;
+    padding-right: 0;
+
+    .en__component--imageblock {
+      &:first-child {
+        @extend .d-lg-none;
+      }
+
+      &:last-child {
+        @extend .d-none;
+        @extend .d-lg-block;
+      }
+
+      img {
+        width: 100% !important;
+      }
+    }
+  }
+
+  &.quiz-image-final-screen {
+    .en__component--imageblock {
+      @include media-breakpoint-between(lg, xxl) {
+        height: 100%;
+        overflow: hidden;
+        position: relative;        
+        
+        img {
+          height: 100% !important;
+          left: 50%;
+          max-width: none;
+          position: absolute;
+          transform: translateX(-50%);
+          width: auto !important;          
+        }
+      }
+    }    
+  }
+
   &.quiz {
     background-color: $gray-100;
     padding-left: 1.25rem;
     padding-right: 1.25rem;
 
     @include media-breakpoint-down(lg) {
-      margin-top: 2.3333rem;
+      padding-bottom: 3.125rem;
+      padding-top: 2.3333rem;
     }
 
     @include media-breakpoint-up(lg) {
@@ -42,10 +63,7 @@
       flex: none;
       flex-direction: column;
       justify-content: center;
-      padding-bottom: 1.25rem;
-      padding-left: 3rem;
-      padding-right: 3rem;
-      padding-top: 1.25rem;
+      padding: 1.25rem 3rem;
       width: 50%;
     }
 
@@ -205,11 +223,16 @@
   }
 
   &.quiz-final-screen {
-    @include media-breakpoint-up(xl) {
-      padding-left: 8.5%;
-      padding-right: 8.5%;
+    @include media-breakpoint-up(lg) {
+      padding-bottom: 3.125rem;      
+      padding-top: 3.125rem;
     }
 
+    @include media-breakpoint-up(xl) {
+      padding-left: 7.75%;
+      padding-right: 7.75%;
+    }
+    
     h1 {
       font-family: $font-family-sans-serif;
       font-size: 1.25rem;
@@ -240,7 +263,7 @@
       color: $white;
       display: inline-flex;
       font-size: $font-size-sm;
-      font-weight: $font-weight-medium;
+      font-weight: $font-weight-semibold;
       justify-content: center;
       white-space: nowrap;
       width: 100% !important;
@@ -301,7 +324,6 @@
   }
 }
 
-
 body:not(#en__pagebuilder) {
   .en__component--advcolumn {
     &.quiz {
@@ -331,6 +353,10 @@ body:not(#en__pagebuilder) {
   }
 
   .footer {
+    @include media-breakpoint-down(lg) {
+      margin-top: 0;      
+    }
+
     @include media-breakpoint-up(lg) {
       border-top: 0;
       margin-top: 1.75rem;

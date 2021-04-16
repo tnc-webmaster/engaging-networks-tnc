@@ -15,6 +15,7 @@ $confirmation-max-width: 850px !important;
 }
 
 .thank-you-donation-receipt {
+  @extend %serif-lg;
   margin-left: auto;
   margin-right: auto;
   max-width: $confirmation-max-width;
@@ -38,10 +39,17 @@ $confirmation-max-width: 850px !important;
     margin-bottom: .75rem;
   }
   
-  p {
-    @extend %serif-lg;
+  h3 {
+    @extend %confirmation-subheading;
   }
-  
+
+  a {
+    font-size: inherit;
+    font-weight: inherit;
+    text-decoration: underline;
+    text-transform: inherit;
+  }
+    
   table {
     @extend %sans-serif-lg;    
     margin-top: 1.75rem;
@@ -82,9 +90,10 @@ $confirmation-max-width: 850px !important;
 
 .thank-you-honorary-header,
 .thank-you-survey-header {
+  @extend %serif-xl;
+
   h2 {
     color: $body-color;
-    font-family: $font-family-serif;
     font-size: 1.875rem;
     line-height: 1.2;
     margin-bottom: 1.5rem;
@@ -103,9 +112,7 @@ $confirmation-max-width: 850px !important;
     margin-top: 2rem;
   }
   
-  p {
-    @extend %serif-xl;
-    
+  p {  
     @include media-breakpoint-up(lg) {
       margin-bottom: 2.5rem;
     }
@@ -113,7 +120,6 @@ $confirmation-max-width: 850px !important;
   
   ul {
     @extend %list-flush;
-    @extend %serif-xl;
   }
   
   a {
@@ -132,3 +138,71 @@ $confirmation-max-width: 850px !important;
     }
   }
 }
+
+.otg-thank-you {
+  @extend %serif-xl;
+    border-bottom: $border-default;      
+    margin-bottom: 2.75rem;
+    padding-bottom: 1.875rem;
+
+  @include media-breakpoint-up(lg) {
+    margin-bottom: 2.375rem;
+    padding-bottom: 2.25rem;
+  }
+
+  h3 {
+    @extend %confirmation-subheading;
+  }
+
+  a {
+    font-size: inherit;
+    font-weight: inherit;
+    text-decoration: underline;
+    text-transform: inherit;
+  }
+
+  ol {
+    counter-reset: item;
+    margin:0;
+    padding-left: 0;
+
+    > li {
+      counter-increment: item;
+      display: flex;
+      list-style: none inside;
+      overflow: hidden;
+      
+      &:not(:last-child) {
+        margin-bottom: 1.25rem;
+        
+        @include media-breakpoint-up(lg) {
+          margin-bottom: 1.875rem;
+        }
+      }
+
+      &:before {
+        align-items: center;
+        background-color: $primary;
+        border-radius: 50%;
+        color: $white;
+        content:counter(item) ;
+        display: inline-flex;
+        flex: none;
+        font-family: $font-family-sans-serif;
+        font-size: .8125rem;
+        font-weight: $font-weight-bold;
+        height: 2em;
+        justify-content: center;
+        line-height: 1;
+        margin-right: .6875rem;
+        width: 2em;
+        
+        @include media-breakpoint-up(lg) {
+          font-size: 1.25rem;
+          margin-right: 1.25rem;
+        }
+      }
+    }
+  }
+}
+

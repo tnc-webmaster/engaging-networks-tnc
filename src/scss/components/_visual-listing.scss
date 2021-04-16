@@ -1,11 +1,10 @@
 .visual-listing {
+  @extend %serif-normal;
   --bs-gutter-x: 1.75rem;
 
   h3 {
     @extend .text-md-start;
-    font-family: $font-family-serif;
     margin-bottom: 2rem;
-    text-align: center;
     width: 100%;
     
     .visual-listing--no-images & {
@@ -36,8 +35,6 @@
   
   blockquote,
   p {
-    @extend %serif-normal;
-
     @include media-breakpoint-down(lg) {
       line-height: 1.5555;
     }    
@@ -53,7 +50,13 @@
     &:last-child:not(:first-child) {
       @extend .col-md-8;
     }
-  }  
+  }
+  
+  small {
+    @extend .h6;
+    display: block;
+    margin-bottom: 0;
+  }
 }
 
 .visual-listing--no-images {

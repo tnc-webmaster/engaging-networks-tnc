@@ -63,6 +63,12 @@
   }
 }
 
+.form-select {
+  @include media-breakpoint-up(md) {
+    font-size: $font-size-sm;
+  }
+}
+
 input[type="date"]::-webkit-calendar-picker-indicator,
 input::-webkit-clear-button,
 input::-webkit-outer-spin-button,
@@ -175,7 +181,6 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
     @extend .col;
   }
 }
-
 
 .en__field__input--textarea {
   height: calc(6.875rem + 1px);
@@ -513,7 +518,8 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
 
   button {
     @extend .btn;
-    @extend .btn-lg;
+    //@extend .btn-lg;
+    height: auto !important;
     min-width: 11.875rem !important;
     
     &:not([class*="btn-outline"]) {

@@ -542,7 +542,7 @@ $input-padding-x-lg: $input-btn-padding-x-lg !default;
 $input-font-size-lg: $input-btn-font-size-lg !default;
 
 $input-bg: $white !default;
-$input-disabled-bg: $gray-200 !default;
+$input-disabled-bg: $white;
 $input-disabled-border-color: null !default;
 
 $input-color: $gray-900;
@@ -635,7 +635,7 @@ $input-group-addon-border-color: $input-border-color !default;
 
 $form-select-padding-y: $input-padding-y !default;
 $form-select-padding-x: $input-padding-x !default;
-$form-select-font-size: $font-size-sm;
+$form-select-font-size: $font-size-base;
 $form-select-indicator-padding: 1rem !default; // Extra padding to account for the presence of the background-image based indicator
 $form-select-font-weight: 700;
 $form-select-line-height: $input-line-height !default;
@@ -1056,17 +1056,17 @@ $modal-scale-transform: scale(1.02) !default;
 //
 // Define alert colors, border radius, and padding.
 
-$alert-padding-y: $spacer !default;
-$alert-padding-x: $spacer !default;
+$alert-padding-y: 1.5rem;
+$alert-padding-x: 2rem;
 $alert-margin-bottom: 1rem !default;
 $alert-border-radius: $border-radius !default;
-$alert-border-width: $border-width !default;
+$alert-border-width: 2px;
 
-$alert-bg-scale: -80% !default;
-$alert-border-scale: -70% !default;
+$alert-bg-scale: -90%;
+$alert-border-scale: 0%;
 $alert-color-scale: 40% !default;
 
-$alert-dismissible-padding-r: $alert-padding-x * 3 !default; // 3x covers width of x plus default padding on either side
+$alert-dismissible-padding-r: $alert-padding-x * 2;
 
 
 // Progress bars

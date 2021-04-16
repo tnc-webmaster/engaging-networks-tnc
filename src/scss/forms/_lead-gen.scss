@@ -101,11 +101,5 @@
 }
 
 .lead-gen-overview {
-  h2 {
-    font-family: $font-family-serif;
-  }
-
-  p {
-    @extend %serif-xl;
-  }
+  @extend %serif-xl;
 }

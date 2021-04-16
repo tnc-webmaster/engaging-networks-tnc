@@ -1,0 +1,45 @@
+.canvas-container {
+  width: 100%;
+  
+  canvas {
+    height: 200px;
+    width: 380px;
+  }
+}
+
+.accordion-item {
+  border-bottom: $border-default;
+}
+
+.accordion-button {
+  font-size: 1em;
+  font-weight: inherit;
+
+  &.collapsed:focus {
+    &:after {
+      outline: 2px solid $primary;      
+    }        
+  }
+}
+
+.accordion-body {
+  @extend %serif-normal;  
+  margin-bottom: 1.25rem;  
+  padding-top: .625rem;
+  
+  @include media-breakpoint-down(lg) {
+    margin-top: -1rem;
+  }
+  
+  @include media-breakpoint-up(lg) {
+    margin-bottom: 2rem;        
+  }
+  
+  ol, ul {
+    padding-left: calc(1rem + 2px);    
+  }
+
+  li {
+    padding-left: .75rem;
+  }
+}

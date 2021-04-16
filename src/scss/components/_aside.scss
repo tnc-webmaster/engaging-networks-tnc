@@ -89,7 +89,17 @@
           max-width: 80.2926%;
         }
       }
-    }
+      
+      &.gift-membership {
+        h4 {
+          margin-bottom: 1.5rem;
+        }
+
+        p:not(:last-child) {
+          margin-bottom: 2rem;
+        }        
+      }
+    }    
   }
 
   .en__component--formblock:not(:first-child) {

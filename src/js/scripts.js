@@ -33,13 +33,13 @@
   const enFieldSelector = '.en__field';
   const enFieldItemSelector = '.en__field__item';
   const giftDesignationSelect = '#en__field_transaction_dirgift';
-  const homePhoneInputSelector = '#en__field_supporter_phoneNumber';  
+  const homePhoneInputSelector = '#en__field_supporter_phoneNumber';
   const informCountrySelect = '#en__field_transaction_infcountry';
   const informStateProvinceSelect = '#en__field_transaction_infreg';
   const mobilePhoneSameAsHomeCheckboxSelector = '#en__field_supporter_questions_891102';
   const mobilePhoneInputSelector = '#en__field_supporter_phoneNumber2';
   const otherAmountSelector = '.en__field--donationAmt .en__field__item--other';
-  const otherAmountInputSelector = '.en__field--donationAmt .en__field__input--other';
+  const otherAmountInputSelector = '.en__field--donationAmt .en__field__input--other, .en__field--donationAmt .en__field__input--text';
   const paymentMethodSelector = '[class*="en__field--payment-method"]';
   const paymentMethodRadioSelector = '[class*="en__field--payment-method"].en__field--radio';
   const paymentTypeSelector = '[name="transaction.paymenttype"]';
@@ -56,7 +56,7 @@
 
   // Elements
   const theForm = document.querySelector('.en__component--page');
-  
+
   // Masks
   const numberPipe = IMask.createPipe({
     mask: 'num',
@@ -69,7 +69,6 @@
       }
     }
   });
-  let otherAmountMask = null;
 
   // Widgets
   let cleave = null;
@@ -121,14 +120,14 @@
       const selectValue = selectOne.value;
       let html = '';
       let index = 1;
-      
+
       // Only do this for state selects
       if (_choices._baseId.indexOf('region') > -1) {
         // Clear the native select
-        selectOne.innerHTML = '';      
+        selectOne.innerHTML = '';
         //Remove the duplicate that this method generates at bottom of list
         if (e) {
-          _choices.choiceList.element.removeChild(_choices.choiceList.element.lastChild);                      
+          _choices.choiceList.element.removeChild(_choices.choiceList.element.lastChild);
         }
         // Re-add all <options> to native select
         getAll('.choices__item', _choices.choiceList.element).forEach(el => {
@@ -144,7 +143,7 @@
         selectOne.choices = _choices;
         // Listen for an autofill (change event)
         selectOne.removeEventListener('change', handleChoicesChange);
-        selectOne.addEventListener('change', handleChoicesChange);        
+        selectOne.addEventListener('change', handleChoicesChange);
       }
     };
 
@@ -211,12 +210,12 @@
     });
     // Dont forget pseudo elements
     root.style.setProperty('--scrollbarWidth', `${scrollbarWidth}px`);
-    
+
     // Initiate choices.js
     getAll(`select:not(${stateProvinceSelect}):not(${informStateProvinceSelect}):not(${giftDesignationSelect})`).forEach(el => {
       createChoices(el);
     });
-    
+
     // Structure modals
     els = getAll('.modal-header, .modal-body, .modal-footer');
     if (els.length > 0) {
@@ -224,8 +223,8 @@
     }
     getAll('.modal-content').forEach(el => {
       wrapEl(el, 'div', ['modal-dialog', 'modal-lg']);
-    });    
-                  
+    });
+
     getAll('.modal').forEach(el => {
       // Add attributes
       setAttributes(el, {
@@ -298,7 +297,7 @@
         }
       });
     }
-        
+
     /**
     * Shows tribute headings that match headingClass
     *
@@ -314,7 +313,7 @@
         removeClass(el, hiddenWebOnlyClass);
       });
     };
-    
+
     // Selecting a tribute option might change headings on the form
     el = theForm.querySelector(tributeOptionsSelector);
     if (el) {
@@ -331,7 +330,7 @@
             break;
         }
       });
-    }    
+    }
 
     // Is there a full bleed hero?
     addClass(document.body, maybeHasHero());
@@ -359,27 +358,27 @@
         addPlaceholder(el, fieldItem.previousElementSibling.querySelector('label').textContent);
       }
     });
-    
+
     // Placeholders for address 2 fields
     getAll('[name*="address2"], [name*="add2"]').forEach(el => {
-      el.setAttribute('placeholder', 'Apt, ste, bldg.');      
+      el.setAttribute('placeholder', 'Apt, ste, bldg.');
     });
-    
+
     // Hardcode placeholder for date fields
     getAll(dateInputSelector).forEach(el => {
       addPlaceholder(el, 'Select Date');
     });
-    
+
     // Maybe convert event address to Google maps link
     getAll('.link-to-map address').forEach(el => {
       const wrap = wrapEl(el, 'a');
-      
+
       if (wrap) {
         setAttributes(wrap, {
           'href': `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(el.textContent)}`,
           'target': '_blank',
         });
-      }      
+      }
     });
 
     // Wrap event ticket selector
@@ -387,7 +386,7 @@
       els = getAll('.en__ticket__minus, .en__ticket__quantity, .en__ticket__plus', el);
       if (els.length > 0) {
         wrapAll(els, 'div', 'input-group');
-      }      
+      }
     });
 
     // Missing event ticket quanity labels
@@ -418,7 +417,7 @@
     if (el && _parent) {
       _parent.append(el);
     }
-    
+
     // Wrap additional donation and promo code fields
     els = getAll('.form-heading--additional, .form-heading--promo');
     if (els.length > 0) {
@@ -436,29 +435,29 @@
           el.setAttribute('aria-labelledby', labelId);
        });
      });
-    }        
- 
+    }
+
     // Radio element accessibility
     getAll('.en__field--radio').forEach(el => {
       // Some radio elements have loose labels
       const looseLabel = el.querySelector('label:first-child');
       let replaceLabel = null;
-      
+
       if (looseLabel) {
         replaceLabel = document.createElement('p');
         replaceLabel.textContent = looseLabel.textContent;
         replaceLabel.id = looseLabel.id;
         replaceLabel.classList = looseLabel.classList;
-        looseLabel.parentNode.replaceChild(replaceLabel, looseLabel);        
+        looseLabel.parentNode.replaceChild(replaceLabel, looseLabel);
       }
-    
+
       // Add aria role
       el.setAttribute('role', 'radiogroup');
       if (hasClass(el, 'en__field--donationAmt')) {
         el.setAttribute('aria-labelledby', 'giftAmountLabel');
       } else {
         addAriaLabelledBy(el);
-      }           
+      }
     });
 
      // Missing Other Amount label
@@ -473,7 +472,7 @@
       el.setAttribute('role', 'group');
       addAriaLabelledBy(el);
     });
-    
+
     // Labels are sometimes blank
     getAll('.en__field__label').forEach(el => {
       if (isEmpty(el)) {
@@ -491,9 +490,12 @@
       });
     }
 
-    // Add mask and inputmode attribute for currency fields
+    // Add mask and inputmode attribute for currency fields. Also prevent autofill
     getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
-      otherAmountMask = el.setAttribute('inputmode', 'decimal');
+      setAttributes(el, {
+        'autocomplete': 'photo',
+        'inputmode': 'decimal',
+      });
       IMask(el, {
         mask: 'num',
         blocks: {
@@ -504,7 +506,12 @@
             radix: '.',
           }
         }
-      });      
+      });
+    });
+    
+    // Prevent autofill on mem/trib fields
+    getAll('.en__field--honname .en__field__input, .en__field--honname ~ .en__field .en__field__input, .en__field--infname .en__field__input, .en__field--infname ~ .en__field .en__field__input').forEach(el => {
+      el.setAttribute('autocomplete', 'photo');
     });
 
     // Add inputmode attribute for credit card fields
@@ -545,37 +552,6 @@
       getClosestEl(el, enFieldSelector).append(el);
     });
 
-    // Paypal checkbox needs to hide credit card blocks and set payment type
-    el = theForm.querySelector(paypalInputSelector);
-    _parent = theForm.querySelector(paymentMethodSelector);
-    if (el && _parent) {
-      el.addEventListener('click', e => {
-        const paymentType = theForm.querySelector(paymentTypeSelector);
-
-        _parent = getClosestEl(_parent, '.en__component--formblock');
-        if (e.target.checked) {
-          addClass(_parent, paypalSelectedClass);
-          if (paymentType) {
-            paymentType.value = 'Paypal';            
-          }          
-        } else {
-          removeClass(_parent, paypalSelectedClass);
-        }
-      });
-    }
-    
-    // ACH button needs to set payment type
-    el = theForm.querySelector('.en__field--payment-method-cc-and-ach-');
-    if (el) {
-      el.addEventListener('click', el => {
-        const paymentType = theForm.querySelector(paymentTypeSelector);
-
-        if (paymentType) {
-          paymentType.value = 'ACH';
-        }
-      });
-    }
-
     // Provide credit card type feedback
     el = theForm.querySelector(ccNumberInputSelector);
     if (el) {
@@ -593,15 +569,60 @@
       });
     }
 
-    // Switching between Check and CC payment methods loses the value for payment type
+    // Handle switching between Check and CC payment methods
     el = theForm.querySelector(paymentMethodRadioSelector);
     if (el && cleave) {
-      el = el.querySelector('.en__field__input--radio[value="CC"]');
-      if (el) {
+      getAll('.en__field__input--radio', el).forEach(el => {
         el.addEventListener('click', e => {
-          updatePaymentType(cleave.properties.creditCardType);
+          const paymentMethod = e.target.value;
+
+          if (paymentMethod === 'CC') {
+            updatePaymentType(cleave.properties.creditCardType);
+          } else if (paymentMethod === 'Check') {
+            const paymentType = theForm.querySelector(paymentTypeSelector);
+
+            if (paymentType) {
+              paymentType.value = 'ACH';
+            }
+          }
         });
-      }
+      });
+    }
+    
+    const setPaymentType = (paymentType) => {
+      const hasPaymentMethod = theForm.querySelector(paymentMethodRadioSelector);
+      let selectedPaymentMethod = null;
+      
+      if (hasPaymentMethod) {
+        selectedPaymentMethod = hasPaymentMethod.querySelector('.en__field__input--radio:checked').value;
+        if (selectedPaymentMethod === 'CC') {
+          updatePaymentType(cleave.properties.creditCardType);          
+        } else if (selectedPaymentMethod === 'Check') {
+            paymentType.value = 'ACH';
+        }               
+      } else {
+        updatePaymentType(cleave.properties.creditCardType);        
+      }      
+    };
+
+    // Paypal checkbox needs to hide credit card blocks and set payment type
+    el = theForm.querySelector(paypalInputSelector);
+    _parent = theForm.querySelector(paymentMethodSelector);
+    if (el && _parent) {
+      el.addEventListener('click', e => {
+        const paymentType = theForm.querySelector(paymentTypeSelector);
+        _parent = getClosestEl(_parent, '.en__component--formblock');
+
+        if (_parent && paymentType) {
+          if (e.target.checked) {
+            addClass(_parent, paypalSelectedClass);
+            paymentType.value = 'Paypal';
+          } else {
+            removeClass(_parent, paypalSelectedClass);
+            setPaymentType(paymentType);
+          }
+        }
+      });
     }
 
     // Active state for field containers
@@ -636,13 +657,72 @@
     // Add inputmode attribute for date fields to prevent mobile keyboard
     getAll('.datepicker-input').forEach(el => {
       el.setAttribute('inputmode', 'none');
+      el.readOnly = true;
     });
+    
+    //getAll('.datepicker-input').forEach(el => {
+    //  var dateMask = IMask(el, {
+    //    mask: Date,  // enable date mask
+    //
+    //    // other options are optional
+    //    pattern: 'd/`m/`Y',  // Pattern mask with defined blocks, default is 'd{.}`m{.}`Y'
+    //    // you can provide your own blocks definitions, default blocks for date mask are:
+    //    blocks: {
+    //      d: {
+    //        mask: IMask.MaskedRange,
+    //        from: 1,
+    //        to: 31,
+    //        maxLength: 2,
+    //      },
+    //      m: {
+    //        mask: IMask.MaskedRange,
+    //        from: 1,
+    //        to: 12,
+    //        maxLength: 2,
+    //      },
+    //      Y: {
+    //        mask: IMask.MaskedRange,
+    //        from: 1900,
+    //        to: 9999,
+    //        maxLength: 4,
+    //      }
+    //    },
+    //    // define date -> str convertion
+    //    format: function (date) {
+    //      var day = date.getDate();
+    //      var month = date.getMonth() + 1;
+    //      var year = date.getFullYear();
+    //
+    //      if (day < 10) day = "0" + day;
+    //      if (month < 10) month = "0" + month;
+    //
+    //      return [year, month, day].join('-');
+    //    },
+    //    // define str -> date convertion
+    //    parse: function (str) {
+    //      var yearMonthDay = str.split('-');
+    //      return new Date(yearMonthDay[0], yearMonthDay[1] - 1, yearMonthDay[2]);
+    //    },
+    //
+    //    // optional interval options
+    //    min: new Date(2000, 0, 1),  // defaults to `1900-01-01`
+    //    max: new Date(2020, 0, 1),  // defaults to `9999-01-01`
+    //
+    //    autofix: true,  // defaults to `false`
+    //
+    //    // also Pattern options can be set
+    //    lazy: false,
+    //
+    //    // and other common options
+    //    overwrite: true  // defaults to `false`
+    //  });      
+    //});
 
     // Each photo in hero and sidebar elements needs description and meta info popover
     getAll('.en__component--imageblock').forEach(el => {
       createImgTooltip(el);
     });
-
+    
     // Create popovers elements
     if (typeof popoverTranslations !== 'undefined') {
       popoverTranslations.forEach(translation => {
@@ -660,12 +740,12 @@
         });
       });
     });
-    
+
     // Init collapsibles
     getAll('.btn-collapse').forEach(el => {
       el.addEventListener('click', e => {
         const _target = e.target;
-        
+
         if (hasClass(_target, 'expanded')) {
           removeClass(_target, 'expanded');
           _target.textContent = 'See more';
@@ -715,20 +795,20 @@
   /**
   * Donation form enhancements
   */
-  const donationForm = () => {
+  const donation = () => {
     const donationAmt = theForm.querySelector('.en__field--donationAmt');
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
     const tipJar = theForm.querySelector('.en__field--tip-jar');
     let donationAmtRadios = null;
     let tipJarCheckbox = null;
     let tipJarUserChecked = false;
-     
+
     const disableTipJar = () => {
-      restoreDonationAmounts();     
+      restoreDonationAmounts();
       updateTotalGift(getOriginalDonationAmount());
       addClass(tipJar, disabledClass);
     };
-    
+
     const enableTipJar = () => {
       removeClass(tipJar, disabledClass);
     };
@@ -762,22 +842,22 @@
         restoreDonationAmounts();
       }
     };
-    
+
     const maybeUncheckTipJar = (amt) => {
       if (!tipJarUserChecked && !isNaN(amt)) {
         if (Number(amt) >= 1000) {
           tipJarCheckbox.checked = false;
           triggerEvent(tipJarCheckbox, 'click');
-        }        
+        }
       }
     };
-    
+
     const toggleTipJar = (el) => {
       const toggle = theForm.querySelector(tipJarToggle);
 
       if (toggle) {
         toggle.style.display = el.checked ? 'inline' : 'none';
-      }      
+      }
     };
 
     if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
@@ -790,7 +870,7 @@
           updateTipJar(getTipJar(getOriginalDonationAmount()));
           updateTotalGift(getTipJar(getOriginalDonationAmount()));
         } else {
-          updateTotalGift(getOriginalDonationAmount());      
+          updateTotalGift(getOriginalDonationAmount());
         }
 
         // Maybe a tip jar?
@@ -881,8 +961,8 @@
   const quiz = () => {
     const leadGenModal = theForm.querySelector('.modal--lead-gen');
     let el = null;
-    let score = 0;    
-    
+    let score = 0;
+
     // Maybe display lead gen modal
     if (leadGenModal) {
       const modal = new bootstrap.Modal(leadGenModal, {
@@ -890,18 +970,18 @@
         keyboard: false
       });
       modal.show();
-      
+
       // Handle modal submit button click
       leadGenModal.querySelector('.btn').addEventListener('click', e => {
         setTimeout(function() {
           if (formIsValid(leadGenModal)) {
-            modal.hide(); 
+            modal.hide();
             focusFirst();
-          }          
+          }
         }, 100);
       });
-    }    
-    
+    }
+
     // Listen for validation error
     el = theForm.querySelector('.en__field--survey');
     if (el) {
@@ -924,7 +1004,7 @@
         attributes: false,
         childList: true,
         subtree: false,
-      });      
+      });
     }
 
     getAll('.en__field__input--radio').forEach(el => {
@@ -939,7 +1019,7 @@
         }
       });
     });
-    
+
     const checkAnswer = () => {
       const correctAnswer = theForm.querySelector('.correct');
       const incorrectAnswer = theForm.querySelector('.incorrect');
@@ -973,7 +1053,7 @@
         if (alreadyAnswered === 'false') {
           // Update running count of quiz questions
           questionCount++;
-          sessionStorage.setItem('questionCount', questionCount);        
+          sessionStorage.setItem('questionCount', questionCount);
           // Save running score
           sessionStorage.setItem('quizScore', quizScore);
           sessionStorage.setItem('alreadyAnswered', 'true');
@@ -986,23 +1066,23 @@
     if (el) {
       el.addEventListener('click', e => {
         const fieldError = theForm.querySelector('.en__field__error');
-        
+
         if (theForm.querySelector('.en__field__input--radio:checked')) {
           addClass(getClosestEl(e.target, '.en__submit'), hiddenClass);
           if (fieldError) {
             removeClass(fieldError, displayClass);
             addClass(fieldError, hiddenClass);
           }
-          checkAnswer();        
+          checkAnswer();
         } else {
           if (fieldError) {
             removeClass(fieldError, hiddenClass);
             addClass(fieldError, displayClass);
           }
         }
-      });      
+      });
     }
-    
+
     // Handle submit button click
     el = theForm.querySelector('.en__submit button:not([type="button"])');
     if (el) {
@@ -1027,7 +1107,7 @@
       sessionStorage.removeItem('alreadyAnswered');
     }
   };
-  
+
   /**
   * Event form enhancements
   */
@@ -1047,81 +1127,87 @@
     const updateTotalAmount = () => {
       const additionalInput = theForm.querySelector('.en__additional__input');
       let totalAmount = 0;
-      
+
       // Sum all tickets
       getAll('.en__ticket__quantity').forEach(el => {
         const row = getClosestEl(el, '.en__ticket');
         const price = Number(row.querySelector('.en__ticket__price').textContent);
-        
+
         if (price !== '0') {
-          totalAmount += el.value === '0' ? 0 : Number(Number(el.value) * price);          
+          totalAmount += el.value === '0' ? 0 : Number(Number(el.value) * price);
         }
-      });           
-      // Include additional donation       
+      });
+      // Include additional donation
       if (additionalInput) {
         totalAmount += !isNaN(Number(additionalInput.value)) ? Number(additionalInput.value) : 0;
-      }     
+      }
       // Display total amount
       getAll(totalAmountSelector).forEach(el => {
-        el.textContent = totalAmount.toFixed(2);
+        el.textContent = numberPipe(String(totalAmount));
       });
       // Save total for use on billing page
       sessionStorage.setItem('savedTotalAmount', totalAmount);
     };
-    
+
     const getPromo = (el) => {
       return el.querySelector('.en__orderSummary__data--promo').textContent !== '';
     };
-    
+
     // Make ticket quantity field readonly to avoid invalid ticket numbers
     getAll('.en__ticket__quantity').forEach(el => {
       el.readOnly = true;
       el.setAttribute('tabindex', '-1');
     });
-    
+
     // Add ticket quantity plus/minus to tab order
     getAll('.en__ticket__minus, .en__ticket__plus').forEach(el => {
       el.setAttribute('tabindex', '0');
     });
-    
+
     // Strip currency indicators
     getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(el => {
       el.textContent = el.textContent.replace(/USD/, '');
     });
-    
+
     // Strip label colons
     getAll('.en__orderSummary__header').forEach(el => {
       el.textContent = el.textContent.replace(/\:/, '');
     });
-    
-    
+
+
     // Maybe on page 1
     if (pageNumber === 1) {
+      // Display waitlist confirmation if coming from a chained redirect
+      el = theForm.querySelector('.waitlist-confirmation');
+      if (el && location.href.indexOf('chain') > -1) {
+        removeClass(el, hiddenWebOnlyClass);              
+      }
+      
       // Maybe add waitlist links
       if (waitListLink) {
         getAll('.en__ticket__soldout').forEach(el => {
           let clone = waitListLink.cloneNode(true);
-          
-          el.parentElement.append(clone);          
-        });        
+
+          el.parentElement.append(clone);
+        });
       }
-      
-      // Listen for additional donation    
+
+      // Listen for additional donation
       el = theForm.querySelector('.en__additional__input');
       if (el) {
         el.addEventListener('change', e => {
-          updateTotalAmount();        
+          updateTotalAmount();
         });
       }
-      
+
       // Listen for ticket selection
       getAll('.en__ticket__quantity').forEach(el => {
         el.addEventListener('change', e => {
           setTimeout(function() {
             updateTotalAmount();
-          }, 100);        
-        });      
-      });    
+          }, 100);
+        });
+      });
 
       // Init total amount
       updateTotalAmount();
@@ -1130,88 +1216,88 @@
       getAll('.en__ticket__minus, .en__ticket__plus').forEach(el => {
         const row = getClosestEl(el, '.en__ticket');
         const ticketQuantity = row.querySelector('.en__ticket__quantity');
-        
+
         el.addEventListener('click', e => {
           triggerEvent(ticketQuantity, 'change');
         });
-        
+
         // Add keyboard nav to plus/minus buttons
         el.addEventListener('keyup', e => {
           if (e.key === 'Enter' || e.keyCode === 13) {
             e.target.click();
-          }          
+          }
         });
-      });      
-    // Maybe on page 2      
+      });
+    // Maybe on page 2
     } else if (pageNumber === 2) {
       // Display total amount
-      el = theForm.querySelector('.en__orderSummary__data--totalAmount'); 
+      el = theForm.querySelector('.en__orderSummary__data--totalAmount');
       if (el) {
         getAll(totalAmountSelector).forEach(el => {
           el.textContent = `$${el.textContent}`;
-        });      
+        });
       }
-      
+
       // Customize order summary table
       getAll('.en__orderSummary__item').forEach(el => {
         const itemType = el.querySelector('.en__orderSummary__data--type');
         const itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent;
-        
+
         itemType.textContent = `${itemQuantity}x  ${itemType.textContent}`;
         hasPromo = hasPromo || getPromo(el);
       });
-      
+
       // Maybe add promo discount line
-      el = theForm.querySelector('.en__orderSummary__data--totalAmount'); 
+      el = theForm.querySelector('.en__orderSummary__data--totalAmount');
       _parent = theForm.querySelector('.en__orderSummary');
       if (savedTotalAmount && hasPromo && el && _parent) {
-        totalAmount = Number(el.textContent);      
+        totalAmount = Number(el.textContent);
         el = document.getElementById('orderSummaryPromo');
         if (el) {
-          totalDiscount = Number(savedTotalAmount) - totalAmount;      
+          totalDiscount = Number(savedTotalAmount) - totalAmount;
           el.querySelector('.js-applied-promo').textContent = totalDiscount.toFixed(2);
           _parent.insertBefore(el, theForm.querySelector('.en__orderSummary__total'));
           removeClass(el, hiddenWebOnlyClass);
-        }        
+        }
         // Cleanup
         theForm.querySelector('.en__submit button').addEventListener('click', e => {
           sessionStorage.removeItem('savedTotalAmount');
         });
       }
-      
+
       getAll('.en__registrants__ticketHead').forEach(el => {
         el.textContent = el.textContent.replace(/\d/g, '');
       });
-      
+
       // Remove attendee index number
       getAll('.en__registrants__registrantHead').forEach(el => {
         el.textContent = el.textContent.replace(/\d/g, '');
       });
-      
+
       // Re-number attendees
       getAll('.en__registrants__ticket').forEach(el => {
         const attendees = getAll('.en__registrants__registrantHead', el);
-        
+
         if (attendees.length > 1) {
           attendees.forEach((el, index) => {
             el.textContent = `${el.textContent} ${index + 1}`;
-          });                  
+          });
         }
       });
-      
+
       // Adding commas to totals
       getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(el => {
         el.textContent = numberPipe(el.textContent);
       });
-      
+
       // Remove ticket index number
       // Display total cost
       getAll('.js-total-gift').forEach(el => {
         el.textContent = `$${theForm.querySelector('.en__orderSummary__data--totalAmount').textContent}`;
       });
-    }    
+    }
   };
-  
+
   /**
   * Form validation enhancements
   */
@@ -1336,15 +1422,15 @@
         }
       }
     }, true);
-    
+
     const setMonthlyAmount = (amt) => {
-      if (amt >= 10 && amt <= 24) {
+      if (amt >= 5 && amt <= 24) {
         return 5;
       } else if (amt >= 25 && amt < 50) {
-        return 10;        
+        return 10;
       } else if (amt >= 50 && amt <= 100) {
-        return 15;        
-      }      
+        return 15;
+      }
     };
 
     const doSubmit = () => {
@@ -1352,11 +1438,11 @@
       theForm.submit = savedSubmit;
       theForm.submit();
     };
-    
+
     // Maybe an upsell modal
     if (hasUpsell) {
       // A valid form always wants to submit, so
-      // save the EN form submit handler then remove it if the upsell modal is present      
+      // save the EN form submit handler then remove it if the upsell modal is present
       savedSubmit = theForm.submit;
       theForm.submit = null;
     }
@@ -1372,21 +1458,26 @@
             otherAmountOriginal = otherAmountInput.value;
             otherAmountInput.value = otherAmountInput.dataset.tipjar ? otherAmountInput.dataset.tipjar : otherAmountInput.value;
           }
-          
+
           // Restore other amount value if validation errors
           setTimeout(function() {
             if (!formIsValid()) {
-              otherAmountInput.value = otherAmountOriginal;              
-            }            
+              otherAmountInput.value = otherAmountOriginal;
+            }
           });
         }
 
         // Maybe display upsell modal
         if (hasUpsell) {
-          if (donationAmount >= 10 && donationAmount <= 100) {
+          if (donationAmount >= 5 && donationAmount <= 100) {
             setTimeout(function() {
               if (formIsValid()) {
                 if (!monthlyCheckbox.checked) {
+                  // Display monthly amount
+                  getAll('.js-monthly-gift').forEach(el => {
+                    el.textContent = `$${numberPipe(String(setMonthlyAmount(donationAmount)))}`;
+                  });
+                  setMonthlyAmount(donationAmount);
                   // Open modal
                   const modal = new bootstrap.Modal(upsellModal, {
                     backdrop: 'static',
@@ -1402,11 +1493,11 @@
                   getAll('.btn-close, .btn-continue').forEach(el => {
                     el.addEventListener('click', e => {
                       doSubmit();
-                    });                 
+                    });
                   });
                 } else {
                   doSubmit();
-                }                                      
+                }
               }
             }, 100);
           } else {
@@ -1455,7 +1546,7 @@
             donationData.originalDonationAmount = originalDonationAmount;
           }
         }
-        
+
         // Maybe save ecard fields for use on seamless ecard page
         if (ecardSelect && ecardFields) {
           if (ecardSelect.querySelector('.en__field__input--checkbox').checked) {
@@ -1484,6 +1575,8 @@
         donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : '';
         donationData.emailAddress = theForm.querySelector(supporterEmailAddressSelector) ? theForm.querySelector(supporterEmailAddressSelector).value : '';
         sessionStorage.setItem('donationData', JSON.stringify(donationData));
+      } else {
+        submitButton.disabled = false;
       }
     });
   };
@@ -1498,9 +1591,9 @@
     if (donationData) {
       donationData = JSON.parse(donationData);
     }
-    
+
     if (recurringStatus) {
-      recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';      
+      recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';
     }
   };
 
@@ -1529,11 +1622,11 @@
       ecardData.recipients.forEach(recipient => {
         addEcardRecipient(recipient);
       });
-      sessionStorage.removeItem('ecardData');
+      //sessionStorage.removeItem('ecardData');
       document.querySelector('.en__submit button').click();
     }
   };
-  
+
   /**
   * Thermometer enhancements
   */
@@ -1544,7 +1637,7 @@
       const raisedPct = parseInt(fill.style.width);
       const raisedNumber = parseInt(el.querySelector('.raised > div').textContent.replace(/\,/g, ''));
       let newGoal = null;
-      
+
       // Calculate and display updated therm numbers
       if (raisedPct >= thermThresholdPct) {
         // Reset fill width so that animation runs once new width is set
@@ -1555,10 +1648,10 @@
       }
       // Therms are hidden with CSS
       setTimeout(function() {
-        addClass(el, activeClass);        
+        addClass(el, activeClass);
       }, 100);
-    });    
-  };  
+    });
+  };
 
   /**
    * Adds active class to element
@@ -1698,7 +1791,7 @@
   */
   const createImgTooltip = (el) => {
     const img = el.querySelector('img');
-    
+
     if (img) {
       const tooltipContent = img.getAttribute('alt');
 
@@ -1721,8 +1814,8 @@
           template: '<div class="tooltip" role="tooltip"><div class="tooltip-inner"></div></div>',
           trigger: 'click'
         });
-      }      
-    }    
+      }
+    }
   };
 
   /**
@@ -1737,7 +1830,7 @@
 
     if (field) {
       let popoverContainer = document.createElement('p');
-      
+
       addClass(popoverContainer, popoverContainerClass);
       let popover = document.createElement('a');
       setAttributes(popover, {
@@ -1770,7 +1863,7 @@
   const deactivateField = el => {
     removeClass((el.target || el).parentElement, activeClass);
   };
-  
+
   /**
    * Disables input elements
    *
@@ -1885,7 +1978,7 @@
   const getTipJar = amt => {
     if (typeof amt === 'string') {
       amt = amt.replace(/\,/g, '');
-      return !isNaN(amt) ? (parseFloat(amt) + (parseFloat(amt) * tipJarPct)).toFixed(2) : '';      
+      return !isNaN(amt) ? (parseFloat(amt) + (parseFloat(amt) * tipJarPct)).toFixed(2) : '';
     }
   };
 
@@ -2048,7 +2141,7 @@
       paymentType.value = paymentTypeCode;
     }
   };
-  
+
   /**
   * Updates everywhere tip jar amount is displayed.
   *
@@ -2107,7 +2200,7 @@
    */
   const wrapEl = (node, wrapperType, wrapperClass) => {
     let wrapper = document.createElement(wrapperType);
-    
+
     if (wrapperClass) {
       addClass(wrapper, wrapperClass);
     }
@@ -2129,7 +2222,7 @@
      seamlessEcard();
     }
     ui();
-    donationForm();
+    donation();
     if (document.querySelector('.en__component--page[action*="event"]')) {
       events();
     }
@@ -2144,6 +2237,11 @@
   });
 
   window.addEventListener('load', e => {
-    thermometers();
+    let checkThermometer = setInterval(function() {
+      if (theForm.querySelector('.enWidget--progressBar')) {
+        clearInterval(checkThermometer);
+        thermometers();
+      }
+    }, 100);
   });
 })();

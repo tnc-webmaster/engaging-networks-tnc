@@ -1,3 +1,4 @@
+.en__component--page[action*="action"],
 .en__component--page[action*="petition"] {
   .overview {
     @extend %serif-xl;
@@ -109,6 +110,11 @@
   }
 }
 
+.en__component--contactblock {
+  background-color: transparent;
+  padding: 0;
+}
+
 .advocacy-share-bar-block {
   display: flex;
   align-items: center;
@@ -189,7 +195,7 @@
       }
     }
 
-    a::after {
+    a:not(.fa)::after {
       bottom: 0;
       content: "";
       left: 0;
@@ -198,7 +204,7 @@
       top: 0;
     }
   }
-
+  
   .card-body {
     border-bottom: $border-default;
     border-left: $border-default;
@@ -215,6 +221,10 @@
     @include media-breakpoint-down(lg) {
       font-size: 1.25rem;
       line-height: 1.2;
+    }
+    
+    a::after {
+      display: none;      
     }
   }
 

@@ -30,4 +30,13 @@ img {
       text-align: left;
     }
   }
+  
+  .d-md-none + & {
+    @extend .d-md-none;
+  }
+  
+  .d-none + & {
+    @extend .d-none;
+    @extend .d-md-block;
+  }
 }
