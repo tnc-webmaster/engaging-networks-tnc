@@ -813,6 +813,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var donation = function donation() {
+    var bequestIframe = theForm.querySelector('.iframe--bequest iframe');
+    var bequestModal = theForm.querySelector('.modal--bequest');
     var donationAmt = theForm.querySelector('.en__field--donationAmt');
     var otherAmountInput = theForm.querySelector(otherAmountInputSelector);
     var tipJar = theForm.querySelector('.en__field--tip-jar');
@@ -929,6 +931,23 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           otherAmountInput.addEventListener('input', handleDonationAmountChange);
         }
       }
+    }
+
+    if (bequestIframe) {
+      bequestIframe.addEventListener('load', function (e) {
+        resizeIframe(bequestIframe);
+      });
+      window.addEventListener('resize', function (e) {
+        resizeIframe(bequestIframe);
+      });
+    }
+
+    if (bequestModal) {
+      var modal = new bootstrap.Modal(bequestModal, {
+        backdrop: 'static',
+        keyboard: false
+      });
+      modal.show();
     }
 
     var initPhoneFields = function initPhoneFields() {
@@ -2133,6 +2152,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     } else {
       el.classList.remove(_classes);
     }
+  };
+  /**
+   * Dynamiccaly resizes iframe to fit content
+   *
+   * @param {node} el The iframe to resize
+   */
+
+
+  var resizeIframe = function resizeIframe(el) {
+    setTimeout(function () {
+      el.style.height = el.contentWindow.document.body.scrollHeight + "px";
+    }, 100);
   };
   /**
    * Scrolls to element on page

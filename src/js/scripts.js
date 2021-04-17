@@ -796,6 +796,8 @@
   * Donation form enhancements
   */
   const donation = () => {
+    const bequestIframe = theForm.querySelector('.iframe--bequest iframe');
+    const bequestModal = theForm.querySelector('.modal--bequest');
     const donationAmt = theForm.querySelector('.en__field--donationAmt');
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
     const tipJar = theForm.querySelector('.en__field--tip-jar');
@@ -912,7 +914,25 @@
         }
       }
     }
+    
+    if (bequestIframe) {
+      bequestIframe.addEventListener('load', e => {
+        resizeIframe(bequestIframe);                
+      });
+      
+      window.addEventListener('resize', e => {
+        resizeIframe(bequestIframe);      
+      });      
+    }
 
+    if (bequestModal) {
+      const modal = new bootstrap.Modal(bequestModal, {
+        backdrop: 'static',
+        keyboard: false
+      });
+      modal.show();      
+    }
+    
     const initPhoneFields = () => {
       let mobilePhoneInput = theForm.querySelector(mobilePhoneInputSelector);
       let homePhoneInput = theForm.querySelector(homePhoneInputSelector);
@@ -2070,6 +2090,17 @@
     } else {
       el.classList.remove(_classes);
     }
+  };
+
+  /**
+   * Dynamiccaly resizes iframe to fit content
+   *
+   * @param {node} el The iframe to resize
+   */
+  const resizeIframe = el => {
+    setTimeout(function() {
+      el.style.height = el.contentWindow.document.body.scrollHeight + "px";
+    }, 100);
   };
 
   /**
