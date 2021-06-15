@@ -5,10 +5,13 @@
 .en__captcha,
 .en__field {
   padding: 0;
-  
   &:not(:last-child) {
-    margin-bottom: 1.5rem;    
+    margin-bottom: 1.5rem;
   }
+}
+
+.en__captcha {
+  margin-top: 1.5rem;
 }
 
 .en__field__item {
@@ -57,4 +60,8 @@
 
 .en__component--row--2 {
   @extend .row;
+}
+
+div[style="position:absolute; left:0; right:0; top:0; bottom:0; z-index:9999"] {
+  display: none;
 }

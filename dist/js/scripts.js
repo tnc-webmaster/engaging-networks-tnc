@@ -15,7 +15,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 (function () {
   var root = document.documentElement;
   var body = document.body;
-  var ecardRedirect = document.querySelector('a[data-campaign-id]');
+  var appealCodeRedirect = document.querySelector('a[data-campaign-id][href*="appealCode"]');
+  var ecardRedirect = document.querySelector('a[data-campaign-id][href*="action"]');
   var seamlessEcardBlock = document.querySelector('.seamless-ecard'); // Classes
 
   var activeClass = 'is-active';
@@ -34,6 +35,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var validationFailedClass = 'en__field--validationFailed';
   var visuallyHiddenClass = 'visually-hidden'; // Selectors
 
+  var ccExpMonthSelect = '#en__field_transaction_ccexpire';
+  var ccExpYearSelect = '.en__field--ccexpire .en__field__item:last-child select';
   var ccNumberFieldSelector = '.en__field--ccnumber';
   var ccNumberInputSelector = '#en__field_transaction_ccnumber';
   var countrySelect = '#en__field_supporter_country';
@@ -46,9 +49,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var enFieldItemSelector = '.en__field__item';
   var giftDesignationSelect = '#en__field_transaction_dirgift';
   var homePhoneInputSelector = '#en__field_supporter_phoneNumber';
+  var honoreeCountrySelect = '#en__field_supporter_NOT_TAGGED_38';
+  var honoreeStateProvinceSelect = '#en__field_supporter_NOT_TAGGED_35';
   var informCountrySelect = '#en__field_transaction_infcountry';
   var informStateProvinceSelect = '#en__field_transaction_infreg';
-  var mobilePhoneSameAsHomeCheckboxSelector = '#en__field_supporter_questions_891102';
+  var mobilePhoneSameAsHomeCheckboxSelector = '#en__field_supporter_questions_891102, .en__field--my-mobile-phone-is-the-same-as-my-primary-phone .en__field__input--checkbox';
   var mobilePhoneInputSelector = '#en__field_supporter_phoneNumber2';
   var otherAmountSelector = '.en__field--donationAmt .en__field__item--other';
   var otherAmountInputSelector = '.en__field--donationAmt .en__field__input--other, .en__field--donationAmt .en__field__input--text';
@@ -66,7 +71,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var totalAmountSelector = '.js-total-gift';
   var tributeOptionsSelector = 'select#en__field_transaction_trbopts'; // Elements
 
-  var theForm = document.querySelector('.en__component--page'); // Masks
+  var theForm = document.querySelector('.en__component--page') || document.querySelector('.main'); // Masks
 
   var numberPipe = IMask.createPipe({
     mask: 'num',
@@ -86,17 +91,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var thermIncrease = 1.25;
   var tipJarPct = 0.03;
   /**
-  * Form interface enhancements
-  */
+   * Form interface enhancements
+   */
 
   var ui = function ui() {
     var el = null;
     var els = null;
     var _parent = null;
     var wrap = null;
-    var stateProvinceChoices = void 0;
-    var informStateProvinceChoices = void 0;
-    var currentChoices = void 0;
+    var stateProvinceChoices = null;
+    var honoreeStateProvinceChoices = null;
+    var informStateProvinceChoices = null;
+    var currentChoices = null;
     /**
      * Set the value of choices when autofill is detected
      *
@@ -115,11 +121,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       resetSelect(_target.choices, e);
     };
     /**
-    * choices.js removes <options> form the native select
-    * Restoring the <options> allows choices.js to work with browser autofill
-    *
-    * @param {choices} choices choices.js instance to restore options to
-    */
+     * choices.js removes <options> form the native select
+     * Restoring the <options> allows choices.js to work with browser autofill
+     *
+     * @param {choices} choices choices.js instance to restore options to
+     */
 
 
     var resetSelect = function resetSelect(_choices, e) {
@@ -127,36 +133,35 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var selectValue = selectOne.value;
       var html = '';
       var index = 1; // Only do this for state selects
+      //if (_choices._baseId.indexOf('region') > -1) {
+      // Clear the native select
 
-      if (_choices._baseId.indexOf('region') > -1) {
-        // Clear the native select
-        selectOne.innerHTML = ''; //Remove the duplicate that this method generates at bottom of list
+      selectOne.innerHTML = ''; //Remove the duplicate that this method generates at bottom of list
 
-        if (e) {
-          _choices.choiceList.element.removeChild(_choices.choiceList.element.lastChild);
-        } // Re-add all <options> to native select
+      if (e) {
+        _choices.choiceList.element.removeChild(_choices.choiceList.element.lastChild);
+      } // Re-add all <options> to native select
 
 
-        getAll('.choices__item', _choices.choiceList.element).forEach(function (el) {
-          var choiceSelected = el.dataset.value === selectValue ? true : false;
-          var opt = document.createElement('option');
-          opt.value = el.dataset.value;
-          opt.text = el.textContent;
-          opt.selected = choiceSelected;
-          selectOne.add(opt, null);
-        });
-        currentChoices = _choices;
-        selectOne.choices = _choices; // Listen for an autofill (change event)
+      getAll('.choices__item', _choices.choiceList.element).forEach(function (el) {
+        var choiceSelected = el.dataset.value === selectValue ? true : false;
+        var opt = document.createElement('option');
+        opt.value = el.dataset.value;
+        opt.text = el.textContent;
+        opt.selected = choiceSelected;
+        selectOne.add(opt, null);
+      });
+      currentChoices = _choices;
+      selectOne.choices = _choices; // Listen for an autofill (change event)
 
-        selectOne.removeEventListener('change', handleChoicesChange);
-        selectOne.addEventListener('change', handleChoicesChange);
-      }
+      selectOne.removeEventListener('change', handleChoicesChange);
+      selectOne.addEventListener('change', handleChoicesChange); //}
     };
     /**
-    * Creates choices.js instance
-    *
-    * @param {node} el Target to apply choices to
-    */
+     * Creates choices.js instance
+     *
+     * @param {node} el Target to apply choices to
+     */
 
 
     var createChoices = function createChoices(el) {
@@ -164,7 +169,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         silent: true,
         duplicateItemsAllowed: false,
         itemSelectText: '',
+        searchResultLimit: 100,
         shouldSort: false,
+        fuseOptions: {
+          distance: 0
+        },
         callbackOnInit: function callbackOnInit() {
           var _choices = this;
 
@@ -185,7 +194,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             _choices.choiceList.element.setAttribute('aria-label', "Select " + label.textContent.replace(/Select/, ''));
 
             _choices.choiceList.element.id = choicesId;
-          } // role=textbox is unneccesary in our setup
+          } // restrict the search field to one character to avoid false results
+          //_choices.input.element.setAttribute('maxlength', '1');
+          // role=textbox is unneccesary in our setup
 
 
           getAll('[role="textbox"]', _choices.containerOuter.element).forEach(function (el) {
@@ -196,10 +207,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     };
     /**
-    * Destroys a choices.js instance
-    *
-    * @param {choices} choices choices.js instance to destroy
-    */
+     * Destroys a choices.js instance
+     *
+     * @param {choices} choices choices.js instance to destroy
+     */
 
 
     var destroyChoices = function destroyChoices(_choices, selector) {
@@ -211,15 +222,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }; // Add body classes
 
 
+    if (typeof pageJson !== 'undefined') {
+      addClass(body, "page--" + pageJson.pageNumber);
+    }
+
     if (document.querySelector('.quiz')) {
       addClass(body, 'page--quiz');
-    } else if (pageJson.pageCount === pageJson.pageNumber) {
-      addClass(body, 'page--confirmation');
+    } else if (document.querySelector('.hub')) {
+      addClass(body, 'page--hub');
+    } else if (document.querySelector('.related-actions.card')) {
+      addClass(body, 'has-related-actions');
+    } else if (document.querySelector('.action-center')) {
+      addClass(body, 'page--action-center');
+    } else if (typeof pageJson !== 'undefined') {
+      if (pageJson.pageCount === pageJson.pageNumber) {
+        addClass(body, 'page--confirmation');
+      }
     } // Set width of full bleed elements
 
 
     var scrollbarWidth = window.innerWidth - document.body.clientWidth;
-    getAll('.page--quiz .en__component--advrow, .hero-full-bleed').forEach(function (el) {
+    getAll('.page--quiz .en__component--advrow, .page--hub.page--1 .en__component--advrow, .hero-full-bleed').forEach(function (el) {
       el.style.width = "calc(100vw - " + scrollbarWidth + "px)";
       el.style.marginLeft = "calc(-50vw + " + scrollbarWidth / 2 + "px)";
     }); // Dont forget pseudo elements
@@ -249,8 +272,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         'aria-labelledby': 'modalTitle',
         'aria-hidden': 'true'
       }); // Move modals to end of main form
-
-      theForm.append(el);
+      //theForm.append(el);
     }); // Allow EN swap lists for billing state/province field
 
     el = theForm.querySelector(stateProvinceSelect);
@@ -269,6 +291,28 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           destroyChoices(stateProvinceChoices);
           setTimeout(function () {
             stateProvinceChoices = createChoices(theForm.querySelector(stateProvinceSelect));
+          }, 100);
+        });
+      }
+    } // Allow EN swap lists for honoree state/province field
+
+
+    el = theForm.querySelector(honoreeStateProvinceSelect);
+
+    if (el) {
+      honoreeStateProvinceChoices = createChoices(el);
+    } // Allow EN swap lists on country field change
+
+
+    el = theForm.querySelector(honoreeCountrySelect);
+
+    if (el) {
+      if (honoreeStateProvinceChoices) {
+        el.addEventListener('change', function (e) {
+          // Rebuild state/province choices
+          destroyChoices(honoreeStateProvinceChoices);
+          setTimeout(function () {
+            honoreeStateProvinceChoices = createChoices(theForm.querySelector(honoreeStateProvinceSelect));
           }, 100);
         });
       }
@@ -314,10 +358,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     }
     /**
-    * Shows tribute headings that match headingClass
-    *
-    * @param {string} headingClass Class of headings to show
-    */
+     * Shows tribute headings that match headingClass
+     *
+     * @param {string} headingClass Class of headings to show
+     */
 
 
     var showTributeHeadings = function showTributeHeadings(headingClass) {
@@ -438,7 +482,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (els.length > 0) {
       wrapAll(els, 'div', ['row', 'justify-content-between', 'additional-promo']);
-    } // Missing CC expiration year label
+    } // Missing split select labels
 
 
     el = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child .en__field__input--splitselect');
@@ -452,8 +496,20 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           el.setAttribute('aria-labelledby', labelId);
         });
       });
-    } // Radio element accessibility
+    } // Missing triple select labels
 
+
+    getAll('.en__field--tripleselect').forEach(function (el) {
+      var label = el.querySelector('.en__field__label');
+
+      if (label) {
+        labelId = label.id ? label.id : "label" + generateId();
+        label.id = labelId;
+        getAll('[role="combobox"], [role="listbox"]', el).forEach(function (el) {
+          el.setAttribute('aria-labelledby', labelId);
+        });
+      }
+    }); // Radio element accessibility
 
     getAll('.en__field--radio').forEach(function (el) {
       // Some radio elements have loose labels
@@ -476,6 +532,24 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } else {
         addAriaLabelledBy(el);
       }
+    }); // Checkbox element accessibility
+
+    getAll('.en__field--checkbox.en__field--survey').forEach(function (el) {
+      // Some checkbox elements have loose labels
+      var looseLabel = el.querySelector('label:first-child');
+      var replaceLabel = null;
+
+      if (looseLabel) {
+        replaceLabel = document.createElement('p');
+        replaceLabel.textContent = looseLabel.textContent;
+        replaceLabel.id = looseLabel.id;
+        replaceLabel.classList = looseLabel.classList;
+        looseLabel.parentNode.replaceChild(replaceLabel, looseLabel);
+      } // Add aria role
+
+
+      el.setAttribute('role', 'group');
+      addAriaLabelledBy(el);
     }); // Missing Other Amount label
 
     el = theForm.querySelector(otherAmountInputSelector);
@@ -499,7 +573,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     }); // Convert URL strings to images for dummy select ecard radios
 
-    el = theForm.querySelector('.en__field--ecard-select-an-ecard');
+    el = theForm.querySelector('[class*="select-an-ecard"]');
 
     if (el) {
       getAll('.en__field__label--item', el).forEach(function (el) {
@@ -526,9 +600,22 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     }); // Prevent autofill on mem/trib fields
 
-    getAll('.en__field--honname .en__field__input, .en__field--honname ~ .en__field .en__field__input, .en__field--infname .en__field__input, .en__field--infname ~ .en__field .en__field__input').forEach(function (el) {
+    getAll('.en__field--ecard-recipient-email-addresses .en__field__input, .en__field--honname .en__field__input, .en__field--honname ~ .en__field .en__field__input, .en__field--infname .en__field__input, .en__field--infname ~ .en__field .en__field__input').forEach(function (el) {
       el.setAttribute('autocomplete', 'photo');
-    }); // Add inputmode attribute for credit card fields
+    }); // Autocomplete attributes for CC expiration fields
+
+    el = theForm.querySelector(ccExpMonthSelect);
+
+    if (el) {
+      el.setAttribute('autocomplete', 'cc-exp-month');
+    }
+
+    el = theForm.querySelector(ccExpYearSelect);
+
+    if (el) {
+      el.setAttribute('autocomplete', 'cc-exp-year');
+    } // Add inputmode attribute for credit card fields
+
 
     getAll('[name*="ccnumber"], [name*="ccvv"]').forEach(function (el) {
       el.setAttribute('inputmode', 'numeric');
@@ -644,8 +731,21 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           }
         }
       });
-    } // Active state for field containers
+    } // Set sharing URLs for action center items
 
+
+    getAll('.advocacy-related-actions:not(:only-of-type)').forEach(function (el) {
+      var facebookShareLink = el.querySelector('.en__socialShare--facebook');
+      var twitterShareLink = el.querySelector('.en__socialShare--twitter');
+      var shareLink = el.querySelector('a[data-campaign-id]');
+      var shareUrl = null;
+
+      if (facebookShareLink && twitterShareLink && shareLink) {
+        shareUrl = shareLink.getAttribute('href');
+        facebookShareLink.setAttribute('href', makeFacebookUrl(facebookShareLink.getAttribute('href'), shareUrl));
+        twitterShareLink.setAttribute('href', makeTwitterUrl(shareLink.textContent, twitterShareLink.getAttribute('href'), shareUrl));
+      }
+    }); // Active state for field containers
 
     getAll('.en__field__input').forEach(function (el) {
       el.addEventListener('focus', activateField);
@@ -675,70 +775,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     getAll('.datepicker-input').forEach(function (el) {
       el.setAttribute('inputmode', 'none');
       el.readOnly = true;
-    }); //getAll('.datepicker-input').forEach(el => {
-    //  var dateMask = IMask(el, {
-    //    mask: Date,  // enable date mask
-    //
-    //    // other options are optional
-    //    pattern: 'd/`m/`Y',  // Pattern mask with defined blocks, default is 'd{.}`m{.}`Y'
-    //    // you can provide your own blocks definitions, default blocks for date mask are:
-    //    blocks: {
-    //      d: {
-    //        mask: IMask.MaskedRange,
-    //        from: 1,
-    //        to: 31,
-    //        maxLength: 2,
-    //      },
-    //      m: {
-    //        mask: IMask.MaskedRange,
-    //        from: 1,
-    //        to: 12,
-    //        maxLength: 2,
-    //      },
-    //      Y: {
-    //        mask: IMask.MaskedRange,
-    //        from: 1900,
-    //        to: 9999,
-    //        maxLength: 4,
-    //      }
-    //    },
-    //    // define date -> str convertion
-    //    format: function (date) {
-    //      var day = date.getDate();
-    //      var month = date.getMonth() + 1;
-    //      var year = date.getFullYear();
-    //
-    //      if (day < 10) day = "0" + day;
-    //      if (month < 10) month = "0" + month;
-    //
-    //      return [year, month, day].join('-');
-    //    },
-    //    // define str -> date convertion
-    //    parse: function (str) {
-    //      var yearMonthDay = str.split('-');
-    //      return new Date(yearMonthDay[0], yearMonthDay[1] - 1, yearMonthDay[2]);
-    //    },
-    //
-    //    // optional interval options
-    //    min: new Date(2000, 0, 1),  // defaults to `1900-01-01`
-    //    max: new Date(2020, 0, 1),  // defaults to `9999-01-01`
-    //
-    //    autofix: true,  // defaults to `false`
-    //
-    //    // also Pattern options can be set
-    //    lazy: false,
-    //
-    //    // and other common options
-    //    overwrite: true  // defaults to `false`
-    //  });      
-    //});
-    // Each photo in hero and sidebar elements needs description and meta info popover
+    }); // Each photo in hero and sidebar elements needs description and meta info popover
 
-    getAll('.en__component--imageblock').forEach(function (el) {
+    getAll('.en__component--imageblock, .en__component--copyblock .card').forEach(function (el) {
       createImgTooltip(el);
     }); // Create popovers elements
 
-    if (typeof popoverTranslations !== 'undefined') {
+    if (typeof popoverTranslations !== 'undefined' && typeof pageJson !== 'undefined') {
       popoverTranslations.forEach(function (translation) {
         createPopover(translation.field, translation.placement, translation[pageJson.locale].label, translation[pageJson.locale].text);
       });
@@ -808,17 +851,21 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     window.closePopover = closePopover;
   };
   /**
-  * Donation form enhancements
-  */
+   * Donation form enhancements
+   */
 
 
-  var donation = function donation() {
+  var donationForm = function donationForm() {
+    var appealCode = theForm.querySelector('.en__field--appealCode');
     var bequestIframe = theForm.querySelector('.iframe--bequest iframe');
     var bequestModal = theForm.querySelector('.modal--bequest');
     var donationAmt = theForm.querySelector('.en__field--donationAmt');
+    var giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     var otherAmountInput = theForm.querySelector(otherAmountInputSelector);
+    var selectedAmount = donationAmt.querySelector('.en__field__input--radio:not([value=""]):checked');
     var tipJar = theForm.querySelector('.en__field--tip-jar');
     var donationAmtRadios = null;
+    var modal = null;
     var tipJarCheckbox = null;
     var tipJarUserChecked = false;
 
@@ -864,20 +911,47 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     };
 
     var maybeUncheckTipJar = function maybeUncheckTipJar(amt) {
-      if (!tipJarUserChecked && !isNaN(amt)) {
+      if (tipJarCheckbox.checked && !tipJarUserChecked && !isNaN(amt)) {
         if (Number(amt) >= 1000) {
           tipJarCheckbox.checked = false;
-          triggerEvent(tipJarCheckbox, 'click');
         }
       }
     };
 
-    var toggleTipJar = function toggleTipJar(el) {
-      var toggle = theForm.querySelector(tipJarToggle);
+    var handleDonationAmountChange = function handleDonationAmountChange(e) {
+      if (tipJarCheckbox) {
+        maybeUncheckTipJar(getOriginalDonationAmount());
+        updateDonationAmounts(tipJarCheckbox);
+        updateTipJar(getTipJar(getOriginalDonationAmount()));
+        updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : e.target.value);
+      } else {
+        updateTotalGift(e.target.value);
+      } // Work around for mobile pay not getting latest amount
 
-      if (toggle) {
-        toggle.style.display = el.checked ? 'inline' : 'none';
+
+      if (e.type === 'click') {
+        doubleClickAmount(e.target);
       }
+    };
+
+    var doubleClickAmount = function doubleClickAmount(el) {
+      // Don't want to get stuck in an endless loop
+      donationAmtRadios.forEach(function (el) {
+        el.removeEventListener('click', handleDonationAmountChange, {
+          once: true
+        });
+      });
+      setTimeout(function () {
+        // Reclicking the button makes mobile pay get the correct amount
+        el.checked = false;
+        el.click(); // Re add the click handler
+
+        donationAmtRadios.forEach(function (el) {
+          el.addEventListener('click', handleDonationAmountChange, {
+            once: true
+          });
+        });
+      }, 100);
     };
 
     if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
@@ -898,43 +972,70 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox'); // Handle tip jar click
 
           tipJarCheckbox.addEventListener('click', function (e) {
+            var selectedAmount = theForm.querySelector('.en__field__input--radio:not([value=""]):checked');
             tipJarUserChecked = true;
-            toggleTipJar(e.target);
             updateDonationAmounts(e.target);
-            updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount());
-          });
-          toggleTipJar(tipJarCheckbox);
+            updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount()); // Work around for mobile pay not getting latest amount
+
+            if (selectedAmount) {
+              doubleClickAmount(selectedAmount);
+            }
+          }); // Initiialize tip jar
+
           maybeUncheckTipJar(getOriginalDonationAmount());
 
           if (tipJarCheckbox.checked) {
             updateDonationAmounts(tipJarCheckbox);
           }
-        } // Handle donation amount change
+        } // Work around for mobile pay not getting latest amount
 
 
-        var handleDonationAmountChange = function handleDonationAmountChange(e) {
-          if (tipJarCheckbox) {
-            maybeUncheckTipJar(getOriginalDonationAmount());
-            updateDonationAmounts(tipJarCheckbox);
-            updateTipJar(getTipJar(getOriginalDonationAmount()));
-            updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : e.target.value);
-          } else {
-            updateTotalGift(e.target.value);
-          }
-        };
+        if (selectedAmount) {
+          doubleClickAmount(selectedAmount);
+        } // Listen for other amount change
 
-        donationAmtRadios.forEach(function (el) {
-          el.addEventListener('click', handleDonationAmountChange);
-        });
 
         if (otherAmountInput) {
           otherAmountInput.addEventListener('input', handleDonationAmountChange);
+        }
+      } // Gift designation Y/N 
+
+
+      if (giftDesignationYN && appealCode) {
+        giftDesignationYN.querySelector('.en__field__input--radio[value="N"]').addEventListener('click', function (e) {
+          disableEl(appealCode);
+        });
+        giftDesignationYN.querySelector('.en__field__input--radio[value="Y"]').addEventListener('click', function (e) {
+          enableEl(appealCode);
+        });
+
+        if (giftDesignationYN.querySelector('.en__field__input--radio[value="N"]').checked) {
+          disableEl(appealCode);
         }
       }
     }
 
     if (bequestIframe) {
       bequestIframe.addEventListener('load', function (e) {
+        bequestIframe.contentWindow.enOnValidate = function () {
+          setTimeout(function () {
+            if (formIsValid(bequestIframe.contentWindow.document.querySelector('.en__component--page'))) {
+              // Close modal
+              modal.hide();
+              focusFirst(); // Fire tracking
+
+              if (typeof utag !== 'undefined') {
+                utag.link({
+                  'event_name': 'lightbox_click',
+                  'lightbox_name': 'bequest'
+                });
+              }
+            } else {
+              resizeIframe(bequestIframe);
+            }
+          }, 100);
+        };
+
         resizeIframe(bequestIframe);
       });
       window.addEventListener('resize', function (e) {
@@ -943,78 +1044,376 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     if (bequestModal) {
-      var modal = new bootstrap.Modal(bequestModal, {
+      modal = new bootstrap.Modal(bequestModal, {
         backdrop: 'static',
         keyboard: false
       });
-      modal.show();
-    }
+      modal.show(); // Fire tracking
 
-    var initPhoneFields = function initPhoneFields() {
-      var mobilePhoneInput = theForm.querySelector(mobilePhoneInputSelector);
-      var homePhoneInput = theForm.querySelector(homePhoneInputSelector);
-      var mobileSameAsHomeCheckbox = theForm.querySelector(mobilePhoneSameAsHomeCheckboxSelector);
-      var submitButton = theForm.querySelector('.en__submit button');
-
-      if (mobilePhoneInput.value.length && homePhoneInput.value.length && homePhoneInput.value !== mobilePhoneInput.value && mobileSameAsHomeCheckbox.checked) {
-        mobileSameAsHomeCheckbox.click();
-      } else if (mobilePhoneInput.value.length === 0 && homePhoneInput.value.length && mobileSameAsHomeCheckbox.checked) {
-        mobilePhoneInput.disabled = false;
-        mobilePhoneInput.value = homePhoneInput.value;
-      }
-
-      var setMobilePhoneField = function setMobilePhoneField(e) {
-        if (e.target.checked) {
-          //override EN's diabling of the field
-          setTimeout(syncMobilePhoneField, 500);
-        } else {
-          mobilePhoneInput.value = '';
+      setTimeout(function () {
+        if (typeof utag !== 'undefined') {
+          utag.link({
+            'event_name': 'lightbox_impression',
+            'lightbox_name': 'bequest'
+          });
         }
-      };
-
-      var syncMobilePhoneField = function syncMobilePhoneField(e) {
-        if (mobileSameAsHomeCheckbox.checked) {
-          mobilePhoneInput.disabled = false;
-          mobilePhoneInput.value = homePhoneInput.value;
-        }
-      }; //attach event handler to the checkbox
-
-
-      mobileSameAsHomeCheckbox.addEventListener('change', setMobilePhoneField); //attach event hanfler to the home input
-
-      homePhoneInput.addEventListener('input', syncMobilePhoneField);
-    }; //if all three fields are present
-
-
-    if (theForm.querySelectorAll(mobilePhoneInputSelector).length && theForm.querySelectorAll(homePhoneInputSelector).length && theForm.querySelectorAll(mobilePhoneSameAsHomeCheckboxSelector).length) {
-      //initialize phone field features
-      initPhoneFields();
+      }, 1000);
     }
   };
   /**
-  * Quiz form enhancements
-  */
+   * Event form enhancements
+   */
+
+
+  var eventForm = function eventForm() {
+    var pageNumber = pageJson.pageNumber;
+    var savedTotalAmount = sessionStorage.getItem('savedTotalAmount');
+    var waitListLink = theForm.querySelector('.waitlist-link a');
+    var el = null;
+    var _parent = null;
+    var hasPromo = false;
+    var totalAmount = 0;
+    var totalDiscount = 0;
+    /**
+     * Updates total amount
+     */
+
+    var updateTotalAmount = function updateTotalAmount() {
+      var additionalInput = theForm.querySelector('.en__additional__input');
+      var totalAmount = 0; // Sum all tickets
+
+      getAll('.en__ticket__quantity').forEach(function (el) {
+        var row = getClosestEl(el, '.en__ticket');
+        var price = Number(row.querySelector('.en__ticket__price').textContent);
+
+        if (price !== '0') {
+          totalAmount += el.value === '0' ? 0 : Number(Number(el.value) * price);
+        }
+      }); // Include additional donation
+
+      if (additionalInput) {
+        totalAmount += !isNaN(Number(additionalInput.value)) ? Number(additionalInput.value) : 0;
+      } // Display total amount
+
+
+      getAll(totalAmountSelector).forEach(function (el) {
+        el.textContent = numberPipe(String(totalAmount));
+      }); // Save total for use on billing page
+
+      sessionStorage.setItem('savedTotalAmount', totalAmount);
+    };
+
+    var getPromo = function getPromo(el) {
+      return el.querySelector('.en__orderSummary__data--promo').textContent !== '';
+    }; // Make ticket quantity field readonly to avoid invalid ticket numbers
+
+
+    getAll('.en__ticket__quantity').forEach(function (el) {
+      el.readOnly = true;
+      el.setAttribute('tabindex', '-1');
+    }); // Add ticket quantity plus/minus to tab order
+
+    getAll('.en__ticket__minus, .en__ticket__plus').forEach(function (el) {
+      el.setAttribute('tabindex', '0');
+    }); // Strip currency indicators and $ signs
+
+    getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(function (el) {
+      el.textContent = el.textContent.replace(/USD/, '');
+    }); // Strip label colons
+
+    getAll('.en__orderSummary__header').forEach(function (el) {
+      el.textContent = el.textContent.replace(/\:/, '');
+    }); // Maybe on page 1
+
+    if (pageNumber === 1) {
+      // Display waitlist confirmation if coming from a chained redirect
+      el = theForm.querySelector('.waitlist-confirmation');
+
+      if (el && location.href.indexOf('chain') > -1) {
+        removeClass(el, hiddenWebOnlyClass);
+      } // Maybe add waitlist links
+
+
+      if (waitListLink) {
+        getAll('.en__ticket__soldout').forEach(function (el) {
+          var clone = waitListLink.cloneNode(true);
+          el.parentElement.append(clone);
+        });
+      } // Listen for additional donation
+
+
+      el = theForm.querySelector('.en__additional__input');
+
+      if (el) {
+        el.addEventListener('change', function (e) {
+          updateTotalAmount();
+        });
+      } // Listen for ticket selection
+
+
+      getAll('.en__ticket__quantity').forEach(function (el) {
+        el.addEventListener('change', function (e) {
+          setTimeout(function () {
+            updateTotalAmount();
+          }, 100);
+        });
+      }); // Listen for reset
+
+      el = theForm.querySelector('button[type="reset"]');
+
+      if (el) {
+        el.addEventListener('click', function (e) {
+          setTimeout(function () {
+            updateTotalAmount();
+          }, 100);
+        });
+      } // Init total amount
+
+
+      updateTotalAmount(); // Force ticket total cost update
+
+      getAll('.en__ticket__minus, .en__ticket__plus').forEach(function (el) {
+        var row = getClosestEl(el, '.en__ticket');
+        var ticketQuantity = row.querySelector('.en__ticket__quantity');
+        el.addEventListener('click', function (e) {
+          triggerEvent(ticketQuantity, 'change');
+        }); // Add keyboard nav to plus/minus buttons
+
+        el.addEventListener('keyup', function (e) {
+          if (e.key === 'Enter' || e.keyCode === 13) {
+            e.target.click();
+          }
+        });
+      }); // Maybe on page 2
+    } else if (pageNumber === 2) {
+      // Customize order summary table
+      getAll('.en__orderSummary__item').forEach(function (el) {
+        var itemType = el.querySelector('.en__orderSummary__data--type');
+        var itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent;
+        itemType.textContent = itemQuantity + "x  " + itemType.textContent;
+        hasPromo = hasPromo || getPromo(el);
+      }); // Maybe add promo discount line
+
+      el = theForm.querySelector('.en__orderSummary__data--totalAmount');
+      _parent = theForm.querySelector('.en__orderSummary');
+
+      if (savedTotalAmount && hasPromo && el && _parent) {
+        totalAmount = Number(el.textContent.replace(/\$/, ''));
+        el = document.getElementById('orderSummaryPromo');
+
+        if (el) {
+          totalDiscount = Number(savedTotalAmount) - totalAmount;
+          el.querySelector('.js-applied-promo').textContent = totalDiscount.toFixed(2);
+
+          _parent.insertBefore(el, theForm.querySelector('.en__orderSummary__total'));
+
+          removeClass(el, hiddenWebOnlyClass);
+        } // Cleanup
+
+
+        theForm.querySelector('.en__submit button').addEventListener('click', function (e) {
+          sessionStorage.removeItem('savedTotalAmount');
+        });
+      } // Remove ticket index number
+
+
+      getAll('.en__registrants__ticketHead').forEach(function (el) {
+        el.textContent = el.textContent.replace(/\d/g, '');
+      }); // Remove attendee index number
+
+      getAll('.en__registrants__registrantHead').forEach(function (el) {
+        el.textContent = el.textContent.replace(/\d/g, '');
+      }); // Re-number attendees
+
+      getAll('.en__registrants__ticket').forEach(function (el) {
+        var attendees = getAll('.en__registrants__registrantHead', el);
+
+        if (attendees.length > 1) {
+          attendees.forEach(function (el, index) {
+            el.textContent = el.textContent + " " + (index + 1);
+          });
+        }
+      }); // Adding commas to totals
+
+      getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(function (el) {
+        el.textContent = numberPipe(el.textContent);
+      }); // Adjust the page if zero amount due
+
+      el = theForm.querySelector('.en__orderSummary__data--totalAmount');
+
+      if (el) {
+        if (parseInt(el.textContent) === 0) {
+          // Some of the form headings have 'Billing' in them
+          getAll('.form-heading h3').forEach(function (el) {
+            el.textContent = el.textContent.replace(/Billing\s/i, '');
+          }); // Find the form block with address info
+
+          el = document.getElementById('en__field_supporter_address1');
+
+          if (el) {
+            // CSS will hide eveything below .last-visible except the submit block
+            addClass(getClosestEl(el, '.en__component--formblock'), 'last-visible');
+          }
+        }
+      } // Display total amount
+
+
+      el = theForm.querySelector('.en__orderSummary__data--totalAmount');
+
+      if (el) {
+        // Prevent double $ symbols
+        setTimeout(function () {
+          el.textContent = el.textContent.indexOf('$') > -1 ? el.textContent.replace(/\$/g, '') : el.textContent;
+          addClass(el, activeClass);
+          getAll(totalAmountSelector).forEach(function (el) {
+            el.textContent = "$" + theForm.querySelector('.en__orderSummary__data--totalAmount').textContent.replace(/\$/, '');
+          });
+        }, 500);
+      }
+    }
+  };
+  /**
+   * Email to target enhancements
+   */
+
+
+  var emailToTarget = function emailToTarget() {
+    var contactBlock = theForm.querySelector('.en__component--contactblock');
+
+    if (contactBlock) {
+      // Already visually hidden, but hide from screen readers too without using display: none
+      contactBlock.setAttribute('aria-hidden', 'true');
+    }
+  };
+  /**
+   * Hub enhancements
+   */
+
+
+  var hub = function hub() {
+    var hubImage = theForm.querySelector('.hub-image .en__component--imageblock:last-child img');
+    var emailAddress = theForm.querySelector('.en__supporterHubLogin__emailAddress .en__field__input'); // Convert large image to a background to better styling
+
+    if (hubImage) {
+      hubImage.parentElement.style.backgroundImage = "url(" + hubImage.getAttribute('src') + ")";
+    } // Enable autocomplete on email address field
+
+
+    if (emailAddress) {
+      emailAddress.id = emailAddress;
+      emailAddress.setAttribute('autocomplete', 'email');
+    }
+  };
+  /**
+   * Quiz form enhancements
+   */
 
 
   var quiz = function quiz() {
     var leadGenModal = theForm.querySelector('.modal--lead-gen');
+    var isInvalid = false;
+    var formType = null;
     var el = null;
-    var score = 0; // Maybe display lead gen modal
+    var score = 0;
+
+    var getFormType = function getFormType(form) {
+      var emailOptInChecked = form.querySelector('.en__field--generic-opt-in:not(.en__hidden) .en__field__input--checkbox') ? form.querySelector('.en__field--generic-opt-in:not(.en__hidden) .en__field__input--checkbox').checked : false;
+      var mobilePhoneField = form.querySelector('#en__field_supporter_phoneNumber2');
+      var textOptInChecked = form.querySelector('.en__field--home-phone-opt-in .en__field__input--checkbox') ? form.querySelector('.en__field--home-phone-opt-in .en__field__input--checkbox').checked : false;
+      var formType = {};
+      formType.lightbox_name = "lightbox-" + utag_data.page_name;
+      formType.form_name = "lightbox-" + utag_data.page_name;
+      formType.email_signup_location = "lightbox-" + utag_data.page_name;
+
+      if (emailOptInChecked && mobilePhoneField && textOptInChecked) {
+        formType.event_name = 'frm_ltbx_emt_emo_txt_txto_submit';
+        formType.form_type = 'email_text_signup';
+        formType.text_signup_location = "lightbox-" + utag_data.page_name;
+      } else if (emailOptInChecked && mobilePhoneField) {
+        formType.event_name = 'frm_ltbx_emt_emo_txt_submit';
+        formType.form_type = 'email_text_signup';
+        formType.text_signup_location = "lightbox-" + utag_data.page_name;
+      } else if (emailOptInChecked) {
+        formType.event_name = 'frm_ltbx_emt_emo_submit';
+        formType.form_type = 'email_signup';
+      } else if (mobilePhoneField && textOptInChecked) {
+        formType.event_name = 'rm_ltbx_emt_txt_txto_submit';
+        formType.form_type = 'email_text_signup';
+        formType.text_signup_location = "lightbox-" + utag_data.page_name;
+      } else if (mobilePhoneField) {
+        formType.event_name = 'frm_ltbx_emt_txt_submit';
+        formType.form_type = 'email_text_signup';
+        formType.text_signup_location = "lightbox-" + utag_data.page_name;
+      } else {
+        formType.event_name = 'frm_ltbx_emt_submit';
+        formType.form_type = 'email_signup';
+      }
+
+      return formType;
+    }; // Maybe display lead gen modal
+
 
     if (leadGenModal) {
+      formType = getFormType(leadGenModal);
       var modal = new bootstrap.Modal(leadGenModal, {
         backdrop: 'static',
         keyboard: false
       });
-      modal.show(); // Handle modal submit button click
+      modal.show(); // Fire tracking
+
+      setTimeout(function () {
+        if (typeof utag !== 'undefined') {
+          utag.link({
+            'event_name': 'lightbox_form_impression',
+            'lightbox_name': formType.lightbox_name,
+            'form_type': formType.form_type,
+            'form_name': formType.form_name
+          });
+        }
+      }, 100);
+
+      var validateModal = function validateModal() {
+        if (formIsValid(leadGenModal)) {
+          formType = getFormType(leadGenModal);
+          modal.hide();
+          focusFirst(leadGenModal); // Fire tracking
+
+          if (typeof utag !== 'undefined') {
+            utag.link(formType);
+          } // Submit buttons are disabled after clicking
+
+
+          enableSubmitButtons();
+        } else {
+          // Submit buttons are disabled after clicking
+          isInvalid = true;
+          enableSubmitButtons();
+        }
+
+        return false;
+      };
+
+      var enableSubmitButtons = function enableSubmitButtons() {
+        setTimeout(function () {
+          getAll('.en__submit button').forEach(function (el) {
+            el.disabled = false;
+          });
+        }, 100);
+      }; // Handle modal submit button click
+
 
       leadGenModal.querySelector('.btn').addEventListener('click', function (e) {
-        setTimeout(function () {
-          if (formIsValid(leadGenModal)) {
-            modal.hide();
-            focusFirst();
-          }
-        }, 100);
+        if (isInvalid) {
+          validateModal();
+          e.preventDefault();
+          return false;
+        } else {
+          setTimeout(function () {
+            validateModal();
+            e.preventDefault();
+            return false;
+          }, 100);
+        }
       });
     } // Listen for validation error
 
@@ -1045,7 +1444,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     getAll('.en__field__input--radio').forEach(function (el) {
       el.addEventListener('click', function (e) {
-        var _target = e.target;
         var el = void 0; // Clicking any answer removes error message
 
         el = theForm.querySelector(errorSelector);
@@ -1150,190 +1548,109 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
   /**
-  * Event form enhancements
-  */
+   * Action center form enhancements
+   */
 
 
-  var events = function events() {
-    var pageNumber = pageJson.pageNumber;
-    var savedTotalAmount = sessionStorage.getItem('savedTotalAmount');
-    var waitListLink = theForm.querySelector('.waitlist-link a');
-    var el = null;
-    var _parent = null;
-    var hasPromo = false;
-    var totalAmount = 0;
-    var totalDiscount = 0;
-    /**
-     * Updates total amount
-     */
+  var actionCenter = function actionCenter() {
+    // Make image blocks clickable    
+    getAll('.card').forEach(function (el) {
+      var link = el.querySelector('a[data-type="campaignpage_url_pb"]');
+      var img = el.querySelector('.en__component--imageblock img');
+      var clone = null;
 
-    var updateTotalAmount = function updateTotalAmount() {
-      var additionalInput = theForm.querySelector('.en__additional__input');
-      var totalAmount = 0; // Sum all tickets
+      if (link && img) {
+        clone = link.cloneNode();
+        img.parentNode.insertBefore(clone, img);
+        clone.appendChild(img);
+      }
+    });
+  };
+  /**
+   * Track form errors
+   */
 
-      getAll('.en__ticket__quantity').forEach(function (el) {
-        var row = getClosestEl(el, '.en__ticket');
-        var price = Number(row.querySelector('.en__ticket__price').textContent);
 
-        if (price !== '0') {
-          totalAmount += el.value === '0' ? 0 : Number(Number(el.value) * price);
+  var trackFormErrors = function trackFormErrors() {
+    var invalidFields = '';
+    var errors = '';
+
+    if (typeof utag !== 'undefined') {
+      // Gather invalid fields and error messages
+      getAll('.en__field--validationFailed').forEach(function (el) {
+        if (el.querySelector('.en__field__error')) {
+          invalidFields += el.querySelector('.en__field__input').getAttribute('name') + "|";
+          errors += el.querySelector('.en__field__error').textContent + "|";
         }
-      }); // Include additional donation
+      }); // Fire tracking if errors were found
 
-      if (additionalInput) {
-        totalAmount += !isNaN(Number(additionalInput.value)) ? Number(additionalInput.value) : 0;
-      } // Display total amount
-
-
-      getAll(totalAmountSelector).forEach(function (el) {
-        el.textContent = numberPipe(String(totalAmount));
-      }); // Save total for use on billing page
-
-      sessionStorage.setItem('savedTotalAmount', totalAmount);
-    };
-
-    var getPromo = function getPromo(el) {
-      return el.querySelector('.en__orderSummary__data--promo').textContent !== '';
-    }; // Make ticket quantity field readonly to avoid invalid ticket numbers
-
-
-    getAll('.en__ticket__quantity').forEach(function (el) {
-      el.readOnly = true;
-      el.setAttribute('tabindex', '-1');
-    }); // Add ticket quantity plus/minus to tab order
-
-    getAll('.en__ticket__minus, .en__ticket__plus').forEach(function (el) {
-      el.setAttribute('tabindex', '0');
-    }); // Strip currency indicators
-
-    getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(function (el) {
-      el.textContent = el.textContent.replace(/USD/, '');
-    }); // Strip label colons
-
-    getAll('.en__orderSummary__header').forEach(function (el) {
-      el.textContent = el.textContent.replace(/\:/, '');
-    }); // Maybe on page 1
-
-    if (pageNumber === 1) {
-      // Display waitlist confirmation if coming from a chained redirect
-      el = theForm.querySelector('.waitlist-confirmation');
-
-      if (el && location.href.indexOf('chain') > -1) {
-        removeClass(el, hiddenWebOnlyClass);
-      } // Maybe add waitlist links
-
-
-      if (waitListLink) {
-        getAll('.en__ticket__soldout').forEach(function (el) {
-          var clone = waitListLink.cloneNode(true);
-          el.parentElement.append(clone);
-        });
-      } // Listen for additional donation
-
-
-      el = theForm.querySelector('.en__additional__input');
-
-      if (el) {
-        el.addEventListener('change', function (e) {
-          updateTotalAmount();
-        });
-      } // Listen for ticket selection
-
-
-      getAll('.en__ticket__quantity').forEach(function (el) {
-        el.addEventListener('change', function (e) {
-          setTimeout(function () {
-            updateTotalAmount();
-          }, 100);
-        });
-      }); // Init total amount
-
-      updateTotalAmount(); // Force ticket total cost update
-
-      getAll('.en__ticket__minus, .en__ticket__plus').forEach(function (el) {
-        var row = getClosestEl(el, '.en__ticket');
-        var ticketQuantity = row.querySelector('.en__ticket__quantity');
-        el.addEventListener('click', function (e) {
-          triggerEvent(ticketQuantity, 'change');
-        }); // Add keyboard nav to plus/minus buttons
-
-        el.addEventListener('keyup', function (e) {
-          if (e.key === 'Enter' || e.keyCode === 13) {
-            e.target.click();
-          }
-        });
-      }); // Maybe on page 2
-    } else if (pageNumber === 2) {
-      // Display total amount
-      el = theForm.querySelector('.en__orderSummary__data--totalAmount');
-
-      if (el) {
-        getAll(totalAmountSelector).forEach(function (el) {
-          el.textContent = "$" + el.textContent;
-        });
-      } // Customize order summary table
-
-
-      getAll('.en__orderSummary__item').forEach(function (el) {
-        var itemType = el.querySelector('.en__orderSummary__data--type');
-        var itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent;
-        itemType.textContent = itemQuantity + "x  " + itemType.textContent;
-        hasPromo = hasPromo || getPromo(el);
-      }); // Maybe add promo discount line
-
-      el = theForm.querySelector('.en__orderSummary__data--totalAmount');
-      _parent = theForm.querySelector('.en__orderSummary');
-
-      if (savedTotalAmount && hasPromo && el && _parent) {
-        totalAmount = Number(el.textContent);
-        el = document.getElementById('orderSummaryPromo');
-
-        if (el) {
-          totalDiscount = Number(savedTotalAmount) - totalAmount;
-          el.querySelector('.js-applied-promo').textContent = totalDiscount.toFixed(2);
-
-          _parent.insertBefore(el, theForm.querySelector('.en__orderSummary__total'));
-
-          removeClass(el, hiddenWebOnlyClass);
-        } // Cleanup
-
-
-        theForm.querySelector('.en__submit button').addEventListener('click', function (e) {
-          sessionStorage.removeItem('savedTotalAmount');
+      if (invalidFields !== '') {
+        utag.link({
+          'event_name': 'form_error',
+          'form_field_error_field': invalidFields.slice(0, -1),
+          'form_field_error_value': errors.slice(0, -1),
+          'form_name': utag_data.page_name,
+          'form_type': pageJson.pageType
         });
       }
+    }
+  };
 
-      getAll('.en__registrants__ticketHead').forEach(function (el) {
-        el.textContent = el.textContent.replace(/\d/g, '');
-      }); // Remove attendee index number
-
-      getAll('.en__registrants__registrantHead').forEach(function (el) {
-        el.textContent = el.textContent.replace(/\d/g, '');
-      }); // Re-number attendees
-
-      getAll('.en__registrants__ticket').forEach(function (el) {
-        var attendees = getAll('.en__registrants__registrantHead', el);
-
-        if (attendees.length > 1) {
-          attendees.forEach(function (el, index) {
-            el.textContent = el.textContent + " " + (index + 1);
-          });
-        }
-      }); // Adding commas to totals
-
-      getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(function (el) {
-        el.textContent = numberPipe(el.textContent);
-      }); // Remove ticket index number
-      // Display total cost
-
-      getAll('.js-total-gift').forEach(function (el) {
-        el.textContent = "$" + theForm.querySelector('.en__orderSummary__data--totalAmount').textContent;
+  var trackFormSubmit = function trackFormSubmit() {
+    if (typeof utag !== 'undefined') {
+      utag.link({
+        'event_name': 'form_submit',
+        'form_type': pageJson.pageType,
+        'form_name': utag_data.page_name
       });
     }
   };
+
+  var mobilePhone = function mobilePhone() {
+    var initPhoneFields = function initPhoneFields() {
+      var mobilePhoneInput = theForm.querySelector(mobilePhoneInputSelector);
+      var homePhoneInput = theForm.querySelector(homePhoneInputSelector);
+      var mobileSameAsHomeCheckbox = theForm.querySelector(mobilePhoneSameAsHomeCheckboxSelector);
+      var submitButton = theForm.querySelector('.en__submit button');
+
+      if (mobilePhoneInput.value.length && homePhoneInput.value.length && homePhoneInput.value !== mobilePhoneInput.value && mobileSameAsHomeCheckbox.checked) {
+        mobileSameAsHomeCheckbox.click();
+      } else if (mobilePhoneInput.value.length === 0 && homePhoneInput.value.length && mobileSameAsHomeCheckbox.checked) {
+        mobilePhoneInput.disabled = false;
+        mobilePhoneInput.value = homePhoneInput.value;
+      }
+
+      var setMobilePhoneField = function setMobilePhoneField(e) {
+        if (e.target.checked) {
+          //override EN's diabling of the field
+          setTimeout(syncMobilePhoneField, 500);
+        } else {
+          mobilePhoneInput.value = '';
+        }
+      };
+
+      var syncMobilePhoneField = function syncMobilePhoneField(e) {
+        if (mobileSameAsHomeCheckbox.checked) {
+          mobilePhoneInput.disabled = false;
+          mobilePhoneInput.value = homePhoneInput.value;
+        }
+      }; //attach event handler to the checkbox
+
+
+      mobileSameAsHomeCheckbox.addEventListener('change', setMobilePhoneField); //attach event hanfler to the home input
+
+      homePhoneInput.addEventListener('input', syncMobilePhoneField);
+    }; //if all three fields are present
+
+
+    if (theForm.querySelectorAll(mobilePhoneInputSelector).length && theForm.querySelectorAll(homePhoneInputSelector).length && theForm.querySelectorAll(mobilePhoneSameAsHomeCheckboxSelector).length) {
+      //initialize phone field features
+      initPhoneFields();
+    }
+  };
   /**
-  * Form validation enhancements
-  */
+   * Form validation enhancements
+   */
 
 
   var validation = function validation() {
@@ -1382,8 +1699,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             // Check for US currency
             el.setAttribute('pattern', '^\\$?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\\.[0-9]{1,2})?$');
           } else if (el.name.indexOf('ccnumber') > -1) {
-            // Check for valid credit card (https://regexlib.com/REDetails.aspx?regexp_id=100)
-            el.setAttribute('pattern', '^((?:4\\d{3})|(?:5[1-5]\\d{2})|(?:6011)|(?:3[68]\\d{2})|(?:30[012345]\\d))[ -]?(\\d{4})[ -]?(\\d{4})[ -]?(\\d{4}|3[4,7]\\d{13})$');
+            // Check for valid credit card (https://www.w3resource.com/javascript-exercises/javascript-regexp-exercise-2.php)
+            el.setAttribute('pattern', '^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$');
           } else if (el.name.indexOf('ccvv') > -1) {
             // Check for 3 or 4 digits
             el.setAttribute('pattern', '^([0-9]{3,4})$');
@@ -1434,8 +1751,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
   /**
-  * Form submit enhancements
-  */
+   * Form submit enhancements
+   */
 
 
   var formSubmit = function formSubmit() {
@@ -1444,10 +1761,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var upsellButton = theForm.querySelector('.btn-upsell');
     var upsellModal = theForm.querySelector('.modal--upsell');
     var hasUpsell = monthlyCheckbox && upsellModal && upsellButton && continueButton;
-    var submitButton = theForm.querySelector('.en__submit button');
     var otherAmountInput = theForm.querySelector(otherAmountInputSelector);
-    var savedSubmit = void 0;
-    var otherAmountOriginal = null; // Don't submit form on ENTER if focused on an input
+    var otherAmountOriginal = null;
+    var isInvalid = false; // Don't submit form on ENTER if focused on an input
 
     window.addEventListener('keydown', function (e) {
       if (e.keyIdentifier == 'U+000A' || e.keyIdentifier == 'Enter' || e.keyCode == 13) {
@@ -1458,165 +1774,301 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     }, true);
 
-    var setMonthlyAmount = function setMonthlyAmount(amt) {
-      if (amt >= 5 && amt <= 24) {
-        return 5;
-      } else if (amt >= 25 && amt < 50) {
-        return 10;
-      } else if (amt >= 50 && amt <= 100) {
-        return 15;
-      }
+    window.enOnError = function () {
+      trackFormErrors();
     };
 
-    var doSubmit = function doSubmit() {
-      // Restore the EN form submit handler
-      theForm.submit = savedSubmit;
-      theForm.submit();
-    }; // Maybe an upsell modal
-
-
-    if (hasUpsell) {
-      // A valid form always wants to submit, so
-      // save the EN form submit handler then remove it if the upsell modal is present
-      savedSubmit = theForm.submit;
-      theForm.submit = null;
-    }
-
-    if (submitButton) {
-      submitButton.addEventListener('click', function (e) {
-        var otherAmountValue = void 0;
-        var donationAmount = parseFloat(getTotalDonationAmount()); // Set other amount field to tip jar amount if needed
-
-        if (otherAmountInput && !getSelectedAmount()) {
-          if (otherAmountInput.value !== '') {
-            otherAmountOriginal = otherAmountInput.value;
-            otherAmountInput.value = otherAmountInput.dataset.tipjar ? otherAmountInput.dataset.tipjar : otherAmountInput.value;
-          } // Restore other amount value if validation errors
-
-
-          setTimeout(function () {
-            if (!formIsValid()) {
-              otherAmountInput.value = otherAmountOriginal;
-            }
-          });
-        } // Maybe display upsell modal
-
-
-        if (hasUpsell) {
-          if (donationAmount >= 5 && donationAmount <= 100) {
-            setTimeout(function () {
-              if (formIsValid()) {
-                if (!monthlyCheckbox.checked) {
-                  // Display monthly amount
-                  getAll('.js-monthly-gift').forEach(function (el) {
-                    el.textContent = "$" + numberPipe(String(setMonthlyAmount(donationAmount)));
-                  });
-                  setMonthlyAmount(donationAmount); // Open modal
-
-                  var modal = new bootstrap.Modal(upsellModal, {
-                    backdrop: 'static',
-                    keyboard: false
-                  });
-                  modal.show(); // Handle modal clicks
-
-                  upsellButton.addEventListener('click', function (e) {
-                    monthlyCheckbox.click();
-                    otherAmountInput.value = setMonthlyAmount(donationAmount);
-                    doSubmit();
-                  });
-                  getAll('.btn-close, .btn-continue').forEach(function (el) {
-                    el.addEventListener('click', function (e) {
-                      doSubmit();
-                    });
-                  });
-                } else {
-                  doSubmit();
-                }
-              }
-            }, 100);
-          } else {
-            doSubmit();
-          }
-        }
-      });
-    }
-
-    theForm.addEventListener('submit', function (e) {
-      var tipJar = theForm.querySelector('.en__field--tip-jar');
+    window.enOnValidate = function () {
+      var donationAmount = parseFloat(getTotalDonationAmount());
       var ecardSelect = theForm.querySelector(ecardSelectSelector);
       var ecardFields = theForm.querySelector(ecardFieldsSelector);
+      var mobilePhoneNumber = theForm.querySelector('.en__field--phoneNumber2:not(:placeholder-shown) .en__field__input');
+      var mobilePhoneOptIn = theForm.querySelector('.en__field--mobile-text-opt-in .en__field__input--checkbox:checked');
+      var tipJar = theForm.querySelector('.en__field--tip-jar');
+      var trackSubmit = theForm.querySelector('.track-submit');
       var extraAmount = 0;
       var donationData = {};
       var ecardData = {};
+      var mobilePhoneData = {};
+      var upsellDone = false;
 
-      var getEcardRecipients = function getEcardRecipients(ecardFields) {
-        var recipientsInput = ecardFields.querySelector('.en__field__input--textarea');
-        var recipientEmails = void 0;
-        var validEmails = [];
-        var regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-        if (recipientsInput) {
-          recipientEmails = recipientsInput.value.replace(/\s/g, '').split(',');
-
-          for (var i = 0; i < recipientEmails.length; i++) {
-            if (recipientEmails[i] !== "" || regex.test(recipientEmails[i])) {
-              validEmails.push(recipientEmails[i]);
-            }
-          }
-
-          return validEmails;
+      var tipJarSelected = function tipJarSelected() {
+        if (!tipJar) {
+          return false;
         }
 
-        return null;
+        return tipJar.querySelector('.en__field__input--checkbox').checked;
       };
 
-      if (formIsValid()) {
-        if (tipJar) {
-          // Calculate extra tip jar amount for data layer
-          if (tipJar.querySelector('.en__field__input--checkbox').checked) {
-            var totalDonationAmount = getTotalDonationAmount();
-            var originalDonationAmount = otherAmountOriginal || getOriginalDonationAmount();
-            extraAmount = (totalDonationAmount - originalDonationAmount).toFixed(2);
-            donationData.originalDonationAmount = originalDonationAmount;
-          }
-        } // Maybe save ecard fields for use on seamless ecard page
+      var doUpsell = function doUpsell() {
+        if (!upsellDone) {
+          // Display monthly amount
+          getAll('.js-monthly-gift').forEach(function (el) {
+            el.textContent = "$" + numberPipe(String(setMonthlyAmount(donationAmount)));
+          });
+          setMonthlyAmount(donationAmount); // Open modal
+
+          var modal = new bootstrap.Modal(upsellModal, {
+            backdrop: 'static',
+            keyboard: false
+          });
+          modal.show(); // Fire tracking
+
+          if (typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'lightbox_impression',
+              'lightbox_name': 'sustainer upsell'
+            });
+          } // Handle modal clicks
 
 
-        if (ecardSelect && ecardFields) {
-          if (ecardSelect.querySelector('.en__field__input--checkbox').checked) {
-            ecardData.recipients = getEcardRecipients(ecardFields);
-
-            if (ecardData.recipients.length > 0) {
-              ecardData.selectEcard = ecardSelect.querySelector('.en__field__input--radio:checked').value;
-              ecardData.subject = ecardFields.querySelector('.en__field__input--text').value;
-              ecardData.message = ecardFields.querySelector('.en__field--ecard-message .en__field__input--textarea').value;
-              ecardData.sendDate = ecardFields.querySelector('.datepicker-input').value;
-              sessionStorage.setItem('ecardData', JSON.stringify(ecardData));
-            }
-          } else {
-            sessionStorage.removeItem('ecardData');
-          }
-        } // Looking for URL tracking params to pass to data layer on confirmation page
+          upsellButton.addEventListener('click', function (e) {
+            // Fire tracking
+            if (typeof utag !== 'undefined') {
+              utag.link({
+                'event_name': 'lightbox_click',
+                'lightbox_name': 'sustainer upsell'
+              });
+            } // Select monthly option and proceed to confirmation
 
 
-        var trackingParams = new URLSearchParams(location.search);
-        donationData.src = trackingParams.has('src') ? trackingParams.get('src') : '';
-        donationData.vid = trackingParams.has('vid') ? trackingParams.get('vid') : '';
-        donationData.vid2 = trackingParams.has('vid2') ? trackingParams.get('vid2') : ''; // Save non-pageJson data for data layer on confirmation page
+            monthlyCheckbox.click();
+            otherAmountInput.value = setMonthlyAmount(donationAmount);
+            theForm.submit();
+          });
+          getAll('.btn-close, .btn-continue').forEach(function (el) {
+            el.addEventListener('click', function (e) {
+              theForm.submit();
+            });
+          });
+          upsellDone = true;
+        }
+      }; // Set other amount field to tip jar amount if needed
 
-        donationData.extraAmount = extraAmount;
-        donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : '';
-        donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : '';
-        donationData.emailAddress = theForm.querySelector(supporterEmailAddressSelector) ? theForm.querySelector(supporterEmailAddressSelector).value : '';
-        sessionStorage.setItem('donationData', JSON.stringify(donationData));
-      } else {
-        submitButton.disabled = false;
+
+      if (otherAmountInput && !getSelectedAmount()) {
+        if (otherAmountInput.value !== '') {
+          otherAmountOriginal = otherAmountInput.value;
+          otherAmountInput.value = tipJarSelected() && otherAmountInput.dataset.tipjar ? otherAmountInput.dataset.tipjar : otherAmountInput.value;
+        }
       }
+
+      if (tipJar) {
+        // Calculate extra tip jar amount for data layer
+        if (tipJarSelected()) {
+          var totalDonationAmount = getTotalDonationAmount();
+          var originalDonationAmount = otherAmountOriginal || getOriginalDonationAmount();
+          extraAmount = (totalDonationAmount - originalDonationAmount).toFixed(2);
+          donationData.originalDonationAmount = originalDonationAmount;
+        }
+      } // Maybe save ecard fields for use on seamless ecard page
+
+
+      if (ecardSelect && ecardFields) {
+        if (ecardSelect.querySelector('.en__field__input--checkbox').checked) {
+          donationData.ecardSelected = 'true';
+          ecardData.selectEcard = ecardSelect.querySelector('.en__field__input--radio:checked').value;
+          ecardData.recipients = ecardFields.querySelector('.en__field__input--email').value;
+          ecardData.message = ecardFields.querySelector('.en__field--ecard-message .en__field__input--textarea').value;
+          ecardData.sendDate = ecardFields.querySelector('.datepicker-input').value;
+          sessionStorage.setItem('ecardData', JSON.stringify(ecardData));
+        } else {
+          delete donationData.ecardSelected;
+          sessionStorage.removeItem('ecardData');
+        }
+      } // Looking for non-hidden, non-blank mobile phone field and mobile text opt-in to save and pass to SMS platform
+
+
+      if (mobilePhoneNumber) {
+        mobilePhoneData.phoneNumber = mobilePhoneNumber.value;
+
+        if (mobilePhoneOptIn) {
+          mobilePhoneData.optIn = 'Y';
+        } else {
+          mobilePhoneData.optIn = null;
+        }
+
+        sessionStorage.setItem('mobilePhoneData', JSON.stringify(mobilePhoneData));
+      } // Looking for URL tracking params to pass to data layer on confirmation page
+
+
+      var trackingParams = new URLSearchParams(location.search);
+      donationData.src = trackingParams.has('src') ? trackingParams.get('src') : '';
+      donationData.vid = trackingParams.has('vid') ? trackingParams.get('vid') : '';
+      donationData.vid2 = trackingParams.has('vid2') ? trackingParams.get('vid2') : ''; // Save non-pageJson data for data layer on confirmation page
+
+      donationData.productId = utag_data.page_name;
+      donationData.donationFormId = typeof pageJson !== 'undefined' ? pageJson.campaignPageId : '';
+      donationData.extraAmount = extraAmount;
+      donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : '';
+      donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : '';
+      donationData.emailAddress = theForm.querySelector(supporterEmailAddressSelector) ? theForm.querySelector(supporterEmailAddressSelector).value : '';
+      sessionStorage.setItem('donationData', JSON.stringify(donationData)); // Maybe track form submit
+
+      if (trackSubmit) {
+        trackFormSubmit();
+      } // Maybe display upsell modal
+
+
+      if (hasUpsell && donationAmount >= 5 && donationAmount <= 100 && !monthlyCheckbox.checked) {
+        if (isInvalid) {
+          if (formIsValid()) {
+            doUpsell();
+          }
+        } else {
+          setTimeout(function () {
+            if (formIsValid()) {
+              doUpsell();
+            } else {
+              isInvalid = true;
+            }
+          }, 100);
+        }
+
+        return false;
+      } else {
+        return true;
+      }
+    };
+
+    window.enOnSubmit = function () {
+      // handle async code with promises
+      return new Promise(function (resolve, reject) {
+        setTimeout(function () {
+          resolve(); // will allow submit when timeout runs in 1000ms
+        }, 1000);
+      });
+    };
+  };
+  /**
+   * Member care form
+   */
+
+
+  var memberCare = function memberCare() {
+    var emailAddress = document.getElementById('en__field_supporter_emailAddress');
+    var generateEmailButton = document.getElementById('generateEmail');
+    var optIns = getAll('.hide-opt-ins .en__field--question .en__field__input--checkbox');
+
+    var unCheckOptIns = function unCheckOptIns() {
+      optIns.forEach(function (el) {
+        el.checked = false;
+      });
+    };
+
+    var checkOptIns = function checkOptIns() {
+      optIns.forEach(function (el) {
+        el.checked = true;
+      });
+    }; // Auto check/uncheck opt in checkboxes
+
+
+    if (emailAddress && generateEmailButton) {
+      emailAddress.addEventListener('change', function (e) {
+        if (e.target.value.indexOf('fakeemail') > -1) {
+          unCheckOptIns();
+        } else {
+          checkOptIns();
+        }
+      }); // For anonymous actions, or actions that don't require an email address, 
+      // the database still needs an email address to be able to store the data.
+
+      generateEmailButton.addEventListener('click', function (e) {
+        var theDate = new Date();
+        var milliseconds = theDate.getTime();
+        var anonAddress = milliseconds + ".first.last@fakeemail.com";
+        emailAddress.value = anonAddress;
+        triggerEvent(emailAddress, 'change');
+      });
+    }
+  };
+  /**
+   * Track social share clicks
+   */
+
+
+  var socialShareTracking = function socialShareTracking() {
+    getAll('.en__socialShare__image').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        if (typeof utag !== 'undefined') {
+          utag.link({
+            'event_name': 'social_share',
+            'social_share_id': "preserve.nature.org.share." + e.target.parentElement.dataset.enshare,
+            'social_share_platform': e.target.parentElement.dataset.enshare
+          });
+        }
+      });
     });
   };
   /**
-  * Confirmation page enhancements
-  */
+   * Track ETT and petition submits
+   */
+
+
+  var advocacyTracking = function advocacyTracking() {
+    if (pageJson.pageType === 'advocacypetition' || pageJson.pageType === 'emailtotarget') {
+      theForm.addEventListener('submit', function (e) {
+        setTimeout(function () {
+          if (formIsValid() && typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'form_submit',
+              'form_type': 'advocacy',
+              'form_name': pageJson.pageType + ":" + pageJson.campaignPageId + ":" + pageJson.pageName.replace(/;|,|(|)/g, ''),
+              'action_id': utag_data.form_name,
+              'action_type': pageJson.pageType
+            });
+          }
+        }, 100);
+      });
+    }
+  };
+  /**
+   * Track footer clicks
+   */
+
+
+  var footerTracking = function footerTracking() {
+    var footer = document.querySelector('.footer');
+
+    if (footer) {
+      getAll('a', footer).forEach(function (el) {
+        el.addEventListener('click', function (e) {
+          if (typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'footer_nav_click',
+              'nav_click_location': "preserve.nature.org.fnav." + e.target.textContent.toLowerCase()
+            });
+          }
+        });
+      });
+    }
+  };
+  /**
+   * Redirect enhancements
+   */
+
+
+  var redirects = function redirects() {
+    // Need to carry appealCode URL param to redirected campaign
+    if (typeof pageJson !== 'undefined') {
+      if (pageJson.pageNumber === 1 && pageJson.appealCode) {
+        // Save appeal code for use on redirect page
+        sessionStorage.setItem('appealCode', pageJson.appealCode);
+      }
+    } // Redirect with appeal code
+
+
+    if (appealCodeRedirect && sessionStorage.getItem('appealCode')) {
+      // The appeal code URL param has already been added to the redirect link with a default value of 'xxx'
+      // Replace 'xxx' with saved appeal code
+      appealCodeRedirect.setAttribute('href', appealCodeRedirect.getAttribute('href').replace(/xxx/, sessionStorage.getItem('appealCode')));
+      sessionStorage.removeItem('appealCode');
+      appealCodeRedirect.click();
+    }
+  };
+  /**
+   * Confirmation page enhancements
+   */
 
 
   var confirmation = function confirmation() {
@@ -1632,8 +2084,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
   /**
-  * Seamless ecard enhancements
-  */
+   * Seamless ecard enhancements
+   */
 
 
   var seamlessEcard = function seamlessEcard() {
@@ -1651,20 +2103,23 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     };
 
     if (ecardData) {
-      ecardData = JSON.parse(ecardData);
-      document.querySelector(".en__ecarditems__thumb:nth-child(" + ecardData.selectEcard + ")").click();
-      document.querySelector('.en__ecardmessage__default').value = ecardData.message;
-      document.querySelector('[name="ecard.schedule"]').value = ecardData.sendDate.replace(/(..).(..).(....)/, '$3-$1-$2');
-      ecardData.recipients.forEach(function (recipient) {
-        addEcardRecipient(recipient);
-      }); //sessionStorage.removeItem('ecardData');
+      setTimeout(function () {
+        // Populate fields
+        ecardData = JSON.parse(ecardData);
+        document.querySelector(".en__ecarditems__thumb:nth-child(" + ecardData.selectEcard + ")").click();
+        document.querySelector('.en__ecardmessage__default').value = ecardData.message;
+        document.querySelector('.en__ecardrecipients__futureDelivery input').value = ecardData.sendDate.replace(/(..).(..).(....)/, '$3-$1-$2');
+        addEcardRecipient(ecardData.recipients); // Cleanup
 
-      document.querySelector('.en__submit button').click();
+        sessionStorage.removeItem('ecardData'); // Submit
+
+        document.querySelector('.en__submit button').click();
+      }, 1000);
     }
   };
   /**
-  * Thermometer enhancements
-  */
+   * Thermometer enhancements
+   */
 
 
   var thermometers = function thermometers() {
@@ -1821,23 +2276,30 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     return el.className = '';
   };
   /**
-  * Creates image element from a url string
-  *
-  * @param {string} url The URL to the image
-  * @param {node} el Node to append image to
-  */
+   * Creates image element from a url string
+   *
+   * @param {string} url The URL to the image
+   * @param {node} el Node to append image to
+   */
 
 
-  var createImgFromUrl = function createImgFromUrl(url, el) {
+  var createImgFromUrl = function createImgFromUrl(textContent, el) {
     var newImg = new Image();
-    newImg.src = url;
-    el.appendChild(newImg); //el.textContent = '';
+    var altText = textContent.split('~')[0];
+    var url = textContent.split('~')[1];
+
+    if (altText && url) {
+      el.textContent = '';
+      newImg.src = url;
+      newImg.setAttribute('alt', altText);
+      el.appendChild(newImg);
+    }
   };
   /**
-  * Creates tooltip element for images
-  *
-  * @param {node} el The image block to create the tooltip for
-  */
+   * Creates tooltip element for images
+   *
+   * @param {node} el The image block to create the tooltip for
+   */
 
 
   var createImgTooltip = function createImgTooltip(el) {
@@ -1867,12 +2329,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
   /**
-  * Creates popover element
-  *
-  * @param {string} fieldSelector The field to attach popover to
-  * @param {string} label Text for popover trigger
-  * @param {string} txt Popover content
-  */
+   * Creates popover element
+   *
+   * @param {string} fieldSelector The field to attach popover to
+   * @param {string} label Text for popover trigger
+   * @param {string} txt Popover content
+   */
 
 
   var createPopover = function createPopover(fieldSelector, placement, label, txt) {
@@ -1907,7 +2369,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
   /**
-   * Removes active class to element
+   * Removes active class from element
    *
    * @param {node} el The element to remove class from
    */
@@ -1925,14 +2387,34 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var disableFields = function disableFields(fields) {
     fields.forEach(function (el) {
-      el.disabled = true;
+      addClass(el, disabledClass);
     });
   };
   /**
-  * Splits error text blob into sentences.
-  *
-  * @param {node} el Element containing the error content
-  */
+   * Adds disabled class to element
+   *
+   * @param {node} el The element to remove class from
+   */
+
+
+  var disableEl = function disableEl(el) {
+    addClass(el, disabledClass);
+  };
+  /**
+   * Removed disabled class from element
+   *
+   * @param {node} el The element to remove class from
+   */
+
+
+  var enableEl = function enableEl(el) {
+    removeClass(el, disabledClass);
+  };
+  /**
+   * Splits error text blob into sentences.
+   *
+   * @param {node} el Element containing the error content
+   */
 
 
   var formatError = function formatError(el) {
@@ -1943,10 +2425,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     });
   };
   /**
-  * Returns does form pass EN validation
-  *
-  * @param {node} _parent The node to check for validation errors
-  */
+   * Returns does form pass EN validation
+   *
+   * @param {node} _parent The node to check for validation errors
+   */
 
 
   var formIsValid = function formIsValid() {
@@ -1970,8 +2452,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     return valid;
   };
   /**
-  * Places focus on first focusable element
-  */
+   * Places focus on first focusable element
+   */
 
 
   var focusFirst = function focusFirst() {
@@ -1984,8 +2466,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
   /**
-  * Returns a unique ID
-  */
+   * Returns a unique ID
+   */
 
 
   var generateId = function generateId() {
@@ -2016,6 +2498,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var closestNode = el.closest(selector);
       return closestNode ? closestNode : null;
     }
+  };
+  /**
+   * Returns locale of page
+   */
+
+
+  var getLocale = function getLocale() {
+    return typeof pageJson !== 'undefined' ? pageJson.locale : 'en-US';
   };
   /**
    * Returns Donation amount without upsell fee or null
@@ -2079,31 +2569,59 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     return el.innerHTML.replace(/^\s*/, '').replace(/\s*$/, '') === '';
   };
   /**
-  * Returns Class for form element.
-  *
-  * @returns {string} Class for form element
-  */
+   * Returns a Facebook sharer URL
+   *
+   * @param {string} sharerUrl Base Facebook sharer URL
+   * @param {string} url The URL to share
+   * @returns {string} Share URL
+   */
+
+
+  var makeFacebookUrl = function makeFacebookUrl(sharerUrl, url) {
+    url = encodeURIComponent(url.replace(/\?chain/, '') + "?locale=" + getLocale() + "&en_chan=fb");
+    return sharerUrl + "?u=" + url;
+  };
+  /*
+   * Returns a Twitter tweet URL
+   *
+   * @param {string} sharerUrl Base Twitter tweet URL
+   * @param {string} text The text to tweet
+   * @param {string} url The URL to tweet
+   * @returns {string} Tweet URL
+   */
+
+
+  var makeTwitterUrl = function makeTwitterUrl(text, sharerUrl, url) {
+    text = encodeURIComponent(text);
+    url = encodeURIComponent(url.replace(/\?chain/, '') + "?locale=" + getLocale() + "&en_chan=tw");
+    return sharerUrl + "?text=" + text + "&url=" + url;
+  };
+  /**
+   * Returns Class for form element.
+   *
+   * @returns {string} Class for form element
+   */
 
 
   var maybeHasHero = function maybeHasHero() {
     return theForm.querySelector('.hero-full-bleed') ? 'has-hero' : 'not-has-hero';
   };
   /**
-  * Returns Class for form element.
-  *
-  * @returns {string} Class for form element
-  */
+   * Returns Class for form element.
+   *
+   * @returns {string} Class for form element
+   */
 
 
   var maybeHasHeroSolid = function maybeHasHeroSolid() {
     return theForm.querySelector('.hero-solid') ? 'has-hero-solid' : 'not-has-hero-solid';
   };
   /**
-  * Creates a label from placeholder value and associates it with an input
-  *
-  * @param {node} el The input element before which the new label is inserted.
-  * @param {node} _parent The parent of the newly inserted label.
-  */
+   * Creates a label from placeholder value and associates it with an input
+   *
+   * @param {node} el The input element before which the new label is inserted.
+   * @param {node} _parent The parent of the newly inserted label.
+   */
 
 
   var placeholderToLabel = function placeholderToLabel(el, _parent) {
@@ -2137,11 +2655,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     });
   };
   /**
-  * Remove a specified class
-  *
-  * @param {node} el Node to clear class from
-  * @param {Array || string} cls Class to remove
-  */
+   * Remove a specified class
+   *
+   * @param {node} el Node to clear class from
+   * @param {Array || string} cls Class to remove
+   */
 
 
   var removeClass = function removeClass(el, _classes) {
@@ -2191,6 +2709,22 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     });
   };
   /**
+   * Returns monthly upsell amount
+   *
+   * @param {number} amt Original donation amount
+   */
+
+
+  var setMonthlyAmount = function setMonthlyAmount(amt) {
+    if (amt >= 5 && amt <= 24) {
+      return 5;
+    } else if (amt >= 25 && amt <= 50) {
+      return 10;
+    } else if (amt > 50 && amt <= 100) {
+      return 15;
+    }
+  };
+  /**
    * Returns str with no spaces
    *
    * @param {sting} str String to strip spaces from
@@ -2212,10 +2746,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     el.dispatchEvent(new Event(evt));
   };
   /**
-  * Updates payment method hidden field
-  *
-  * @param {string} ccType CC type returned from cleave
-  */
+   * Updates payment method hidden field
+   *
+   * @param {string} ccType CC type returned from cleave
+   */
 
 
   var updatePaymentType = function updatePaymentType(ccType) {
@@ -2245,10 +2779,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
   /**
-  * Updates everywhere tip jar amount is displayed.
-  *
-  * @param {string} amt Total donation amount
-  */
+   * Updates everywhere tip jar amount is displayed.
+   *
+   * @param {string} amt Total donation amount
+   */
 
 
   var updateTipJar = function updateTipJar(amt) {
@@ -2257,10 +2791,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     });
   };
   /**
-  * Updates everywhere donation amount is displayed.
-  *
-  * @param {string} amt Total donation amount
-  */
+   * Updates everywhere donation amount is displayed.
+   *
+   * @param {string} amt Total donation amount
+   */
 
 
   var updateTotalGift = function updateTotalGift(amt) {
@@ -2329,22 +2863,42 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     ui();
-    donation();
 
-    if (document.querySelector('.en__component--page[action*="event"]')) {
-      events();
+    if (typeof pageJson !== 'undefined') {
+      if (pageJson.pageType === 'donation' && pageJson.pageNumber !== pageJson.pageCount) {
+        donationForm();
+      } else if (pageJson.pageType === 'event') {
+        eventForm();
+      } else if (pageJson.pageType === 'emailtotarget' && pageJson.pageNumber === 1) {
+        emailToTarget();
+      }
+
+      if (hasClass(body, 'page--hub')) {
+        hub();
+      }
+
+      if (hasClass(body, 'page--quiz')) {
+        quiz();
+      }
+
+      if (hasClass(body, 'page--action-center')) {
+        actionCenter();
+      }
+
+      if (hasClass(body, 'page--confirmation')) {
+        confirmation();
+      }
+
+      mobilePhone();
+      validation();
+      formSubmit();
+      socialShareTracking();
+      advocacyTracking();
+      footerTracking();
+      redirects();
     }
 
-    if (hasClass(body, 'page--quiz')) {
-      quiz();
-    }
-
-    if (hasClass(body, 'page--confirmation')) {
-      confirmation();
-    }
-
-    validation();
-    formSubmit();
+    memberCare();
   });
   window.addEventListener('load', function (e) {
     var checkThermometer = setInterval(function () {

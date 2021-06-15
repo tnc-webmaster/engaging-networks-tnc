@@ -2,27 +2,24 @@
   height: 4.2857em;
   text-transform: uppercase;
   min-width: 11.875rem;
-  
   &:not(a) {
     min-width: 0;
   }
-  
+  &-block {
+    width: 100%;
+  }
   &-lg {
     height: 3em;
   }
-  
   &-primary {
-    @include button-variant($primary, $primary, $white, $gray-900, $gray-900, $white);    
+    @include button-variant($primary, $primary, $white, $gray-900, $gray-900, $white);
   }
-  
-  &-outline-primary {    
+  &-outline-primary {
     @include button-outline-variant($primary, $white, $gray-900, $gray-900);
-    
     &:disabled {
-      @include button-outline-variant($disabled, $white, $gray-900, $disabled);      
+      @include button-outline-variant($disabled, $white, $gray-900, $disabled);
     }
   }
-  
   &-text {
     border: 0;
     color: $link-color;
@@ -32,20 +29,17 @@
     line-height: 1.25;
     padding: 0;
     text-transform: uppercase;
-    
     &:hover {
       color: $link-color;
-      text-decoration: underline;      
+      text-decoration: underline;
     }
   }
-  
   &-collapse {
     &::after {
       content: $form-select-indicator;
       margin-left: .25rem;
       vertical-align: text-bottom;
     }
-    
     &.expanded {
       &::after {
         content: $form-select-indicator-open;

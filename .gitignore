@@ -1,3 +1,4 @@
 *.html
 design-assets/*
 node_modules/*
+client-scripts/

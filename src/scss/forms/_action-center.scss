@@ -1,0 +1,106 @@
+.page--action-center {
+  .en__component--row.en__component--advrow {
+    @include media-breakpoint-up(md) {
+      display: flex;
+      justify-content: flex-start;
+    }
+  }
+}
+
+.action-center.card {
+  @extend %related-actions-card;
+  @include media-breakpoint-up(md) {
+    flex: 0 0 auto;
+    width: 50% !important;
+  }
+  @include media-breakpoint-up(lg) {
+    width: 33.3333% !important;
+  }
+  &.disabled {
+    filter: grayscale(.75);
+    opacity: .5;
+  }
+  body:not(#en__pagebuilder) &.disabled {
+    pointer-events: none;
+  }
+  a:not(.fa):after {
+    position: static;
+  }
+  p a {
+    display: block;
+    margin-top: -.5rem;
+    text-transform: uppercase;
+    &::after {
+      content: "\203A";
+      font-size: 1.125em;
+      margin-left: .25rem;
+      vertical-align: text-bottom;
+    }
+  }
+  .card-body {
+    border-bottom: 0;
+  }
+  .en__component--codeblock {
+    border-left: $border-default;
+    border-right: $border-default;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    @include media-breakpoint-up(lg) {
+      padding-left: 7.25%;
+      padding-right: 7.25%;
+    }
+  }
+  .card-footer {
+    border-bottom: $border-default;
+    border-left: $border-default;
+    border-right: $border-default;
+    border-top: 0;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    justify-content: flex-end;
+    padding: 0 1.25rem 1.875rem;
+    @include media-breakpoint-up(lg) {
+      padding-left: 7.25%;
+      padding-right: 7.25%;
+    }
+  }
+  .advocacy-share-bar-block {
+    border-bottom: 0;
+    margin-bottom: 0;
+    margin-top: 1.875rem;
+    padding: 0;
+    .en__socialShare {
+      margin-left: 0 !important;
+      &:not(:last-child) {
+        margin-right: 1rem !important;
+      }
+      &:last-child {
+        margin-left: 1.25rem !important;
+      }
+    }
+  }
+}
+
+.action-center-overview {
+  @extend %serif-xl;
+  margin-bottom: 3.75rem;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 850px;
+  body:not(#en__pagebuilder) & {
+    @include media-breakpoint-up(md) {
+      margin-top: -1.75rem;
+    }
+  }
+  h3 {
+    margin-bottom: 1.25rem;
+  }
+}
+
+.view-all {
+  margin-top: 2rem;
+  @include media-breakpoint-up(lg) {
+    margin-top: 3.125rem;
+  }
+}

@@ -24,7 +24,7 @@ $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiI
 $choices-z-index: 1;
 
 .choices__input--cloned {
-  @extend .visually-hidden;
+  //@extend .visually-hidden;
 }
 
 .#{$choices-selector} {

@@ -1,92 +1,78 @@
+.en__component--contactblock {
+  @extend .visually-hidden--web;
+}
+
 .en__component--page[action*="action"],
 .en__component--page[action*="petition"] {
   .overview {
     @extend %serif-xl;
-    
     p,
     ol,
     ul {
       &:not(:last-child) {
         margin-bottom: 1.5625rem;
-      }     
-    }    
+      }
+    }
   }
-
   .aside {
     @include media-breakpoint-down(lg) {
       border-top: $border-default;
       padding-top: 1.75rem;
       margin-top: 1.75rem;
     }
-
     h3 {
-      @include media-breakpoint-up(xxl) {
-        //min-width: 14em;
-      }
-      
-      + h4 {
+      +h4 {
         margin-top: .833rem;
       }
-
-      + ol,
-      + ul {
+      +ol,
+      +ul {
         margin-bottom: 1.25rem;
         margin-top: 1.25rem;
-
-        li{
+        li {
           font-size: $font-size-sm;
           font-weight: $font-weight-semibold;
           line-height: 1.2857;
           text-transform: uppercase;
         }
       }
-
-      ~ h4 {
+      ~h4 {
         font-family: $font-family-sans-serif;
         font-size: 1.375rem;
         font-weight: $font-weight-medium;
         line-height: 1.4545;
         margin-bottom: 1rem;
-
         @include media-breakpoint-down(lg) {
           font-size: 1.125rem;
           line-height: 1.4444;
         }
       }
     }
-    
     p:not(:last-child) {
-      margin-bottom: 1.5rem;      
+      margin-bottom: 1.5rem;
     }
-
     ul {
       @extend .list-unstyled;
     }
   }
-
   .en__component--advcolumn {
-    &:first-child:not(:last-child) {
+    &:first-child:not(:last-child):not(.card) {
       @extend .col-lg-5;
-
       .en__component--imageblock {
         img {
           width: 100% !important;
         }
       }
-
       h2 {
         font-family: $font-family-sans-serif;
         font-weight: $font-weight-bold;
         margin-bottom: 2.5rem;
-        
         @include media-breakpoint-down(lg) {
           font-size: 1.875rem;
           margin-bottom: 1rem;
         }
       }
     }
-
-    &:last-child:not(:first-child) {
+    &:last-child:not(:first-child):not(.card) {
       @include media-breakpoint-up(lg) {
         border: $border-default;
         flex: 0 0 auto;
@@ -94,15 +80,12 @@
         padding: 4% 8.5% 6%;
         width: 48%;
       }
-
       .enWidget--progressBar {
         margin-bottom: 2.5rem;
       }
-
       .enWidget__copy--above {
         margin-bottom: 1rem;
       }
-
       .en__submit {
         margin-top: 2.125rem;
       }
@@ -122,21 +105,17 @@
   border-bottom: $border-default;
   padding-bottom: 1.5rem;
   margin-bottom: 2.5rem;
-
   h3 {
     @extend .h5;
     margin: 0;
   }
-
   .en__socialShare {
     align-items: center;
     display: flex;
     margin-left: 1.25rem !important;
     padding: 0 !important;
-
     &:not(:last-child) {
       margin-right: 1.5rem !important;
-
       &::after {
         border-left: $border-default;
         content: "";
@@ -145,94 +124,18 @@
       }
     }
   }
-
   .en__socialShare--facebook {
     height: 20px !important;
     width: 10px !important;
-    
     img {
       width: 10px !important;
     }
   }
-
   .en__socialShare--twitter {
     height: 20px !important;
     width: 24px !important;
-    
     img {
       width: 24px !important;
-    }
-  }
-}
-
-.advocacy-related-actions {
-  margin-top: 3rem;
-
-  @include media-breakpoint-up(lg) {
-    margin-top: 6.25rem;
-  }
-
-  > h3 {
-    @extend .h5;
-    margin-bottom: 1.75rem;
-  }
-  
-  [class*="col"]:not(:last-child) {
-    @include media-breakpoint-down(lg) {
-      margin-bottom: 1.875rem;
-    }
-  }
-
-  .card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    position: relative;
-
-    &:hover {
-      .card-title a {
-        color: $primary;
-      }
-    }
-
-    a:not(.fa)::after {
-      bottom: 0;
-      content: "";
-      left: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-  }
-  
-  .card-body {
-    border-bottom: $border-default;
-    border-left: $border-default;
-    border-right: $border-default;
-    flex-grow: 1;
-    padding: 1.625rem 1.25rem;
-    
-    @include media-breakpoint-up(lg) {    
-      padding: 5% 7.25% 8%;
-    }
-  }
-  
-  .card-title {
-    @include media-breakpoint-down(lg) {
-      font-size: 1.25rem;
-      line-height: 1.2;
-    }
-    
-    a::after {
-      display: none;      
-    }
-  }
-
-  .btn {
-    margin-top: 2rem;
-    
-    @include media-breakpoint-up(lg) {
-      margin-top: 3.125rem;      
     }
   }
 }

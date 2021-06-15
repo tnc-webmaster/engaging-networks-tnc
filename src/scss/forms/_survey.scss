@@ -4,49 +4,64 @@
       border-bottom: $border-default;
       padding-bottom: 2.5rem;
     }
-
     h2 {
       margin-bottom: 1.25rem;
     }
-
     p {
-      @extend %serif-xl;
-
-      &:not(:last-child) {
-        margin-bottom: 2.5rem;
+      &:not(.en__field__label) {
+        @extend %serif-xl;
+        &:not(:last-child):not(.en__field__label) {
+          margin-bottom: 1.5625rem;
+        }
+      }
+      &.en__field__label {
+        display: block;
+        font-size: 1.25rem;
+        line-height: 1.2;
+        margin-bottom: 1.25rem;
+        @include media-breakpoint-up(lg) {
+          display: block;
+          font-size: 1.625rem;
+          line-height: 1.3076;
+        }
       }
     }
-
     .en__component--svblock {
       margin-top: 3rem;
+      .en__field {
+        margin-bottom: 2.5rem;
+      }
+      .en__field__element--checkbox {
+        .en__field__label--item {
+          font-weight: $font-weight-base;
+        }
+      }
+      +.en__component--formblock {
+        margin-top: 2.5rem;
+      }
     }
   }
-
-  .en__component--advrow + .en__component--row--1 {
+  .en__component--advrow+.en__component--row--1 {
     margin-top: 4.125rem;
   }
-
   .en__component--row--1 {
     margin-left: auto;
     margin-right: auto;
     max-width: 53.125rem;
     width: 100%;
   }
-
   .en__component--formblock {
     margin-left: auto;
     margin-right: auto;
     max-width: 39.375rem;
   }
-
   .en__submit {
     margin-top: 2.5rem;
   }
 }
 
-.en__component--copyblock + .en__component--svblock {
+.en__component--copyblock+.en__component--svblock {
   margin-top: 4.75rem;
-
   @include media-breakpoint-up(lg) {
     margin-top: 6rem;
   }
@@ -56,53 +71,43 @@
   margin-left: auto;
   margin-right: auto;
   max-width: 39.375rem;
-
   .en__field__label--positionabove {
     line-height: 1.375;
     margin-bottom: 0.5rem;
   }
-
   .en__field--checkbox {
     &:not(:last-child) {
       margin-bottom: 1.9165rem;
-
       @include media-breakpoint-up(lg) {
         margin-bottom: 3.1111rem;
       }
     }
-
     .en__field__label--positionabove {
       font-size: 1.25rem;
       font-weight: $font-weight-semibold;
       line-height: 1.2;
       margin-bottom: 1.125rem;
-
       @include media-breakpoint-up(lg) {
         font-size: 1.625rem;
         line-height: 1.3076;
         margin-bottom: 1.5rem;
       }
     }
-
     .en__field__item:not(:last-child) {
       margin-bottom: .75rem;
     }
   }
-
-  .en__field--textarea {    
+  .en__field--textarea {
     &:not(:last-child) {
-      margin-bottom: 2.25rem;      
+      margin-bottom: 2.25rem;
     }
   }
-
   .en__field__input--textarea {
     min-height: calc(1.5em + 9rem + 2px) !important;
   }
-
   .en__field--select {
     max-width: 25.667rem;
   }
-
   .en__mandatory>.en__field__label:before {
     display: none;
   }
