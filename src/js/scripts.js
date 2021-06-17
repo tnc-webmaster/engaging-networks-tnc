@@ -1858,10 +1858,11 @@
       }
 
       // Looking for URL tracking params to pass to data layer on confirmation page
-      const trackingParams = new URLSearchParams(location.search);
-      donationData.src = trackingParams.has('src') ? trackingParams.get('src') : '';
-      donationData.vid = trackingParams.has('vid') ? trackingParams.get('vid') : '';
-      donationData.vid2 = trackingParams.has('vid2') ? trackingParams.get('vid2') : '';
+      //const trackingParams = new URLSearchParams(location.search);
+      //visitData.src = trackingParams.has('src') ? trackingParams.get('src') : (visitData.src ? visitData.src : '');
+      //visitData.vid = trackingParams.has('vid') ? trackingParams.get('vid') : (visitData.vid ? visitData.vid : '');
+      //visitData.vid2 = trackingParams.has('vid2') ? trackingParams.get('vid2') : (visitData.vid2 ? visitData.vid2 : '');
+      //visitData.en_txn8 = trackingParams.has('en_txn8') ? trackingParams.get('en_txn8') : (visitData.en_txn8 ? visitData.en_txn8 : '');
 
       // Save non-pageJson data for data layer on confirmation page
       donationData.productId = utag_data.page_name;
@@ -2006,6 +2007,28 @@
         });
       });
     }
+  };
+
+  /**
+   * Track url parameters
+   */
+  const URLTracking = () => {
+    const trackingParams = new URLSearchParams(location.search);
+    let visitData = sessionStorage.getItem('visitData') ? JSON.parse(sessionStorage.getItem('visitData')) : {};
+
+    if (trackingParams.has('src')) {
+      visitData.src = trackingParams.get('src');
+    }
+    if (trackingParams.has('vid')) {
+      visitData.vid = trackingParams.get('vid');
+    }
+    if (trackingParams.has('vid2')) {
+      visitData.vid2 = trackingParams.get('vid2');
+    }
+    if (trackingParams.has('en_txn8')) {
+      visitData.en_txn8 = trackingParams.get('en_txn8');
+    }
+    sessionStorage.setItem('visitData', JSON.stringify(visitData));
   };
 
   /**
@@ -2784,6 +2807,7 @@
       socialShareTracking();
       advocacyTracking();
       footerTracking();
+      URLTracking();
       redirects();
     }
     memberCare();
