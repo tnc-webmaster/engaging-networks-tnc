@@ -279,3 +279,7 @@ body:not(#en__pagebuilder) {
     display: none;
   }
 }
+
+.modal--lead-gen .en__field--question:not(.en__field--899104) {
+  @extend .visually-hidden--web;
+}

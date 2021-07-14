@@ -532,6 +532,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
 }
 
 .form-heading--additional {
+  display: none;
   @include media-breakpoint-down(md) {
     border-bottom: $border-default;
     padding-bottom: 2.5rem;
@@ -670,6 +671,10 @@ a[href="javascript:history.back()"] {
   text-transform: uppercase;
 }
 
+.en__orderSummary__additional {
+  display: none;
+}
+
 .en__orderSummary__data {
   padding-bottom: .75rem;
   padding-top: 1rem;
@@ -708,7 +713,7 @@ a[href="javascript:history.back()"] {
   }
 }
 
-.en__orderSummary__data--totalAmount {
+body:not(.page--confirmation) .en__orderSummary__data--totalAmount {
   opacity: 0;
   transition: $transition-base;
   &.is-active {

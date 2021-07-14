@@ -16,16 +16,18 @@
 %split-page-image {
   padding-left: 0;
   padding-right: 0;
-  .en__component--imageblock {
-    &:first-child {
-      @extend .d-lg-none;
-    }
-    &:last-child {
-      @extend .d-none;
-      @extend .d-lg-block;
-    }
-    img {
-      width: 100% !important;
+  body:not(#en__pagebuilder) & {
+    .en__component--imageblock {
+      &:first-child {
+        @extend .d-lg-none;
+      }
+      &:last-child {
+        @extend .d-none;
+        @extend .d-lg-block;
+      }
+      img {
+        width: 100% !important;
+      }
     }
   }
 }

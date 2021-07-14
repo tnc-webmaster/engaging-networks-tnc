@@ -7,7 +7,7 @@
     h2 {
       margin-bottom: 1.25rem;
     }
-    p {
+    .en__component:not(.opt-in-text--survey) p {
       &:not(.en__field__label) {
         @extend %serif-xl;
         &:not(:last-child):not(.en__field__label) {
@@ -25,6 +25,9 @@
           line-height: 1.3076;
         }
       }
+    }
+    .opt-in-text--survey p {
+      @extend %sans-serif-lg;
     }
     .en__component--svblock {
       margin-top: 3rem;
@@ -67,13 +70,25 @@
   }
 }
 
-.en__component--svblock {
+.en__component--column:not(.quiz) .en__component--svblock {
   margin-left: auto;
   margin-right: auto;
   max-width: 39.375rem;
+  +.en__component--copyblock {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 39.375rem;
+  }
   .en__field__label--positionabove {
-    line-height: 1.375;
-    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: $font-weight-semibold;
+    line-height: 1.2;
+    margin-bottom: 1.125rem;
+    @include media-breakpoint-up(lg) {
+      font-size: 1.625rem;
+      line-height: 1.3076;
+      margin-bottom: 1.5rem;
+    }
   }
   .en__field--checkbox {
     &:not(:last-child) {
@@ -82,20 +97,12 @@
         margin-bottom: 3.1111rem;
       }
     }
-    .en__field__label--positionabove {
-      font-size: 1.25rem;
-      font-weight: $font-weight-semibold;
-      line-height: 1.2;
-      margin-bottom: 1.125rem;
-      @include media-breakpoint-up(lg) {
-        font-size: 1.625rem;
-        line-height: 1.3076;
-        margin-bottom: 1.5rem;
-      }
-    }
     .en__field__item:not(:last-child) {
       margin-bottom: .75rem;
     }
+  }
+  .en__field__element--textarea {
+    width: 100%;
   }
   .en__field--textarea {
     &:not(:last-child) {

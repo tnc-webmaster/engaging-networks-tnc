@@ -5,7 +5,7 @@ module.exports = function(grunt) {
       options: {
         browser: true,
         esversion: 6,
-        reporter: require('jshint-stylish'),    
+        reporter: require('jshint-stylish'),
       },
       build: ['Gruntfile.js', 'src/js/scripts.js'],
     },
@@ -24,6 +24,14 @@ module.exports = function(grunt) {
         separator: ';',
         sourceMap: true,
       },
+      //vendor: {
+      //  src: ['src/js/vendor/**/*.js'],
+      //  dest: 'dist/js/vendor.js',
+      //},
+      //dist: {
+      //  src: ['dist/js/scripts.js'],
+      //  dest: 'dist/js/scripts.min.js',
+      //},
       dist: {
         src: ['src/js/vendor/**/*.js', 'dist/js/scripts.js'],
         dest: 'dist/js/scripts.min.js',
@@ -32,7 +40,7 @@ module.exports = function(grunt) {
     'dart-sass': {
       target: {
         options: {
-          outputStyle: 'expanded', 
+          outputStyle: 'expanded',
           sourceMap: true,
         },
         files: {
@@ -57,7 +65,7 @@ module.exports = function(grunt) {
         options: {
           base: 'dist/css',
           css: [
-          'dist/css/styles.css'
+            'dist/css/styles.css'
           ],
           width: 1420,
           height: 1024,
@@ -83,7 +91,7 @@ module.exports = function(grunt) {
       scripts: {
         files: ['src/js/**/*.js'],
         tasks: ['jshint', 'babel', 'concat']
-      } 
+      }
     },
   });
 
@@ -94,8 +102,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-critical');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.registerTask('w',['watch']);
+  grunt.registerTask('w', ['watch']);
   grunt.registerTask('css', ['dart-sass', 'postcss']);
   grunt.registerTask('js', ['jshint', 'babel', 'concat']);
-  grunt.registerTask('default',['dart-sass', 'postcss']);
+  grunt.registerTask('default', ['dart-sass', 'postcss']);
 };

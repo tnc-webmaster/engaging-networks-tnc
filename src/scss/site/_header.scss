@@ -30,8 +30,8 @@
   }
   .navbar-text {
     font-size: $lead-font-size;
-    max-width: 12rem;
     text-align: right;
+    white-space: nowrap;
     +a {
       @include media-breakpoint-down(md) {
         margin-left: auto;

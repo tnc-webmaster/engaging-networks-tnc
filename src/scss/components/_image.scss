@@ -12,30 +12,38 @@ img {
   right: 1.25rem;
   width: 1.125rem;
   z-index: $zindex-tooltip + 1;
-  
+  .d-none+& {
+    display: none;
+  }
+  .d-lg-none+& {
+    @include media-breakpoint-up(lg) {
+      display: none;
+    }
+  }
+  .d-lg-block+& {
+    @include media-breakpoint-up(lg) {
+      display: block;
+    }
+  }
   &:focus {
-    outline: 2px solid;    
-  }  
-  
-  + .tooltip {
+    outline: 2px solid;
+  }
+  +.tooltip {
     bottom: 0 !important;
     left: 0 !important;
-    padding: 0;  
+    padding: 0;
     top: auto !important;
     transform: none !important;
     width: 100%;
-    
     .tooltip-inner {
       padding-right: calc(1.25rem + 10%);
       text-align: left;
     }
   }
-  
-  .d-md-none + & {
+  .d-md-none+& {
     @extend .d-md-none;
   }
-  
-  .d-none + & {
+  .d-none+& {
     @extend .d-none;
     @extend .d-md-block;
   }
