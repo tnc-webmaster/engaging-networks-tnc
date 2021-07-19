@@ -231,7 +231,7 @@
       el.style.width = `calc(100vw - ${scrollbarWidth}px)`;
       el.style.marginLeft = `calc(-50vw + ${scrollbarWidth / 2}px)`;
     });
-    // Dont forget pseudo elements
+    // Don't forget pseudo elements
     root.style.setProperty('--scrollbarWidth', `${scrollbarWidth}px`);
 
     // Initiate choices.js
@@ -432,7 +432,7 @@
       }
     });
 
-    // Missing event ticket quanity labels
+    // Missing event ticket quantity labels
     getAll('.en__ticket__quantity').forEach(el => {
       addLabel(el, el.parentElement, 'Quantity');
     });
@@ -766,7 +766,6 @@
     });
 
     // Create popovers elements
-    // Create popovers elements
     if (typeof popoverTranslations !== 'undefined' && typeof pageJson !== 'undefined') {
       popoverTranslations.forEach(translation => {
         const locale = translation[pageJson.locale] ? pageJson.locale : 'en-US';
@@ -923,7 +922,7 @@
         el.removeEventListener('click', handleDonationAmountChange, { once: true });
       });
       setTimeout(function() {
-        // Reclicking the button makes mobile pay get the correct amount
+        // Re-clicking the button makes mobile pay get the correct amount
         el.checked = false;
         el.click();
         // Re add the click handler
@@ -1218,6 +1217,13 @@
           });
         }
       });
+      // Labels for Attendee custom checkbox questions do not have for attributes
+      getAll('.en__field--checkbox.en__field--registrant .en__field__item').forEach(el => {
+        const checkboxId = `checkbox${generateId()}`;
+
+        el.querySelector('.en__field__input--checkbox').id = checkboxId;
+        el.querySelector('.en__field__label--item').setAttribute('for', checkboxId);
+      });
 
       // Adding commas to totals
       getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(el => {
@@ -1299,8 +1305,8 @@
     let score = 0;
 
     const getFormType = (form) => {
-      const emailOptInChecked = form.querySelector('.en__field--generic-opt-in:not(.en__hidden) .en__field__input--checkbox') ? form.querySelector('.en__field--generic-opt-in:not(.en__hidden) .en__field__input--checkbox').checked : false;
-      const mobilePhoneField = form.querySelector('#en__field_supporter_phoneNumber2');
+      const emailUnsubscribeChecked = form.querySelector('.en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox') ? form.querySelector('.en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox').checked : false;
+      const mobilePhoneField = form.querySelector('#en__field_supporter_phoneNumber2:not(:placeholder-shown)');
       const textOptInChecked = form.querySelector('.en__field--home-phone-opt-in .en__field__input--checkbox') ? form.querySelector('.en__field--home-phone-opt-in .en__field__input--checkbox').checked : false;
       let formType = {};
 
@@ -1308,30 +1314,42 @@
       formType.form_name = `lightbox-${utag_data.page_name}`;
       formType.email_signup_location = `lightbox-${utag_data.page_name}`;
 
-      if (emailOptInChecked && mobilePhoneField && textOptInChecked) {
+      //These conditions assume that if the field exists, it is required, e.g. mobilePhoneField
+
+      //Unsubscribe not checked, mobile phone field exists and optin checked
+      if (!emailUnsubscribeChecked && mobilePhoneField && textOptInChecked) {
         formType.event_name = 'frm_ltbx_emt_emo_txt_txto_submit';
         formType.form_type = 'email_text_signup';
         formType.text_signup_location = "lightbox-" + utag_data.page_name;
-      } else if (emailOptInChecked && mobilePhoneField) {
+
+        //Unsubscribe not checked, mobile phone field exists (and optin not checked)
+      } else if (!emailUnsubscribeChecked && mobilePhoneField) {
         formType.event_name = 'frm_ltbx_emt_emo_txt_submit';
         formType.form_type = 'email_text_signup';
         formType.text_signup_location = "lightbox-" + utag_data.page_name;
-      } else if (emailOptInChecked) {
+
+        //Unsubscribe not checked, no mobile phone field	
+      } else if (!emailUnsubscribeChecked) {
         formType.event_name = 'frm_ltbx_emt_emo_submit';
         formType.form_type = 'email_signup';
+
+        //Unsubscribe checked, mobile phone field exists and optin checked
       } else if (mobilePhoneField && textOptInChecked) {
         formType.event_name = 'rm_ltbx_emt_txt_txto_submit';
         formType.form_type = 'email_text_signup';
         formType.text_signup_location = "lightbox-" + utag_data.page_name;
+
+        //Unsubscribe checked, mobile phone field exists and optin not checked
       } else if (mobilePhoneField) {
         formType.event_name = 'frm_ltbx_emt_txt_submit';
         formType.form_type = 'email_text_signup';
         formType.text_signup_location = "lightbox-" + utag_data.page_name;
+
+        //Unsubscribe checked, mobile phone field doesn't exist	
       } else {
         formType.event_name = 'frm_ltbx_emt_submit';
         formType.form_type = 'email_signup';
       }
-
       return formType;
     };
 
@@ -1563,7 +1581,7 @@
           'event_name': 'form_error',
           'form_field_error_field': invalidFields.slice(0, -1),
           'form_field_error_value': errors.slice(0, -1),
-          'form_name': utag_data.page_name,
+          'form_name': utag_data.page_name.slice(0, -2),
           'form_type': pageJson.pageType
         });
       }
@@ -1752,16 +1770,17 @@
     };
 
     window.enOnValidate = function() {
+      const address2 = document.getElementById('en__field_supporter_address2');
       const donationAmount = parseFloat(getTotalDonationAmount());
-      const ecardSelect = theForm.querySelector(ecardSelectSelector);
       const ecardFields = theForm.querySelector(ecardFieldsSelector);
+      const ecardSelect = theForm.querySelector(ecardSelectSelector);
       const mobilePhoneNumber = theForm.querySelector('.en__field--phoneNumber2:not(:placeholder-shown) .en__field__input');
       const mobilePhoneOptIn = theForm.querySelector('.en__field--mobile-text-opt-in .en__field__input--checkbox:checked');
       const tipJar = theForm.querySelector('.en__field--tip-jar');
       const trackSubmit = theForm.querySelector('.track-submit');
-      let extraAmount = 0;
       let donationData = {};
-      let ecardData = {};
+      let ecardData = sessionStorage.getItem('ecardData');
+      let extraAmount = 0;
       let mobilePhoneData = {};
       let upsellDone = false;
 
@@ -1815,6 +1834,11 @@
         }
       };
 
+      // Set Address 2 value to '-' if left blank by user
+      if (address2) {
+        address2.value = address2.value === '' ? '-' : address2.value;
+      }
+
       // Set other amount field to tip jar amount if needed
       if (otherAmountInput && !getSelectedAmount()) {
         if (otherAmountInput.value !== '') {
@@ -1834,19 +1858,32 @@
         }
       }
 
-      // Maybe save ecard fields for use on seamless ecard page
-      if (ecardSelect && ecardFields) {
-        if (ecardSelect.querySelector('.en__field__input--checkbox').checked) {
-          donationData.ecardSelected = 'true';
-          ecardData.selectEcard = ecardSelect.querySelector('.en__field__input--radio:checked').value;
-          ecardData.recipients = ecardFields.querySelector('.en__field__input--email').value;
-          ecardData.message = ecardFields.querySelector('.en__field--ecard-message .en__field__input--textarea').value;
-          ecardData.sendDate = ecardFields.querySelector('.datepicker-input').value;
-          sessionStorage.setItem('ecardData', JSON.stringify(ecardData));
-        } else {
-          delete donationData.ecardSelected;
-          sessionStorage.removeItem('ecardData');
+      if (pageJson.pageType === 'donation' && pageJson.pageNumber === 1) {
+        // Maybe save ecard fields for use on seamless ecard page
+        if (ecardSelect && ecardFields) {
+          if (ecardSelect.querySelector('.en__field__input--checkbox').checked) {
+            // Set ecardSelected before saving donationData
+            donationData.ecardSelected = 'true';
+            ecardData = {};
+            ecardData.selectEcard = ecardSelect.querySelector('.en__field__input--radio:checked').value;
+            ecardData.recipients = ecardFields.querySelector('.en__field__input--email').value;
+            ecardData.message = ecardFields.querySelector('.en__field--ecard-message .en__field__input--textarea').value;
+            ecardData.sendDate = ecardFields.querySelector('.datepicker-input').value;
+            sessionStorage.setItem('ecardData', JSON.stringify(ecardData));
+          } else {
+            delete donationData.ecardSelected;
+            sessionStorage.removeItem('ecardData');
+          }
         }
+        // Save donation data for data layer on confirmation page
+        donationData.productId = utag_data.page_name.slice(0, -2);
+        donationData.campaignId = (typeof pageJson !== 'undefined') ? pageJson.campaignId : '';
+        donationData.campaignPageId = (typeof pageJson !== 'undefined') ? pageJson.campaignPageId : '';
+        donationData.extraAmount = extraAmount;
+        donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : '';
+        donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : '';
+        donationData.emailAddress = theForm.querySelector(supporterEmailAddressSelector) ? theForm.querySelector(supporterEmailAddressSelector).value : '';
+        sessionStorage.setItem('donationData', JSON.stringify(donationData));
       }
 
       // Looking for non-hidden, non-blank mobile phone field and mobile text opt-in to save and pass to SMS platform
@@ -1859,23 +1896,6 @@
         }
         sessionStorage.setItem('mobilePhoneData', JSON.stringify(mobilePhoneData));
       }
-
-      // Looking for URL tracking params to pass to data layer on confirmation page
-      //const trackingParams = new URLSearchParams(location.search);
-      //visitData.src = trackingParams.has('src') ? trackingParams.get('src') : (visitData.src ? visitData.src : '');
-      //visitData.vid = trackingParams.has('vid') ? trackingParams.get('vid') : (visitData.vid ? visitData.vid : '');
-      //visitData.vid2 = trackingParams.has('vid2') ? trackingParams.get('vid2') : (visitData.vid2 ? visitData.vid2 : '');
-      //visitData.en_txn8 = trackingParams.has('en_txn8') ? trackingParams.get('en_txn8') : (visitData.en_txn8 ? visitData.en_txn8 : '');
-
-      // Save non-pageJson data for data layer on confirmation page
-      donationData.productId = utag_data.page_name;
-      donationData.donationFormId = (typeof pageJson !== 'undefined') ? pageJson.campaignPageId : '';
-      donationData.extraAmount = extraAmount;
-      donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : '';
-      donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : '';
-      donationData.emailAddress = theForm.querySelector(supporterEmailAddressSelector) ? theForm.querySelector(supporterEmailAddressSelector).value : '';
-      sessionStorage.setItem('donationData', JSON.stringify(donationData));
-
       // Maybe track form submit
       if (trackSubmit) {
         trackFormSubmit();
@@ -1983,9 +2003,10 @@
             utag.link({
               'event_name': 'form_submit',
               'form_type': 'advocacy',
-              'form_name': `${pageJson.pageType}:${pageJson.campaignPageId}:${pageJson.pageName.replace(/;|,|(|)/g, '')}`,
+              'form_name': utag_data.page_name.slice(0, -2),
               'action_id': utag_data.form_name,
-              'action_type': pageJson.pageType
+              'action_type': pageJson.pageType,
+              'zip_code': document.getElementById('en__field_supporter_postcode') ? document.getElementById('en__field_supporter_postcode').value : ''
             });
           }
         }, 100);
@@ -2016,21 +2037,29 @@
    * Track url parameters
    */
   const URLTracking = () => {
-    const trackingParams = new URLSearchParams(location.search);
+    const params = new URLSearchParams(location.search);
+    const trackers = [
+      'src',
+      'vid',
+      'vid2',
+      'en_txn1',
+      'en_txn2',
+      'en_txn3',
+      'en_txn4',
+      'en_txn5',
+      'en_txn7',
+      'en_txn8',
+      'en_txn9',
+      'en_txn10'
+    ];
     let visitData = sessionStorage.getItem('visitData') ? JSON.parse(sessionStorage.getItem('visitData')) : {};
 
-    if (trackingParams.has('src')) {
-      visitData.src = trackingParams.get('src');
-    }
-    if (trackingParams.has('vid')) {
-      visitData.vid = trackingParams.get('vid');
-    }
-    if (trackingParams.has('vid2')) {
-      visitData.vid2 = trackingParams.get('vid2');
-    }
-    if (trackingParams.has('en_txn8')) {
-      visitData.en_txn8 = trackingParams.get('en_txn8');
-    }
+    // Add tracking params as found
+    trackers.forEach(tracker => {
+      if (params.has(tracker)) {
+        visitData[tracker] = params.get(tracker);
+      }
+    });
     sessionStorage.setItem('visitData', JSON.stringify(visitData));
   };
 
