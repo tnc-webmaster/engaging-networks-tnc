@@ -766,9 +766,12 @@
     });
 
     // Create popovers elements
+    // Create popovers elements
     if (typeof popoverTranslations !== 'undefined' && typeof pageJson !== 'undefined') {
       popoverTranslations.forEach(translation => {
-        createPopover(translation.field, translation.placement, translation[pageJson.locale].label, translation[pageJson.locale].text);
+        const locale = translation[pageJson.locale] ? pageJson.locale : 'en-US';
+
+        createPopover(translation.field, translation.placement, translation[locale].label, translation[locale].text);
       });
     }
 
