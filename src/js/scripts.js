@@ -846,7 +846,7 @@
     const donationAmt = theForm.querySelector('.en__field--donationAmt');
     const giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
-    const selectedAmount = donationAmt.querySelector('.en__field__input--radio:not([value=""]):checked');
+    const selectedAmount = donationAmt ? donationAmt.querySelector('.en__field__input--radio:not([value=""]):checked') : null;
     const tipJar = theForm.querySelector('.en__field--tip-jar');
     let donationAmtRadios = null;
     let modal = null;
@@ -932,7 +932,7 @@
       }, 100);
     };
 
-    if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
+    if (pageJson.pageNumber === 1) {
       if (donationAmt) {
         donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
 
@@ -992,50 +992,50 @@
           disableEl(appealCode);
         }
       }
-    }
-
-    if (bequestIframe) {
-      bequestIframe.addEventListener('load', e => {
-        bequestIframe.contentWindow.enOnValidate = function() {
-          setTimeout(function() {
-            if (formIsValid(bequestIframe.contentWindow.document.querySelector('.en__component--page'))) {
-              // Close modal
-              modal.hide();
-              focusFirst();
-              // Fire tracking
-              if (typeof utag !== 'undefined') {
-                utag.link({
-                  'event_name': 'lightbox_click',
-                  'lightbox_name': 'bequest'
-                });
+    } else {
+      if (bequestIframe) {
+        bequestIframe.addEventListener('load', e => {
+          bequestIframe.contentWindow.enOnValidate = function() {
+            setTimeout(function() {
+              if (formIsValid(bequestIframe.contentWindow.document.querySelector('.en__component--page'))) {
+                // Close modal
+                modal.hide();
+                focusFirst();
+                // Fire tracking
+                if (typeof utag !== 'undefined') {
+                  utag.link({
+                    'event_name': 'lightbox_click',
+                    'lightbox_name': 'bequest'
+                  });
+                }
+              } else {
+                resizeIframe(bequestIframe);
               }
-            } else {
-              resizeIframe(bequestIframe);
-            }
-          }, 100);
-        };
-        resizeIframe(bequestIframe);
-      });
-      window.addEventListener('resize', e => {
-        resizeIframe(bequestIframe);
-      });
-    }
+            }, 100);
+          };
+          resizeIframe(bequestIframe);
+        });
+        window.addEventListener('resize', e => {
+          resizeIframe(bequestIframe);
+        });
+      }
 
-    if (bequestModal) {
-      modal = new bootstrap.Modal(bequestModal, {
-        backdrop: 'static',
-        keyboard: false
-      });
-      modal.show();
-      // Fire tracking
-      setTimeout(function() {
-        if (typeof utag !== 'undefined') {
-          utag.link({
-            'event_name': 'lightbox_impression',
-            'lightbox_name': 'bequest'
-          });
-        }
-      }, 1000);
+      if (bequestModal) {
+        modal = new bootstrap.Modal(bequestModal, {
+          backdrop: 'static',
+          keyboard: false
+        });
+        modal.show();
+        // Fire tracking
+        setTimeout(function() {
+          if (typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'lightbox_impression',
+              'lightbox_name': 'bequest'
+            });
+          }
+        }, 1000);
+      }
     }
   };
 
@@ -2814,7 +2814,7 @@
     }
     ui();
     if (typeof pageJson !== 'undefined') {
-      if (pageJson.pageType === 'donation' && pageJson.pageNumber !== pageJson.pageCount) {
+      if (pageJson.pageType === 'donation') {
         donationForm();
       } else if (pageJson.pageType === 'event') {
         eventForm();

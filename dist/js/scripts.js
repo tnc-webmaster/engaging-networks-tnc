@@ -863,7 +863,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var donationAmt = theForm.querySelector('.en__field--donationAmt');
     var giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     var otherAmountInput = theForm.querySelector(otherAmountInputSelector);
-    var selectedAmount = donationAmt.querySelector('.en__field__input--radio:not([value=""]):checked');
+    var selectedAmount = donationAmt ? donationAmt.querySelector('.en__field__input--radio:not([value=""]):checked') : null;
     var tipJar = theForm.querySelector('.en__field--tip-jar');
     var donationAmtRadios = null;
     var modal = null;
@@ -955,7 +955,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }, 100);
     };
 
-    if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
+    if (pageJson.pageNumber === 1) {
       if (donationAmt) {
         donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt); // Display tip jar amount
 
@@ -1014,51 +1014,51 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           disableEl(appealCode);
         }
       }
-    }
+    } else {
+      if (bequestIframe) {
+        bequestIframe.addEventListener('load', function (e) {
+          bequestIframe.contentWindow.enOnValidate = function () {
+            setTimeout(function () {
+              if (formIsValid(bequestIframe.contentWindow.document.querySelector('.en__component--page'))) {
+                // Close modal
+                modal.hide();
+                focusFirst(); // Fire tracking
 
-    if (bequestIframe) {
-      bequestIframe.addEventListener('load', function (e) {
-        bequestIframe.contentWindow.enOnValidate = function () {
-          setTimeout(function () {
-            if (formIsValid(bequestIframe.contentWindow.document.querySelector('.en__component--page'))) {
-              // Close modal
-              modal.hide();
-              focusFirst(); // Fire tracking
-
-              if (typeof utag !== 'undefined') {
-                utag.link({
-                  'event_name': 'lightbox_click',
-                  'lightbox_name': 'bequest'
-                });
+                if (typeof utag !== 'undefined') {
+                  utag.link({
+                    'event_name': 'lightbox_click',
+                    'lightbox_name': 'bequest'
+                  });
+                }
+              } else {
+                resizeIframe(bequestIframe);
               }
-            } else {
-              resizeIframe(bequestIframe);
-            }
-          }, 100);
-        };
+            }, 100);
+          };
 
-        resizeIframe(bequestIframe);
-      });
-      window.addEventListener('resize', function (e) {
-        resizeIframe(bequestIframe);
-      });
-    }
+          resizeIframe(bequestIframe);
+        });
+        window.addEventListener('resize', function (e) {
+          resizeIframe(bequestIframe);
+        });
+      }
 
-    if (bequestModal) {
-      modal = new bootstrap.Modal(bequestModal, {
-        backdrop: 'static',
-        keyboard: false
-      });
-      modal.show(); // Fire tracking
+      if (bequestModal) {
+        modal = new bootstrap.Modal(bequestModal, {
+          backdrop: 'static',
+          keyboard: false
+        });
+        modal.show(); // Fire tracking
 
-      setTimeout(function () {
-        if (typeof utag !== 'undefined') {
-          utag.link({
-            'event_name': 'lightbox_impression',
-            'lightbox_name': 'bequest'
-          });
-        }
-      }, 1000);
+        setTimeout(function () {
+          if (typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'lightbox_impression',
+              'lightbox_name': 'bequest'
+            });
+          }
+        }, 1000);
+      }
     }
   };
   /**
@@ -2898,7 +2898,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     ui();
 
     if (typeof pageJson !== 'undefined') {
-      if (pageJson.pageType === 'donation' && pageJson.pageNumber !== pageJson.pageCount) {
+      if (pageJson.pageType === 'donation') {
         donationForm();
       } else if (pageJson.pageType === 'event') {
         eventForm();
