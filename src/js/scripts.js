@@ -1614,7 +1614,7 @@
 
       const setMobilePhoneField = (e) => {
         if (e.target.checked) {
-          //override EN's diabling of the field
+          //override EN's disabling of the field
           setTimeout(syncMobilePhoneField, 500);
         } else {
           mobilePhoneInput.value = '';
@@ -1630,7 +1630,7 @@
 
       //attach event handler to the checkbox
       mobileSameAsHomeCheckbox.addEventListener('change', setMobilePhoneField);
-      //attach event hanfler to the home input
+      //attach event handler to the home input
       homePhoneInput.addEventListener('input', syncMobilePhoneField);
     };
 
