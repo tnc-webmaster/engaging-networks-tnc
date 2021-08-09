@@ -11,19 +11,16 @@
     height: auto !important;
     width: 100% !important;
   }
-
   body#en__pagebuilder & {
     .d-none,
     .d-lg-none {
       display: block !important;
     }
   }
-
   body:not(#en__pagebuilder) & {
     .en__component--copyblock {
       padding: 2rem 1.25rem 1.667rem;
       text-align: center;
-
       @include media-breakpoint-up(md) {
         color: $white;
         position: absolute;
@@ -33,12 +30,11 @@
         z-index: 10;
       }
     }
-
     .en__component--imageblock {
       @include media-breakpoint-up(md) {
         &::after {
           bottom: 0;
-          background-color: rgba(0,0,0,.5);
+          background-color: rgba(0, 0, 0, .5);
           content: "";
           display: block;
           left: 0;
@@ -50,42 +46,34 @@
       }
     }
   }
-
   h1 {
     line-height: 1.1667;
-
     @include media-breakpoint-down(md) {
       font-size: 2.25rem;
       line-height: 1.1666;
     }
   }
-
   p {
     font-size: 1.375rem;
     line-height: 1.4545;
-
     @include media-breakpoint-up(md) {
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.35);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.35);
     }
   }
 }
 
 .hero-solid {
   display: none;
-  
   @include media-breakpoint-up(md) {
     display: block;
-    padding-top: 12.25vw !important;          
+    padding-top: 12.25vw !important;
   }
-  
   @include media-breakpoint-up(lg) {
-    padding-top: 10.25vw !important;      
+    padding-top: 10.25vw !important;
   }
-  
   &-green {
     background-color: $green-lighter;
   }
-  
   &-primary {
     background-color: $primary;
   }
@@ -93,50 +81,40 @@
 
 .hero-constrained {
   margin-bottom: 3rem;
-
   &,
   * {
     transition: $transition-light;
   }
-
   @include media-breakpoint-up(lg) {
     border-top: .3125rem solid $primary;
     margin-bottom: -.75rem;
     padding-top: 1.7rem;
   }
-
   h2 {
     @extend .h3;
     margin-bottom: 1rem;
-
     @include media-breakpoint-down(lg) {
       font-size: 1.75rem;
     }
   }
-
   img {
     float: left;
     margin-bottom: 1.5rem;
     margin-right: 1.5rem;
     transform: translateY(.5rem);
   }
-
   p {
     line-height: 1.625;
-
     &:not(:last-child) {
       margin-bottom: 1.75rem;
     }
-
     @include media-breakpoint-up(lg) {
       font-size: $font-size-lg;
       line-height: 1.6667;
     }
   }
-
-
   @include media-breakpoint-up(lg) {
-    > div {
+    >div {
       align-items: flex-start;
       display: flex;
     }
@@ -147,25 +125,20 @@
   .main {
     margin-top: 0;
   }
-
-  .en__component--advrow:first-of-type + .en__component--advrow {
+  .en__component--advrow:first-of-type+.en__component--advrow {
     margin-top: 2.5rem;
-    
-    @include media-breakpoint-up(md) {      
+    @include media-breakpoint-up(md) {
       margin-top: 5.5rem;
-    } 
+    }
   }
 }
 
-
 .has-hero-solid {
-  .en__component--advrow:first-of-type + .en__component--advrow {
+  .en__component--advrow:first-of-type+.en__component--advrow {
     margin-top: 0;
-    
     @include media-breakpoint-up(md) {
       margin-top: 2.5rem;
     }
-    
     @include media-breakpoint-up(xl) {
       margin-top: -1.5rem;
     }

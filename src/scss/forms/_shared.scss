@@ -66,7 +66,7 @@
   }
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="date"]:not([name="ecard.schedule"])::-webkit-calendar-picker-indicator,
 input::-webkit-clear-button,
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -74,13 +74,13 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type="date"],
+input[type="date"]:not([name="ecard.schedule"]),
 input[type="number"] {
   -moz-appearance: textfield;
 }
 
-input[type="date"]:not([value])::-webkit-datetime-edit-fields-wrapper,
-input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
+input[type="date"]:not([name="ecard.schedule"]):not([value])::-webkit-datetime-edit-fields-wrapper,
+input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit-fields-wrapper {
   visibility: hidden;
 }
 
@@ -148,7 +148,8 @@ input[type="date"][value=""]::-webkit-datetime-edit-fields-wrapper {
 .en__field__input--textarea,
 .en__field__input--tripletext,
 .en__additional__input,
-.en__additional__code {
+.en__additional__code,
+.en__ecardrecipients__futureDelivery input[type="date"] {
   @extend %input;
 }
 

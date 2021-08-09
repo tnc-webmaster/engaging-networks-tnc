@@ -1362,6 +1362,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
     if (leadGenModal) {
+      // Set placholder on mobile phone field so it can be slected with :placeholder-shown
+      el = leadGenModal.querySelector('#en__field_supporter_phoneNumber2');
+
+      if (el) {
+        el.setAttribute('placeholder', ' ');
+      }
+
       formType = getFormType(leadGenModal);
       var modal = new bootstrap.Modal(leadGenModal, {
         backdrop: 'static',
@@ -1630,7 +1637,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       var setMobilePhoneField = function setMobilePhoneField(e) {
         if (e.target.checked) {
-          //override EN's diabling of the field
+          //override EN's disabling of the field
           setTimeout(syncMobilePhoneField, 500);
         } else {
           mobilePhoneInput.value = '';
@@ -1645,7 +1652,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }; //attach event handler to the checkbox
 
 
-      mobileSameAsHomeCheckbox.addEventListener('change', setMobilePhoneField); //attach event hanfler to the home input
+      mobileSameAsHomeCheckbox.addEventListener('change', setMobilePhoneField); //attach event handler to the home input
 
       homePhoneInput.addEventListener('input', syncMobilePhoneField);
     }; //if all three fields are present

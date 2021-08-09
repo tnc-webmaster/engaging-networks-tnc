@@ -1355,6 +1355,11 @@
 
     // Maybe display lead gen modal
     if (leadGenModal) {
+      // Set placholder on mobile phone field so it can be slected with :placeholder-shown
+      el = leadGenModal.querySelector('#en__field_supporter_phoneNumber2');
+      if (el) {
+        el.setAttribute('placeholder', ' ');
+      }
       formType = getFormType(leadGenModal);
       const modal = new bootstrap.Modal(leadGenModal, {
         backdrop: 'static',
