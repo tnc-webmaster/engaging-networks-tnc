@@ -34,7 +34,7 @@ module.exports = function(grunt) {
       //},
       dist: {
         src: ['src/js/vendor/**/*.js', 'dist/js/scripts.js'],
-        dest: 'dist/js/scripts.min.js',
+        dest: 'dist/js/scripts.min.dev.js',
       },
     },
     'dart-sass': {
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
           sourceMap: true,
         },
         files: {
-          'dist/css/styles.css': 'src/scss/styles.scss',
+          'dist/css/styles.dev.css': 'src/scss/styles.scss',
         }
       }
     },
@@ -65,7 +65,7 @@ module.exports = function(grunt) {
         options: {
           base: 'dist/css',
           css: [
-            'dist/css/styles.css'
+            'dist/css/styles.dev.css'
           ],
           width: 1420,
           height: 1024,
