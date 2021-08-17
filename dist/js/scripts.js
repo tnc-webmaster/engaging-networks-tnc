@@ -69,7 +69,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var tipJarAmountSelector = '.js-total-gift--tipjar';
   var tipJarToggle = '.tip-jar-toggle';
   var totalAmountSelector = '.js-total-gift';
-  var tributeOptionsSelector = 'select#en__field_transaction_trbopts'; // Elements
+  var tributeOptionsSelector = 'select#en__field_transaction_trbopts'; // Custom events
+
+  var iframeSubmitted = new CustomEvent('iframeSubmitted'); // Elements
 
   var theForm = document.querySelector('.en__component--page') || document.querySelector('.main'); // Masks
 
@@ -1025,21 +1027,20 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
           resizeIframe(bequestIframe);
         }); // Listen for submitted message from iframe
+        // window.addEventListener('message', e => {
 
-        window.addEventListener('message', function (e) {
-          if (e.origin === window.top.location.origin) {
-            // Fire tracking
-            if (typeof utag !== 'undefined') {
-              utag.link({
-                'event_name': 'lightbox_click',
-                'lightbox_name': 'bequest'
-              });
-            } // Close modal
+        window.addEventListener('iframeSubmitted', function (e) {
+          // Fire tracking
+          if (typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'lightbox_click',
+              'lightbox_name': 'bequest'
+            });
+          } // Close modal
 
 
-            modal.hide();
-            focusFirst();
-          }
+          modal.hide();
+          focusFirst();
         }); // Fit iframe to parent
 
         window.addEventListener('resize', function (e) {
@@ -2121,7 +2122,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var recurringStatus = theForm.querySelector('.js-recurring-status');
 
     if (window.self !== window.top) {
-      window.parent.postMessage('submitted', '*');
+      // window.parent.postMessage('submitted', '*');
+      window.parent.dispatchEvent(iframeSubmitted);
     }
 
     if (donationData) {

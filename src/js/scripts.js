@@ -59,6 +59,9 @@
   const totalAmountSelector = '.js-total-gift';
   const tributeOptionsSelector = 'select#en__field_transaction_trbopts';
 
+  // Custom events
+  const iframeSubmitted = new CustomEvent('iframeSubmitted');
+
   // Elements
   const theForm = document.querySelector('.en__component--page') || document.querySelector('.main');
 
@@ -1004,19 +1007,18 @@
         });
 
         // Listen for submitted message from iframe
-        window.addEventListener('message', e => {
-          if (e.origin === window.top.location.origin) {
-            // Fire tracking
-            if (typeof utag !== 'undefined') {
-              utag.link({
-                'event_name': 'lightbox_click',
-                'lightbox_name': 'bequest'
-              });
-            }
-            // Close modal
-            modal.hide();
-            focusFirst();
+        // window.addEventListener('message', e => {
+        window.addEventListener('iframeSubmitted', e => {
+          // Fire tracking
+          if (typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'lightbox_click',
+              'lightbox_name': 'bequest'
+            });
           }
+          // Close modal
+          modal.hide();
+          focusFirst();
         });
 
         // Fit iframe to parent
@@ -2104,7 +2106,8 @@
     const recurringStatus = theForm.querySelector('.js-recurring-status');
 
     if (window.self !== window.top) {
-      window.parent.postMessage('submitted', '*');
+      // window.parent.postMessage('submitted', '*');
+      window.parent.dispatchEvent(iframeSubmitted);
     }
 
     if (donationData) {
