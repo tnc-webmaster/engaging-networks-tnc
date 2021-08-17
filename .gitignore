@@ -2,3 +2,4 @@
 design-assets/*
 node_modules/*
 client-scripts/
+src/js/scripts.dev.js
