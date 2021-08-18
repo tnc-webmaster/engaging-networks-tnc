@@ -77,6 +77,7 @@
       }
     }
   });
+  let masks = [];
 
   // Widgets
   let cleave = null;
@@ -569,25 +570,6 @@
       });
     }
 
-    // Add mask and inputmode attribute for currency fields. Also prevent autofill
-    getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
-      setAttributes(el, {
-        'autocomplete': 'photo',
-        'inputmode': 'decimal',
-      });
-      IMask(el, {
-        mask: 'num',
-        blocks: {
-          num: {
-            mask: Number,
-            thousandsSeparator: '',
-            padFractionalZeros: true,
-            radix: '.',
-          }
-        }
-      });
-    });
-
     // Prevent autofill on mem/trib fields
     getAll('.en__field--ecard-recipient-email-addresses .en__field__input, .en__field--honname .en__field__input, .en__field--honname ~ .en__field .en__field__input, .en__field--infname .en__field__input, .en__field--infname ~ .en__field .en__field__input').forEach(el => {
       el.setAttribute('autocomplete', 'photo');
@@ -837,6 +819,37 @@
     };
     // Globalize for inline onclick
     window.closePopover = closePopover;
+
+    // Init other amount input mask
+    const initMasks = () => {
+      // Clear any existing masks
+      masks.forEach(mask => {
+        mask.destroy();
+      });
+      // Add mask and inputmode attribute for currency fields. Also prevent autofill
+      getAll('[name*="Amt"]:not([name*="Amt1"]):not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt1"]):not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach((el, index) => {
+        setAttributes(el, {
+          'autocomplete': 'photo',
+          'inputmode': 'decimal',
+        });
+        masks[index] = IMask(el, {
+          mask: 'num',
+          blocks: {
+            num: {
+              mask: Number,
+              thousandsSeparator: '',
+              padFractionalZeros: true,
+              radix: '.',
+            }
+          }
+        });
+        // Update existing value
+        masks[index].updateValue();
+      });
+    };
+    initMasks();
+    // Globalize
+    window.initMasks = initMasks;
   };
 
   /**
@@ -849,10 +862,11 @@
     const donationAmt = theForm.querySelector('.en__field--donationAmt');
     const giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
-    const selectedAmount = donationAmt ? donationAmt.querySelector('.en__field__input--radio:not([value=""]):checked') : null;
+    const recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq');
     const tipJar = theForm.querySelector('.en__field--tip-jar');
     let donationAmtRadios = null;
     let modal = null;
+    let selectedAmount = getSelectedAmount();
     let tipJarCheckbox = null;
     let tipJarUserChecked = false;
 
@@ -935,51 +949,67 @@
       }, 100);
     };
 
-    if (pageJson.pageNumber === 1) {
-      if (donationAmt) {
-        donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
+    const initDonationAmount = () => {
+      donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
+      selectedAmount = getSelectedAmount();
+      // Display tip jar amount
+      el = theForm.querySelector(tipJarSelector);
+      if (el) {
+        updateTipJar(getTipJar(getOriginalDonationAmount()));
+        updateTotalGift(getTipJar(getOriginalDonationAmount()));
+      } else {
+        updateTotalGift(getOriginalDonationAmount());
+      }
 
-        // Display tip jar amount
-        el = theForm.querySelector(tipJarSelector);
-        if (el) {
-          updateTipJar(getTipJar(getOriginalDonationAmount()));
-          updateTotalGift(getTipJar(getOriginalDonationAmount()));
-        } else {
-          updateTotalGift(getOriginalDonationAmount());
-        }
+      // Maybe a tip jar?
+      if (tipJar && tipJarPct) {
+        tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox');
+        // Handle tip jar click
+        tipJarCheckbox.addEventListener('click', e => {
+          tipJarUserChecked = true;
+          updateDonationAmounts(e.target);
+          updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount());
 
-        // Maybe a tip jar?
-        if (tipJar && tipJarPct) {
-          tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox');
-          // Handle tip jar click
-          tipJarCheckbox.addEventListener('click', e => {
-            const selectedAmount = theForm.querySelector('.en__field__input--radio:not([value=""]):checked');
-
-            tipJarUserChecked = true;
-            updateDonationAmounts(e.target);
-            updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount());
-
-            // Work around for mobile pay not getting latest amount
-            if (selectedAmount) {
-              doubleClickAmount(selectedAmount);
-            }
-          });
-
-          // Initiialize tip jar
-          maybeUncheckTipJar(getOriginalDonationAmount());
-          if (tipJarCheckbox.checked) {
-            updateDonationAmounts(tipJarCheckbox);
+          // Work around for mobile pay not getting latest amount
+          if (selectedAmount) {
+            doubleClickAmount(selectedAmount);
           }
-        }
+        });
 
-        // Work around for mobile pay not getting latest amount
-        if (selectedAmount) {
-          doubleClickAmount(selectedAmount);
+        // Initialize tip jar
+        maybeUncheckTipJar(getOriginalDonationAmount());
+        if (tipJarCheckbox.checked) {
+          updateDonationAmounts(tipJarCheckbox);
         }
+      }
 
-        // Listen for other amount change
-        if (otherAmountInput) {
-          otherAmountInput.addEventListener('input', handleDonationAmountChange);
+      // Work around for mobile pay not getting latest amount
+      if (selectedAmount) {
+        doubleClickAmount(selectedAmount);
+      }
+
+      // Listen for other amount change
+      if (otherAmountInput) {
+        otherAmountInput.addEventListener('input', handleDonationAmountChange);
+        otherAmountInput.addEventListener('focus', e => {
+          console.log(e);
+        });
+      }
+    };
+
+    if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
+      if (donationAmt) {
+        initDonationAmount();
+        // Listen for recurrence change
+        if (recurrenceFrequency) {
+          getAll('.en__field__input--radio', recurrenceFrequency).forEach(el => {
+            el.addEventListener('click', e => {
+              setTimeout(() => {
+                initDonationAmount();
+                window.initMasks();
+              }, 500);
+            });
+          });
         }
       }
 
@@ -995,55 +1025,55 @@
           disableEl(appealCode);
         }
       }
-    } else {
-      if (bequestIframe) {
-        bequestIframe.addEventListener('load', e => {
-          bequestIframe.contentWindow.enOnError = function() {
-            // Fit iframe to parent
-            resizeIframe(bequestIframe);
-          };
+    }
+
+    if (bequestIframe) {
+      bequestIframe.addEventListener('load', e => {
+        bequestIframe.contentWindow.enOnError = function() {
           // Fit iframe to parent
           resizeIframe(bequestIframe);
-        });
-
-        // Listen for submitted message from iframe
-        // window.addEventListener('message', e => {
-        window.addEventListener('iframeSubmitted', e => {
-          // Fire tracking
-          if (typeof utag !== 'undefined') {
-            utag.link({
-              'event_name': 'lightbox_click',
-              'lightbox_name': 'bequest'
-            });
-          }
-          // Close modal
-          modal.hide();
-          focusFirst();
-        });
-
+        };
         // Fit iframe to parent
-        window.addEventListener('resize', e => {
-          resizeIframe(bequestIframe);
-        });
-      }
+        resizeIframe(bequestIframe);
+      });
 
-      if (bequestModal) {
-        modal = new bootstrap.Modal(bequestModal, {
-          backdrop: 'static',
-          keyboard: false
-        });
-        // Open modal
-        modal.show();
+      // Listen for submitted message from iframe
+      // window.addEventListener('message', e => {
+      window.addEventListener('iframeSubmitted', e => {
         // Fire tracking
-        setTimeout(function() {
-          if (typeof utag !== 'undefined') {
-            utag.link({
-              'event_name': 'lightbox_impression',
-              'lightbox_name': 'bequest'
-            });
-          }
-        }, 1000);
-      }
+        if (typeof utag !== 'undefined') {
+          utag.link({
+            'event_name': 'lightbox_click',
+            'lightbox_name': 'bequest'
+          });
+        }
+        // Close modal
+        modal.hide();
+        focusFirst();
+      });
+
+      // Fit iframe to parent
+      window.addEventListener('resize', e => {
+        resizeIframe(bequestIframe);
+      });
+    }
+
+    if (bequestModal) {
+      modal = new bootstrap.Modal(bequestModal, {
+        backdrop: 'static',
+        keyboard: false
+      });
+      // Open modal
+      modal.show();
+      // Fire tracking
+      setTimeout(function() {
+        if (typeof utag !== 'undefined') {
+          utag.link({
+            'event_name': 'lightbox_impression',
+            'lightbox_name': 'bequest'
+          });
+        }
+      }, 1000);
     }
   };
 

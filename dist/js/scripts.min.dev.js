@@ -87,7 +87,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         radix: '.'
       }
     }
-  }); // Widgets
+  });
+  var masks = []; // Widgets
 
   var cleave = null; // Constants
 
@@ -583,26 +584,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       getAll('.en__field__label--item', el).forEach(function (el) {
         createImgFromUrl(el.textContent, el);
       });
-    } // Add mask and inputmode attribute for currency fields. Also prevent autofill
+    } // Prevent autofill on mem/trib fields
 
-
-    getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(function (el) {
-      setAttributes(el, {
-        'autocomplete': 'photo',
-        'inputmode': 'decimal'
-      });
-      IMask(el, {
-        mask: 'num',
-        blocks: {
-          num: {
-            mask: Number,
-            thousandsSeparator: '',
-            padFractionalZeros: true,
-            radix: '.'
-          }
-        }
-      });
-    }); // Prevent autofill on mem/trib fields
 
     getAll('.en__field--ecard-recipient-email-addresses .en__field__input, .en__field--honname .en__field__input, .en__field--honname ~ .en__field .en__field__input, .en__field--infname .en__field__input, .en__field--infname ~ .en__field .en__field__input').forEach(function (el) {
       el.setAttribute('autocomplete', 'photo');
@@ -853,7 +836,38 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }; // Globalize for inline onclick
 
 
-    window.closePopover = closePopover;
+    window.closePopover = closePopover; // Init other amount input mask
+
+    var initMasks = function initMasks() {
+      // Clear any existing masks
+      masks.forEach(function (mask) {
+        mask.destroy();
+      }); // Add mask and inputmode attribute for currency fields. Also prevent autofill
+
+      getAll('[name*="Amt"]:not([name*="Amt1"]):not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt1"]):not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(function (el, index) {
+        setAttributes(el, {
+          'autocomplete': 'photo',
+          'inputmode': 'decimal'
+        });
+        masks[index] = IMask(el, {
+          mask: 'num',
+          blocks: {
+            num: {
+              mask: Number,
+              thousandsSeparator: '',
+              padFractionalZeros: true,
+              radix: '.'
+            }
+          }
+        }); // Update existing value
+
+        masks[index].updateValue();
+      });
+    };
+
+    initMasks(); // Globalize
+
+    window.initMasks = initMasks;
   };
   /**
    * Donation form enhancements
@@ -867,10 +881,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var donationAmt = theForm.querySelector('.en__field--donationAmt');
     var giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     var otherAmountInput = theForm.querySelector(otherAmountInputSelector);
-    var selectedAmount = donationAmt ? donationAmt.querySelector('.en__field__input--radio:not([value=""]):checked') : null;
+    var recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq');
     var tipJar = theForm.querySelector('.en__field--tip-jar');
     var donationAmtRadios = null;
     var modal = null;
+    var selectedAmount = getSelectedAmount();
     var tipJarCheckbox = null;
     var tipJarUserChecked = false;
 
@@ -959,49 +974,67 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }, 100);
     };
 
-    if (pageJson.pageNumber === 1) {
-      if (donationAmt) {
-        donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt); // Display tip jar amount
+    var initDonationAmount = function initDonationAmount() {
+      donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
+      selectedAmount = getSelectedAmount(); // Display tip jar amount
 
-        el = theForm.querySelector(tipJarSelector);
+      el = theForm.querySelector(tipJarSelector);
 
-        if (el) {
-          updateTipJar(getTipJar(getOriginalDonationAmount()));
-          updateTotalGift(getTipJar(getOriginalDonationAmount()));
-        } else {
-          updateTotalGift(getOriginalDonationAmount());
-        } // Maybe a tip jar?
+      if (el) {
+        updateTipJar(getTipJar(getOriginalDonationAmount()));
+        updateTotalGift(getTipJar(getOriginalDonationAmount()));
+      } else {
+        updateTotalGift(getOriginalDonationAmount());
+      } // Maybe a tip jar?
 
 
-        if (tipJar && tipJarPct) {
-          tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox'); // Handle tip jar click
+      if (tipJar && tipJarPct) {
+        tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox'); // Handle tip jar click
 
-          tipJarCheckbox.addEventListener('click', function (e) {
-            var selectedAmount = theForm.querySelector('.en__field__input--radio:not([value=""]):checked');
-            tipJarUserChecked = true;
-            updateDonationAmounts(e.target);
-            updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount()); // Work around for mobile pay not getting latest amount
+        tipJarCheckbox.addEventListener('click', function (e) {
+          tipJarUserChecked = true;
+          updateDonationAmounts(e.target);
+          updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount()); // Work around for mobile pay not getting latest amount
 
-            if (selectedAmount) {
-              doubleClickAmount(selectedAmount);
-            }
-          }); // Initiialize tip jar
-
-          maybeUncheckTipJar(getOriginalDonationAmount());
-
-          if (tipJarCheckbox.checked) {
-            updateDonationAmounts(tipJarCheckbox);
+          if (selectedAmount) {
+            doubleClickAmount(selectedAmount);
           }
-        } // Work around for mobile pay not getting latest amount
+        }); // Initialize tip jar
+
+        maybeUncheckTipJar(getOriginalDonationAmount());
+
+        if (tipJarCheckbox.checked) {
+          updateDonationAmounts(tipJarCheckbox);
+        }
+      } // Work around for mobile pay not getting latest amount
 
 
-        if (selectedAmount) {
-          doubleClickAmount(selectedAmount);
-        } // Listen for other amount change
+      if (selectedAmount) {
+        doubleClickAmount(selectedAmount);
+      } // Listen for other amount change
 
 
-        if (otherAmountInput) {
-          otherAmountInput.addEventListener('input', handleDonationAmountChange);
+      if (otherAmountInput) {
+        otherAmountInput.addEventListener('input', handleDonationAmountChange);
+        otherAmountInput.addEventListener('focus', function (e) {
+          console.log(e);
+        });
+      }
+    };
+
+    if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
+      if (donationAmt) {
+        initDonationAmount(); // Listen for recurrence change
+
+        if (recurrenceFrequency) {
+          getAll('.en__field__input--radio', recurrenceFrequency).forEach(function (el) {
+            el.addEventListener('click', function (e) {
+              setTimeout(function () {
+                initDonationAmount();
+                window.initMasks();
+              }, 500);
+            });
+          });
         }
       } // Gift designation Y/N 
 
@@ -1018,55 +1051,55 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           disableEl(appealCode);
         }
       }
-    } else {
-      if (bequestIframe) {
-        bequestIframe.addEventListener('load', function (e) {
-          bequestIframe.contentWindow.enOnError = function () {
-            // Fit iframe to parent
-            resizeIframe(bequestIframe);
-          }; // Fit iframe to parent
+    }
 
-
+    if (bequestIframe) {
+      bequestIframe.addEventListener('load', function (e) {
+        bequestIframe.contentWindow.enOnError = function () {
+          // Fit iframe to parent
           resizeIframe(bequestIframe);
-        }); // Listen for submitted message from iframe
-        // window.addEventListener('message', e => {
-
-        window.addEventListener('iframeSubmitted', function (e) {
-          // Fire tracking
-          if (typeof utag !== 'undefined') {
-            utag.link({
-              'event_name': 'lightbox_click',
-              'lightbox_name': 'bequest'
-            });
-          } // Close modal
+        }; // Fit iframe to parent
 
 
-          modal.hide();
-          focusFirst();
-        }); // Fit iframe to parent
+        resizeIframe(bequestIframe);
+      }); // Listen for submitted message from iframe
+      // window.addEventListener('message', e => {
 
-        window.addEventListener('resize', function (e) {
-          resizeIframe(bequestIframe);
-        });
-      }
+      window.addEventListener('iframeSubmitted', function (e) {
+        // Fire tracking
+        if (typeof utag !== 'undefined') {
+          utag.link({
+            'event_name': 'lightbox_click',
+            'lightbox_name': 'bequest'
+          });
+        } // Close modal
 
-      if (bequestModal) {
-        modal = new bootstrap.Modal(bequestModal, {
-          backdrop: 'static',
-          keyboard: false
-        }); // Open modal
 
-        modal.show(); // Fire tracking
+        modal.hide();
+        focusFirst();
+      }); // Fit iframe to parent
 
-        setTimeout(function () {
-          if (typeof utag !== 'undefined') {
-            utag.link({
-              'event_name': 'lightbox_impression',
-              'lightbox_name': 'bequest'
-            });
-          }
-        }, 1000);
-      }
+      window.addEventListener('resize', function (e) {
+        resizeIframe(bequestIframe);
+      });
+    }
+
+    if (bequestModal) {
+      modal = new bootstrap.Modal(bequestModal, {
+        backdrop: 'static',
+        keyboard: false
+      }); // Open modal
+
+      modal.show(); // Fire tracking
+
+      setTimeout(function () {
+        if (typeof utag !== 'undefined') {
+          utag.link({
+            'event_name': 'lightbox_impression',
+            'lightbox_name': 'bequest'
+          });
+        }
+      }, 1000);
     }
   };
   /**
