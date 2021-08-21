@@ -116,14 +116,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
      */
 
     var handleChoicesChange = function handleChoicesChange(e) {
-      var _target = e.target;
+      var _target = e.target; // Don't reset dropdowns in event attendee details block
 
-      _target.choices.setValue([{
-        value: _target.value,
-        label: _target.querySelector("option[value=\"" + _target.value + "\"]").textContent
-      }]);
+      if (e.composedPath().indexOf(document.querySelector('.en__registrants__registrantDetails')) === -1) {
+        _target.choices.setValue([{
+          value: _target.value,
+          label: _target.querySelector("option[value=\"" + _target.value + "\"]").textContent
+        }]);
 
-      resetSelect(_target.choices, e);
+        resetSelect(_target.choices, e);
+      }
     };
     /**
      * choices.js removes <options> form the native select
@@ -172,6 +174,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var createChoices = function createChoices(el) {
       return new Choices(el, {
         silent: true,
+        addItems: false,
         duplicateItemsAllowed: false,
         itemSelectText: '',
         searchResultLimit: 100,
@@ -962,9 +965,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         });
       });
       setTimeout(function () {
-        // Re-clicking the button makes mobile pay get the correct amount
-        el.checked = false;
-        el.click(); // Re add the click handler
+        if (el) {
+          // Re-clicking the button makes mobile pay get the correct amount
+          el.checked = false;
+          el.click();
+        } // Re add the click handler
+
 
         donationAmtRadios.forEach(function (el) {
           el.addEventListener('click', handleDonationAmountChange, {
@@ -996,9 +1002,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           updateDonationAmounts(e.target);
           updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount()); // Work around for mobile pay not getting latest amount
 
-          if (selectedAmount) {
-            doubleClickAmount(selectedAmount);
-          }
+          doubleClickAmount(selectedAmount || null);
         }); // Initialize tip jar
 
         maybeUncheckTipJar(getOriginalDonationAmount());
@@ -1009,16 +1013,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } // Work around for mobile pay not getting latest amount
 
 
-      if (selectedAmount) {
-        doubleClickAmount(selectedAmount);
-      } // Listen for other amount change
-
+      doubleClickAmount(selectedAmount || null); // Listen for other amount change
 
       if (otherAmountInput) {
         otherAmountInput.addEventListener('input', handleDonationAmountChange);
-        otherAmountInput.addEventListener('focus', function (e) {
-          console.log(e);
-        });
       }
     };
 

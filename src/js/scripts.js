@@ -109,11 +109,14 @@
     const handleChoicesChange = e => {
       const _target = e.target;
 
-      _target.choices.setValue([{
-        value: _target.value,
-        label: _target.querySelector(`option[value="${_target.value}"]`).textContent,
-      }]);
-      resetSelect(_target.choices, e);
+      // Don't reset dropdowns in event attendee details block
+      if (e.composedPath().indexOf(document.querySelector('.en__registrants__registrantDetails')) === -1) {
+        _target.choices.setValue([{
+          value: _target.value,
+          label: _target.querySelector(`option[value="${_target.value}"]`).textContent,
+        }]);
+        resetSelect(_target.choices, e);
+      }
     };
 
     /**
@@ -163,6 +166,7 @@
     const createChoices = el => {
       return new Choices(el, {
         silent: true,
+        addItems: false,
         duplicateItemsAllowed: false,
         itemSelectText: '',
         searchResultLimit: 100,
@@ -939,9 +943,11 @@
         el.removeEventListener('click', handleDonationAmountChange, { once: true });
       });
       setTimeout(function() {
-        // Re-clicking the button makes mobile pay get the correct amount
-        el.checked = false;
-        el.click();
+        if (el) {
+          // Re-clicking the button makes mobile pay get the correct amount
+          el.checked = false;
+          el.click();
+        }
         // Re add the click handler
         donationAmtRadios.forEach(el => {
           el.addEventListener('click', handleDonationAmountChange, { once: true });
@@ -971,9 +977,7 @@
           updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount());
 
           // Work around for mobile pay not getting latest amount
-          if (selectedAmount) {
-            doubleClickAmount(selectedAmount);
-          }
+          doubleClickAmount(selectedAmount || null);
         });
 
         // Initialize tip jar
@@ -984,16 +988,11 @@
       }
 
       // Work around for mobile pay not getting latest amount
-      if (selectedAmount) {
-        doubleClickAmount(selectedAmount);
-      }
+      doubleClickAmount(selectedAmount || null);
 
       // Listen for other amount change
       if (otherAmountInput) {
         otherAmountInput.addEventListener('input', handleDonationAmountChange);
-        otherAmountInput.addEventListener('focus', e => {
-          console.log(e);
-        });
       }
     };
 

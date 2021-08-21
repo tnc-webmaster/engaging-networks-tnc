@@ -1026,26 +1026,30 @@
 
     if (bequestIframe) {
       bequestIframe.addEventListener('load', e => {
-        bequestIframe.contentWindow.enOnValidate = function() {
-          setTimeout(function() {
-            if (formIsValid(bequestIframe.contentWindow.document.querySelector('.en__component--page'))) {
-              // Close modal
-              modal.hide();
-              focusFirst();
-              // Fire tracking
-              if (typeof utag !== 'undefined') {
-                utag.link({
-                  'event_name': 'lightbox_click',
-                  'lightbox_name': 'bequest'
-                });
-              }
-            } else {
-              resizeIframe(bequestIframe);
-            }
-          }, 100);
+        bequestIframe.contentWindow.enOnError = function() {
+          // Fit iframe to parent
+          resizeIframe(bequestIframe);
         };
+        // Fit iframe to parent
         resizeIframe(bequestIframe);
       });
+
+      // Listen for submitted message from iframe
+      // window.addEventListener('message', e => {
+      window.addEventListener('iframeSubmitted', e => {
+        // Fire tracking
+        if (typeof utag !== 'undefined') {
+          utag.link({
+            'event_name': 'lightbox_click',
+            'lightbox_name': 'bequest'
+          });
+        }
+        // Close modal
+        modal.hide();
+        focusFirst();
+      });
+
+      // Fit iframe to parent
       window.addEventListener('resize', e => {
         resizeIframe(bequestIframe);
       });
@@ -1056,6 +1060,7 @@
         backdrop: 'static',
         keyboard: false
       });
+      // Open modal
       modal.show();
       // Fire tracking
       setTimeout(function() {
