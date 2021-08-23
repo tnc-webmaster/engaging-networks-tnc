@@ -2035,6 +2035,25 @@
   };
 
   /**
+   * Track gated content submits
+   */
+  const dataCaptureTracking = () => {
+    if (pageJson.pageType === 'otherdatacapture') {
+      theForm.addEventListener('submit', e => {
+        setTimeout(function() {
+          if (formIsValid() && typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'form_submit',
+              'form_type': 'otherdatacapture',
+              'form_name': utag_data.page_name.slice(0, -2),
+            });
+          }
+        }, 100);
+      });
+    }
+  };
+
+  /**
    * Track ETT and petition submits
    */
   const advocacyTracking = () => {
@@ -2884,6 +2903,7 @@
       validation();
       formSubmit();
       socialShareTracking();
+      dataCaptureTracking();
       advocacyTracking();
       footerTracking();
       URLTracking();
