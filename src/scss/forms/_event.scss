@@ -769,6 +769,11 @@ body:not(.page--confirmation) .en__orderSummary__data--totalAmount {
 .en__registrants__registrantDetails {
   @extend .row;
   @extend .row-cols-lg-2;
+  .en__field--checkbox {
+    .en__field__label:not([for]) {
+      display: block;
+    }
+  }
 }
 
 .en__field--registrant--mandatory {

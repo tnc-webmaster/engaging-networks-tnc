@@ -1252,15 +1252,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         theForm.querySelector('.en__submit button').addEventListener('click', function (e) {
           sessionStorage.removeItem('savedTotalAmount');
         });
-      } // Remove ticket index number
+      } // Remove attendee index number
 
-
-      getAll('.en__registrants__ticketHead').forEach(function (el) {
-        el.textContent = el.textContent.replace(/\d/g, '');
-      }); // Remove attendee index number
 
       getAll('.en__registrants__registrantHead').forEach(function (el) {
-        el.textContent = el.textContent.replace(/\d/g, '');
+        el.textContent = el.textContent.replace(/^\d{1,3}/, '').replace(/ticket \d{1,3}$/, '');
       }); // Re-number attendees
 
       getAll('.en__registrants__ticket').forEach(function (el) {
@@ -2060,7 +2056,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     });
   };
   /**
-   * Track gated content submits
+   * Track datat capture submits
    */
 
 
