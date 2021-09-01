@@ -266,9 +266,6 @@
         'aria-labelledby': 'modalTitle',
         'aria-hidden': 'true',
       });
-
-      // Move modals to end of main form
-      //theForm.append(el);
     });
 
     // Allow EN swap lists for billing state/province field
@@ -415,7 +412,7 @@
       el.setAttribute('placeholder', 'Apt, ste, bldg.');
     });
 
-    // Hardcode placeholder for date fields
+    // Hard code placeholder for date fields
     getAll(dateInputSelector).forEach(el => {
       addPlaceholder(el, 'Select Date');
     });
@@ -462,7 +459,7 @@
       _parent.append(el);
     }
 
-    // Move promo code field
+    // // Move promo code field
     el = theForm.querySelector('.en__additional__promo');
     _parent = theForm.querySelector('.form-heading--promo');
     if (el && _parent) {
@@ -955,6 +952,29 @@
       }, 100);
     };
 
+    const setDefaultAmount = (el) => {
+      const amountButtons = getAll('[name="transaction.donationAmt"]');
+      const index = Array.prototype.indexOf.call(document.querySelectorAll('[name="transaction.recurrfreq"]'), el);
+      const fieldId = theForm.querySelector('.en__field--withOther') ? theForm.querySelector('.en__field--withOther').getAttribute('class').match(/\d+/g) : null;
+      let altList = fieldId[0] && EngagingNetworks.altLists ? EngagingNetworks.altLists.find(list => list.id === Number(fieldId[0])) : null;
+      let defaultAmount = null;
+      let foundAmount = null;
+
+      if (index !== -1 && altList) {
+        altList = altList.data[index];
+        if (altList) {
+          defaultAmount = altList.data.find(item => item.selected === true);
+          if (defaultAmount) {
+            defaultAmount = defaultAmount.value;
+            foundAmount = amountButtons.find(el => parseInt(el.value) === parseInt(defaultAmount));
+            if (foundAmount) {
+              foundAmount.click();
+            }
+          }
+        }
+      }
+    };
+
     const initDonationAmount = () => {
       donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
       selectedAmount = getSelectedAmount();
@@ -1006,6 +1026,7 @@
               setTimeout(() => {
                 initDonationAmount();
                 window.initMasks();
+                setDefaultAmount(e.target);
               }, 500);
             });
           });

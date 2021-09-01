@@ -277,8 +277,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         'tabindex': '-1',
         'aria-labelledby': 'modalTitle',
         'aria-hidden': 'true'
-      }); // Move modals to end of main form
-      //theForm.append(el);
+      });
     }); // Allow EN swap lists for billing state/province field
 
     el = theForm.querySelector(stateProvinceSelect);
@@ -431,7 +430,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     getAll('[name*="address2"], [name*="add2"]').forEach(function (el) {
       el.setAttribute('placeholder', 'Apt, ste, bldg.');
-    }); // Hardcode placeholder for date fields
+    }); // Hard code placeholder for date fields
 
     getAll(dateInputSelector).forEach(function (el) {
       addPlaceholder(el, 'Select Date');
@@ -473,7 +472,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (el && _parent) {
       _parent.append(el);
-    } // Move promo code field
+    } // // Move promo code field
 
 
     el = theForm.querySelector('.en__additional__promo');
@@ -978,6 +977,38 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }, 100);
     };
 
+    var setDefaultAmount = function setDefaultAmount(el) {
+      var amountButtons = getAll('[name="transaction.donationAmt"]');
+      var index = Array.prototype.indexOf.call(document.querySelectorAll('[name="transaction.recurrfreq"]'), el);
+      var fieldId = theForm.querySelector('.en__field--withOther') ? theForm.querySelector('.en__field--withOther').getAttribute('class').match(/\d+/g) : null;
+      var altList = fieldId[0] && EngagingNetworks.altLists ? EngagingNetworks.altLists.find(function (list) {
+        return list.id === Number(fieldId[0]);
+      }) : null;
+      var defaultAmount = null;
+      var foundAmount = null;
+
+      if (index !== -1 && altList) {
+        altList = altList.data[index];
+
+        if (altList) {
+          defaultAmount = altList.data.find(function (item) {
+            return item.selected === true;
+          });
+
+          if (defaultAmount) {
+            defaultAmount = defaultAmount.value;
+            foundAmount = amountButtons.find(function (el) {
+              return parseInt(el.value) === parseInt(defaultAmount);
+            });
+
+            if (foundAmount) {
+              foundAmount.click();
+            }
+          }
+        }
+      }
+    };
+
     var initDonationAmount = function initDonationAmount() {
       donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
       selectedAmount = getSelectedAmount(); // Display tip jar amount
@@ -1028,6 +1059,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
               setTimeout(function () {
                 initDonationAmount();
                 window.initMasks();
+                setDefaultAmount(e.target);
               }, 500);
             });
           });
