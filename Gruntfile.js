@@ -24,17 +24,9 @@ module.exports = function(grunt) {
         separator: ';',
         sourceMap: true,
       },
-      //vendor: {
-      //  src: ['src/js/vendor/**/*.js'],
-      //  dest: 'dist/js/vendor.js',
-      //},
-      //dist: {
-      //  src: ['dist/js/scripts.js'],
-      //  dest: 'dist/js/scripts.min.js',
-      //},
       dist: {
         src: ['src/js/vendor/**/*.js', 'dist/js/scripts.js'],
-        dest: 'dist/js/scripts.min.082721.js',
+        dest: 'dist/js/scripts.min.epoc-208.js',
       },
     },
     'dart-sass': {
@@ -44,7 +36,7 @@ module.exports = function(grunt) {
           sourceMap: true,
         },
         files: {
-          'dist/css/styles.082721.css': 'src/scss/styles.scss',
+          'dist/css/styles.epoc-208.css': 'src/scss/styles.scss',
         }
       }
     },
@@ -58,29 +50,6 @@ module.exports = function(grunt) {
       },
       dist: {
         src: 'dist/css/*.css'
-      }
-    },
-    critical: {
-      test: {
-        options: {
-          base: 'dist/css',
-          css: [
-            'dist/css/styles.dev.css'
-          ],
-          width: 1420,
-          height: 1024,
-          target: {
-            html: 'critical.css',
-            uncritical: 'noncritical.css',
-          },
-          ignore: {
-            atrule: ['@font-face'],
-            decl: (node, value) => /url\(/.test(value),
-          },
-
-        },
-        src: 'https://preserve.nature.org/page/75242/donate/1',
-        dest: 'dist/css/critical.css'
       }
     },
     watch: {
@@ -100,7 +69,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-dart-sass');
   grunt.loadNpmTasks('grunt-postcss');
-  grunt.loadNpmTasks('grunt-critical');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.registerTask('w', ['watch']);
   grunt.registerTask('css', ['dart-sass', 'postcss']);

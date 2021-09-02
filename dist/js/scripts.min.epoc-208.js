@@ -87,8 +87,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         radix: '.'
       }
     }
-  });
-  var masks = []; // Widgets
+  }); // Widgets
 
   var cleave = null; // Constants
 
@@ -116,7 +115,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
      */
 
     var handleChoicesChange = function handleChoicesChange(e) {
-      var _target = e.target; // Don't reset dropdowns in event attendee details block
+      var _target = e.target; // Don't reset drop downs in event attendee details block
 
       if (e.composedPath().indexOf(document.querySelector('.en__registrants__registrantDetails')) === -1) {
         _target.choices.setValue([{
@@ -474,7 +473,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (el && _parent) {
       _parent.append(el);
-    } // // Move promo code field
+    } // Move promo code field
 
 
     el = theForm.querySelector('.en__additional__promo');
@@ -586,8 +585,26 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       getAll('.en__field__label--item', el).forEach(function (el) {
         createImgFromUrl(el.textContent, el);
       });
-    } // Prevent autofill on mem/trib fields
+    } // Add mask and inputmode attribute for currency fields. Also prevent autofill
 
+
+    getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(function (el) {
+      setAttributes(el, {
+        'autocomplete': 'photo',
+        'inputmode': 'decimal'
+      });
+      IMask(el, {
+        mask: 'num',
+        blocks: {
+          num: {
+            mask: Number,
+            thousandsSeparator: '',
+            padFractionalZeros: true,
+            radix: '.'
+          }
+        }
+      });
+    }); // Prevent autofill on mem/trib fields
 
     getAll('.en__field--ecard-recipient-email-addresses .en__field__input, .en__field--honname .en__field__input, .en__field--honname ~ .en__field .en__field__input, .en__field--infname .en__field__input, .en__field--infname ~ .en__field .en__field__input').forEach(function (el) {
       el.setAttribute('autocomplete', 'photo');
@@ -838,38 +855,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }; // Globalize for inline onclick
 
 
-    window.closePopover = closePopover; // Init other amount input mask
-
-    var initMasks = function initMasks() {
-      // Clear any existing masks
-      masks.forEach(function (mask) {
-        mask.destroy();
-      }); // Add mask and inputmode attribute for currency fields. Also prevent autofill
-
-      getAll('[name*="Amt"]:not([name*="Amt1"]):not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt1"]):not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(function (el, index) {
-        setAttributes(el, {
-          'autocomplete': 'photo',
-          'inputmode': 'decimal'
-        });
-        masks[index] = IMask(el, {
-          mask: 'num',
-          blocks: {
-            num: {
-              mask: Number,
-              thousandsSeparator: '',
-              padFractionalZeros: true,
-              radix: '.'
-            }
-          }
-        }); // Update existing value
-
-        masks[index].updateValue();
-      });
-    };
-
-    initMasks(); // Globalize
-
-    window.initMasks = initMasks;
+    window.closePopover = closePopover;
   };
   /**
    * Donation form enhancements
@@ -2090,26 +2076,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     });
   };
   /**
-   * Track datat capture submits
-   */
-
-
-  var dataCaptureTracking = function dataCaptureTracking() {
-    if (pageJson.pageType === 'otherdatacapture') {
-      theForm.addEventListener('submit', function (e) {
-        setTimeout(function () {
-          if (formIsValid() && typeof utag !== 'undefined') {
-            utag.link({
-              'event_name': 'form_submit',
-              'form_type': 'otherdatacapture',
-              'form_name': utag_data.page_name.slice(0, -2)
-            });
-          }
-        }, 100);
-      });
-    }
-  };
-  /**
    * Track ETT and petition submits
    */
 
@@ -3025,7 +2991,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       validation();
       formSubmit();
       socialShareTracking();
-      dataCaptureTracking();
       advocacyTracking();
       footerTracking();
       URLTracking();
@@ -3044,4 +3009,4 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   });
 })();
 
-//# sourceMappingURL=scripts.min.082721.js.map
+//# sourceMappingURL=scripts.min.epoc-208.js.map

@@ -108,14 +108,11 @@
     const handleChoicesChange = e => {
       const _target = e.target;
 
-      // Don't reset drop downs in event attendee details block
-      if (e.composedPath().indexOf(document.querySelector('.en__registrants__registrantDetails')) === -1) {
-        _target.choices.setValue([{
-          value: _target.value,
-          label: _target.querySelector(`option[value="${_target.value}"]`).textContent,
-        }]);
-        resetSelect(_target.choices, e);
-      }
+      _target.choices.setValue([{
+        value: _target.value,
+        label: _target.querySelector(`option[value="${_target.value}"]`).textContent,
+      }]);
+      resetSelect(_target.choices, e);
     };
 
     /**
@@ -165,7 +162,6 @@
     const createChoices = el => {
       return new Choices(el, {
         silent: true,
-        addItems: false,
         duplicateItemsAllowed: false,
         itemSelectText: '',
         searchResultLimit: 100,
@@ -265,6 +261,9 @@
         'aria-labelledby': 'modalTitle',
         'aria-hidden': 'true',
       });
+
+      // Move modals to end of main form
+      //theForm.append(el);
     });
 
     // Allow EN swap lists for billing state/province field
@@ -569,6 +568,7 @@
         createImgFromUrl(el.textContent, el);
       });
     }
+
     // Add mask and inputmode attribute for currency fields. Also prevent autofill
     getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
       setAttributes(el, {
@@ -849,11 +849,10 @@
     const donationAmt = theForm.querySelector('.en__field--donationAmt');
     const giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
-    const recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq');
+    const selectedAmount = donationAmt ? donationAmt.querySelector('.en__field__input--radio:not([value=""]):checked') : null;
     const tipJar = theForm.querySelector('.en__field--tip-jar');
     let donationAmtRadios = null;
     let modal = null;
-    let selectedAmount = getSelectedAmount();
     let tipJarCheckbox = null;
     let tipJarUserChecked = false;
 
@@ -926,11 +925,9 @@
         el.removeEventListener('click', handleDonationAmountChange, { once: true });
       });
       setTimeout(function() {
-        if (el) {
-          // Re-clicking the button makes mobile pay get the correct amount
-          el.checked = false;
-          el.click();
-        }
+        // Re-clicking the button makes mobile pay get the correct amount
+        el.checked = false;
+        el.click();
         // Re add the click handler
         donationAmtRadios.forEach(el => {
           el.addEventListener('click', handleDonationAmountChange, { once: true });
@@ -938,84 +935,51 @@
       }, 100);
     };
 
-    const setDefaultAmount = (el) => {
-      const amountButtons = getAll('[name="transaction.donationAmt"]');
-      const index = Array.prototype.indexOf.call(document.querySelectorAll('[name="transaction.recurrfreq"]'), el);
-      const fieldId = theForm.querySelector('.en__field--withOther') ? theForm.querySelector('.en__field--withOther').getAttribute('class').match(/\d+/g) : null;
-      let altList = fieldId[0] && EngagingNetworks.altLists ? EngagingNetworks.altLists.find(list => list.id === Number(fieldId[0])) : null;
-      let defaultAmount = null;
-      let foundAmount = null;
+    if (pageJson.pageNumber === 1) {
+      if (donationAmt) {
+        donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
 
-      if (index !== -1 && altList) {
-        altList = altList.data[index];
-        if (altList) {
-          defaultAmount = altList.data.find(item => item.selected === true);
-          if (defaultAmount) {
-            defaultAmount = defaultAmount.value;
-            foundAmount = amountButtons.find(el => parseInt(el.value) === parseInt(defaultAmount));
-            if (foundAmount) {
-              foundAmount.click();
+        // Display tip jar amount
+        el = theForm.querySelector(tipJarSelector);
+        if (el) {
+          updateTipJar(getTipJar(getOriginalDonationAmount()));
+          updateTotalGift(getTipJar(getOriginalDonationAmount()));
+        } else {
+          updateTotalGift(getOriginalDonationAmount());
+        }
+
+        // Maybe a tip jar?
+        if (tipJar && tipJarPct) {
+          tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox');
+          // Handle tip jar click
+          tipJarCheckbox.addEventListener('click', e => {
+            const selectedAmount = theForm.querySelector('.en__field__input--radio:not([value=""]):checked');
+
+            tipJarUserChecked = true;
+            updateDonationAmounts(e.target);
+            updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount());
+
+            // Work around for mobile pay not getting latest amount
+            if (selectedAmount) {
+              doubleClickAmount(selectedAmount);
             }
+          });
+
+          // Initiialize tip jar
+          maybeUncheckTipJar(getOriginalDonationAmount());
+          if (tipJarCheckbox.checked) {
+            updateDonationAmounts(tipJarCheckbox);
           }
         }
-      }
-    };
 
-    const initDonationAmount = () => {
-      donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
-      selectedAmount = getSelectedAmount();
-      // Display tip jar amount
-      el = theForm.querySelector(tipJarSelector);
-      if (el) {
-        updateTipJar(getTipJar(getOriginalDonationAmount()));
-        updateTotalGift(getTipJar(getOriginalDonationAmount()));
-      } else {
-        updateTotalGift(getOriginalDonationAmount());
-      }
-
-      // Maybe a tip jar?
-      if (tipJar && tipJarPct) {
-        tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox');
-        // Handle tip jar click
-        tipJarCheckbox.addEventListener('click', e => {
-          tipJarUserChecked = true;
-          updateDonationAmounts(e.target);
-          updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount());
-
-          // Work around for mobile pay not getting latest amount
-          doubleClickAmount(selectedAmount || null);
-        });
-
-        // Initialize tip jar
-        maybeUncheckTipJar(getOriginalDonationAmount());
-        if (tipJarCheckbox.checked) {
-          updateDonationAmounts(tipJarCheckbox);
+        // Work around for mobile pay not getting latest amount
+        if (selectedAmount) {
+          doubleClickAmount(selectedAmount);
         }
-      }
 
-      // Work around for mobile pay not getting latest amount
-      doubleClickAmount(selectedAmount || null);
-
-      // Listen for other amount change
-      if (otherAmountInput) {
-        otherAmountInput.addEventListener('input', handleDonationAmountChange);
-      }
-    };
-
-    if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
-      if (donationAmt) {
-        initDonationAmount();
-        // Listen for recurrence change
-        if (recurrenceFrequency) {
-          getAll('.en__field__input--radio', recurrenceFrequency).forEach(el => {
-            el.addEventListener('click', e => {
-              setTimeout(() => {
-                initDonationAmount();
-                window.initMasks();
-                setDefaultAmount(e.target);
-              }, 500);
-            });
-          });
+        // Listen for other amount change
+        if (otherAmountInput) {
+          otherAmountInput.addEventListener('input', handleDonationAmountChange);
         }
       }
 
@@ -1031,55 +995,55 @@
           disableEl(appealCode);
         }
       }
-    }
-
-    if (bequestIframe) {
-      bequestIframe.addEventListener('load', e => {
-        bequestIframe.contentWindow.enOnError = function() {
+    } else {
+      if (bequestIframe) {
+        bequestIframe.addEventListener('load', e => {
+          bequestIframe.contentWindow.enOnError = function() {
+            // Fit iframe to parent
+            resizeIframe(bequestIframe);
+          };
           // Fit iframe to parent
           resizeIframe(bequestIframe);
-        };
+        });
+
+        // Listen for submitted message from iframe
+        // window.addEventListener('message', e => {
+        window.addEventListener('iframeSubmitted', e => {
+          // Fire tracking
+          if (typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'lightbox_click',
+              'lightbox_name': 'bequest'
+            });
+          }
+          // Close modal
+          modal.hide();
+          focusFirst();
+        });
+
         // Fit iframe to parent
-        resizeIframe(bequestIframe);
-      });
+        window.addEventListener('resize', e => {
+          resizeIframe(bequestIframe);
+        });
+      }
 
-      // Listen for submitted message from iframe
-      // window.addEventListener('message', e => {
-      window.addEventListener('iframeSubmitted', e => {
+      if (bequestModal) {
+        modal = new bootstrap.Modal(bequestModal, {
+          backdrop: 'static',
+          keyboard: false
+        });
+        // Open modal
+        modal.show();
         // Fire tracking
-        if (typeof utag !== 'undefined') {
-          utag.link({
-            'event_name': 'lightbox_click',
-            'lightbox_name': 'bequest'
-          });
-        }
-        // Close modal
-        modal.hide();
-        focusFirst();
-      });
-
-      // Fit iframe to parent
-      window.addEventListener('resize', e => {
-        resizeIframe(bequestIframe);
-      });
-    }
-
-    if (bequestModal) {
-      modal = new bootstrap.Modal(bequestModal, {
-        backdrop: 'static',
-        keyboard: false
-      });
-      // Open modal
-      modal.show();
-      // Fire tracking
-      setTimeout(function() {
-        if (typeof utag !== 'undefined') {
-          utag.link({
-            'event_name': 'lightbox_impression',
-            'lightbox_name': 'bequest'
-          });
-        }
-      }, 1000);
+        setTimeout(function() {
+          if (typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'lightbox_impression',
+              'lightbox_name': 'bequest'
+            });
+          }
+        }, 1000);
+      }
     }
   };
 
@@ -1241,9 +1205,14 @@
         });
       }
 
+      // Remove ticket index number
+      getAll('.en__registrants__ticketHead').forEach(el => {
+        el.textContent = el.textContent.replace(/\d/g, '');
+      });
+
       // Remove attendee index number
       getAll('.en__registrants__registrantHead').forEach(el => {
-        el.textContent = el.textContent.replace(/^\d{1,3}/, '').replace(/ticket \d{1,3}$/, '');
+        el.textContent = el.textContent.replace(/\d/g, '');
       });
 
       // Re-number attendees
