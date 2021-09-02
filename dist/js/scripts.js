@@ -1001,7 +1001,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         if (otherAmountInput) {
           otherAmountInput.addEventListener('input', handleDonationAmountChange);
         }
-      } // Gift designation Y/N 
+      } // Gift designation Y/N
 
 
       if (giftDesignationYN && appealCode) {
@@ -1346,7 +1346,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } else if (!emailUnsubscribeChecked && mobilePhoneField) {
         formType.event_name = 'frm_ltbx_emt_emo_txt_submit';
         formType.form_type = 'email_text_signup';
-        formType.text_signup_location = "lightbox-" + utag_data.page_name; //Unsubscribe not checked, no mobile phone field	
+        formType.text_signup_location = "lightbox-" + utag_data.page_name; //Unsubscribe not checked, no mobile phone field
       } else if (!emailUnsubscribeChecked) {
         formType.event_name = 'frm_ltbx_emt_emo_submit';
         formType.form_type = 'email_signup'; //Unsubscribe checked, mobile phone field exists and optin checked
@@ -1357,7 +1357,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } else if (mobilePhoneField) {
         formType.event_name = 'frm_ltbx_emt_txt_submit';
         formType.form_type = 'email_text_signup';
-        formType.text_signup_location = "lightbox-" + utag_data.page_name; //Unsubscribe checked, mobile phone field doesn't exist	
+        formType.text_signup_location = "lightbox-" + utag_data.page_name; //Unsubscribe checked, mobile phone field doesn't exist
       } else {
         formType.event_name = 'frm_ltbx_emt_submit';
         formType.form_type = 'email_signup';
@@ -1574,7 +1574,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var actionCenter = function actionCenter() {
-    // Make image blocks clickable    
+    // Make image blocks clickable
     getAll('.card').forEach(function (el) {
       var link = el.querySelector('a[data-type="campaignpage_url_pb"]');
       var img = el.querySelector('.en__component--imageblock img');
@@ -1998,7 +1998,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         } else {
           checkOptIns();
         }
-      }); // For anonymous actions, or actions that don't require an email address, 
+      }); // For anonymous actions, or actions that don't require an email address,
       // the database still needs an email address to be able to store the data.
 
       generateEmailButton.addEventListener('click', function (e) {
@@ -2131,7 +2131,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     if (recurringStatus) {
-      recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';
+      if (window.navigator.userLanguage === 'es-MX' || window.navigator.language === 'es-MX' || window.location.href.indexOf('&locale=es-MX') > -1) {
+        recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Mensual' : 'Una vez';
+      } else {
+        recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';
+      }
     }
   };
   /**
