@@ -2115,7 +2115,7 @@
     }
 
     if (recurringStatus) {
-  		if (window.navigator.userLanguage === 'es-MX' || window.navigator.language === 'es-MX' || window.location.href.indexOf('locale=es-MX') > -1) {
+  		if (window.navigator.userLanguage === 'es-MX' || window.navigator.language === 'es-MX' || window.location.href.indexOf('locale=es-MX') > -1 || pageJson.locale === 'es-MX') {
   			recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Mensual' : 'Una vez';
   		} else {
   			recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';
