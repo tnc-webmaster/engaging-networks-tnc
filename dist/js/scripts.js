@@ -1660,17 +1660,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         });
       }
     }
-  };
+  }; // const trackFormSubmit = () => {
+  //   if (typeof utag !== 'undefined') {
+  //     utag.link({
+  //       'event_name': 'form_submit',
+  //       'form_type': pageJson.pageType,
+  //       'form_name': utag_data.page_name
+  //     });
+  //   }
+  // };
 
-  var trackFormSubmit = function trackFormSubmit() {
-    if (typeof utag !== 'undefined') {
-      utag.link({
-        'event_name': 'form_submit',
-        'form_type': pageJson.pageType,
-        'form_name': utag_data.page_name
-      });
-    }
-  };
 
   var mobilePhone = function mobilePhone() {
     var initPhoneFields = function initPhoneFields() {
@@ -1975,12 +1974,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
 
         sessionStorage.setItem('mobilePhoneData', JSON.stringify(mobilePhoneData));
-      } // Maybe track form submit
-
-
-      if (trackSubmit) {
-        trackFormSubmit();
-      } // Maybe display upsell modal
+      } // // Maybe track form submit
+      // if (trackSubmit) {
+      //   trackFormSubmit();
+      // }
+      // Maybe display upsell modal
 
 
       if (hasUpsell && donationAmount >= 5 && donationAmount <= 100 && !monthlyCheckbox.checked) {
@@ -2056,6 +2054,27 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
   /**
+   * Track data capture submits
+   */
+
+
+  var dataCaptureTracking = function dataCaptureTracking() {
+    if (pageJson.pageType === 'otherdatacapture') {
+      theForm.addEventListener('submit', function (e) {
+        setTimeout(function () {
+          if (formIsValid() && typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'frm_emt_submit',
+              'form_type': 'otherdatacapture',
+              'form_name': utag_data.page_name.slice(0, -2),
+              'email_signup_location': 'otherdatacapture'
+            });
+          }
+        }, 100);
+      });
+    }
+  };
+  /**
    * Track social share clicks
    */
 
@@ -2084,12 +2103,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         setTimeout(function () {
           if (formIsValid() && typeof utag !== 'undefined') {
             utag.link({
-              'event_name': 'form_submit',
-              'form_type': 'advocacy',
+              'event_name': 'frm_emt_submit',
+              'form_type': pageJson.pageType,
               'form_name': utag_data.page_name.slice(0, -2),
               'action_id': utag_data.form_name,
               'action_type': pageJson.pageType,
-              'zip_code': document.getElementById('en__field_supporter_postcode') ? document.getElementById('en__field_supporter_postcode').value : ''
+              'zip_code': document.getElementById('en__field_supporter_postcode') ? document.getElementById('en__field_supporter_postcode').value : '',
+              'email_signup_location': pageJson.pageType
             });
           }
         }, 100);
@@ -2988,6 +3008,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       mobilePhone();
       validation();
       formSubmit();
+      dataCaptureTracking();
       socialShareTracking();
       advocacyTracking();
       footerTracking();
