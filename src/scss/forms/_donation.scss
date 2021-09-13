@@ -146,7 +146,8 @@
   margin-top: 2rem;
 }
 
-.en__field--tip-jar {
+.en__field--tip-jar,
+.en__field--feeCover {
   border: 1px solid $gray-500;
   margin-top: 1.333rem;
   padding: 1.25rem;
@@ -157,7 +158,8 @@
 }
 
 .js-total-gift,
-.js-total-gift--tipjar {
+.js-total-gift--tipjar,
+[data-token="amount-total"] {
   font-weight: 700;
   p & {
     display: block;

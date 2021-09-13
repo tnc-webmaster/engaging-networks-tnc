@@ -29,7 +29,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var hiddenWebOnlyClass = 'd-none--web';
   var paypalSelectedClass = 'paypal-selected';
   var photoInfoClass = 'photo-info';
-  var popoverClass = 'popover';
   var popoverContainerClass = 'popover-container';
   var validClass = 'is-active';
   var validationFailedClass = 'en__field--validationFailed';
@@ -65,9 +64,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var supporterEmailAddressSelector = '#en__field_supporter_emailAddress';
   var supporterStateSelector = '#en__field_supporter_region';
   var supporterZipCodeSelector = '#en__field_supporter_postcode';
-  var tipJarSelector = '.en__field--tip-jar';
   var tipJarAmountSelector = '.js-total-gift--tipjar';
-  var tipJarToggle = '.tip-jar-toggle';
   var totalAmountSelector = '.js-total-gift';
   var tributeOptionsSelector = 'select#en__field_transaction_trbopts'; // Custom events
 
@@ -100,7 +97,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var el = null;
     var els = null;
     var _parent = null;
-    var wrap = null;
     var stateProvinceChoices = null;
     var honoreeStateProvinceChoices = null;
     var informStateProvinceChoices = null;
@@ -134,11 +130,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     var resetSelect = function resetSelect(_choices, e) {
       var selectOne = _choices.passedElement.element;
-      var selectValue = selectOne.value;
-      var html = '';
-      var index = 1; // Only do this for state selects
-      //if (_choices._baseId.indexOf('region') > -1) {
-      // Clear the native select
+      var selectValue = selectOne.value; // Clear the native select
 
       selectOne.innerHTML = ''; //Remove the duplicate that this method generates at bottom of list
 
@@ -159,7 +151,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       selectOne.choices = _choices; // Listen for an autofill (change event)
 
       selectOne.removeEventListener('change', handleChoicesChange);
-      selectOne.addEventListener('change', handleChoicesChange); //}
+      selectOne.addEventListener('change', handleChoicesChange);
     };
     /**
      * Creates choices.js instance
@@ -201,7 +193,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             _choices.choiceList.element.id = choicesId;
           } // restrict the search field to one character to avoid false results
           //_choices.input.element.setAttribute('maxlength', '1');
-          // role=textbox is unneccesary in our setup
+          // role=textbox is unnecessary in our setup
 
 
           getAll('[role="textbox"]', _choices.containerOuter.element).forEach(function (el) {
@@ -865,170 +857,41 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var bequestIframe = theForm.querySelector('.iframe--bequest iframe');
     var bequestModal = theForm.querySelector('.modal--bequest');
     var donationAmt = theForm.querySelector('.en__field--donationAmt');
+    var feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]');
     var giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     var otherAmountInput = theForm.querySelector(otherAmountInputSelector);
     var recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq');
-    var tipJar = theForm.querySelector('.en__field--tip-jar');
     var donationAmtRadios = null;
     var modal = null;
-    var selectedAmount = getSelectedAmount();
-    var tipJarCheckbox = null;
-    var tipJarUserChecked = false;
+    var feeCoverUserChecked = false;
 
-    var disableTipJar = function disableTipJar() {
-      restoreDonationAmounts();
-      updateTotalGift(getOriginalDonationAmount());
-      addClass(tipJar, disabledClass);
-    };
-
-    var enableTipJar = function enableTipJar() {
-      removeClass(tipJar, disabledClass);
-    };
-
-    var increaseDonationAmounts = function increaseDonationAmounts() {
-      if (otherAmountInput) {
-        if (otherAmountInput.value !== '') {
-          otherAmountInput.dataset.tipjar = getTipJar(otherAmountInput.value);
-          return;
-        }
-      }
-
-      getAll('.en__field__input--radio:not([value=""])', donationAmt).forEach(function (el) {
-        if (!el.dataset.original) {
-          el.dataset.original = el.value.replace(/\,/g, '');
-        }
-
-        el.value = getTipJar(el.dataset.original).replace(/\,/g, '');
-      });
-    };
-
-    var restoreDonationAmounts = function restoreDonationAmounts() {
-      getAll('.en__field__input--radio:not([value=""])', donationAmt).forEach(function (el) {
-        el.value = el.dataset.original ? el.dataset.original : el.value.replace(/\,/g, '');
-      });
-    };
-
-    var updateDonationAmounts = function updateDonationAmounts(el, fieldType) {
-      if (el.checked) {
-        increaseDonationAmounts();
-      } else {
-        restoreDonationAmounts();
-      }
-    };
-
-    var maybeUncheckTipJar = function maybeUncheckTipJar(amt) {
-      if (tipJarCheckbox.checked && !tipJarUserChecked && !isNaN(amt)) {
+    var maybeUncheckFeeCover = function maybeUncheckFeeCover(amt) {
+      if (feeCoverCheckbox.checked && !feeCoverUserChecked && !isNaN(amt)) {
         if (Number(amt) >= 1000) {
-          tipJarCheckbox.checked = false;
+          feeCoverCheckbox.checked = false;
         }
       }
     };
 
     var handleDonationAmountChange = function handleDonationAmountChange(e) {
-      if (tipJarCheckbox) {
-        maybeUncheckTipJar(getOriginalDonationAmount());
-        updateDonationAmounts(tipJarCheckbox);
-        updateTipJar(getTipJar(getOriginalDonationAmount()));
-        updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : e.target.value);
-      } else {
-        updateTotalGift(e.target.value);
-      } // Work around for mobile pay not getting latest amount
-
-
-      if (e.type === 'click') {
-        doubleClickAmount(e.target);
-      }
-    };
-
-    var doubleClickAmount = function doubleClickAmount(el) {
-      // Don't want to get stuck in an endless loop
-      donationAmtRadios.forEach(function (el) {
-        el.removeEventListener('click', handleDonationAmountChange, {
-          once: true
-        });
-      });
-      setTimeout(function () {
-        if (el) {
-          // Re-clicking the button makes mobile pay get the correct amount
-          el.checked = false;
-          el.click();
-        } // Re add the click handler
-
-
-        donationAmtRadios.forEach(function (el) {
-          el.addEventListener('click', handleDonationAmountChange, {
-            once: true
-          });
-        });
-      }, 100);
-    };
-
-    var setDefaultAmount = function setDefaultAmount(el) {
-      var amountButtons = getAll('[name="transaction.donationAmt"]');
-      var index = Array.prototype.indexOf.call(document.querySelectorAll('[name="transaction.recurrfreq"]'), el);
-      var fieldId = theForm.querySelector('.en__field--withOther') ? theForm.querySelector('.en__field--withOther').getAttribute('class').match(/\d+/g) : null;
-      var altList = fieldId[0] && EngagingNetworks.altLists ? EngagingNetworks.altLists.find(function (list) {
-        return list.id === Number(fieldId[0]);
-      }) : null;
-      var defaultAmount = null;
-      var foundAmount = null;
-
-      if (index !== -1 && altList) {
-        altList = altList.data[index];
-
-        if (altList) {
-          defaultAmount = altList.data.find(function (item) {
-            return item.selected === true;
-          });
-
-          if (defaultAmount) {
-            defaultAmount = defaultAmount.value;
-            foundAmount = amountButtons.find(function (el) {
-              return parseInt(el.value) === parseInt(defaultAmount);
-            });
-
-            if (foundAmount) {
-              foundAmount.click();
-            }
-          }
-        }
+      if (feeCoverCheckbox) {
+        maybeUncheckFeeCover(getOriginalDonationAmount());
       }
     };
 
     var initDonationAmount = function initDonationAmount() {
       donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
-      selectedAmount = getSelectedAmount(); // Display tip jar amount
+      selectedAmount = getSelectedAmount();
+      donationAmtRadios.forEach(function (el) {
+        el.addEventListener('click', handleDonationAmountChange);
+      });
 
-      el = theForm.querySelector(tipJarSelector);
+      if (feeCoverCheckbox) {
+        feeCoverCheckbox.addEventListener('click', function (e) {
+          feeCoverUserChecked = true;
+        });
+      } // Listen for other amount change
 
-      if (el) {
-        updateTipJar(getTipJar(getOriginalDonationAmount()));
-        updateTotalGift(getTipJar(getOriginalDonationAmount()));
-      } else {
-        updateTotalGift(getOriginalDonationAmount());
-      } // Maybe a tip jar?
-
-
-      if (tipJar && tipJarPct) {
-        tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox'); // Handle tip jar click
-
-        tipJarCheckbox.addEventListener('click', function (e) {
-          tipJarUserChecked = true;
-          updateDonationAmounts(e.target);
-          updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount()); // Work around for mobile pay not getting latest amount
-
-          doubleClickAmount(selectedAmount || null);
-        }); // Initialize tip jar
-
-        maybeUncheckTipJar(getOriginalDonationAmount());
-
-        if (tipJarCheckbox.checked) {
-          updateDonationAmounts(tipJarCheckbox);
-        }
-      } // Work around for mobile pay not getting latest amount
-
-
-      doubleClickAmount(selectedAmount || null); // Listen for other amount change
 
       if (otherAmountInput) {
         otherAmountInput.addEventListener('input', handleDonationAmountChange);
@@ -1045,7 +908,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
               setTimeout(function () {
                 initDonationAmount();
                 window.initMasks();
-                setDefaultAmount(e.target);
               }, 500);
             });
           });
@@ -1077,7 +939,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
         resizeIframe(bequestIframe);
       }); // Listen for submitted message from iframe
-      // window.addEventListener('message', e => {
 
       window.addEventListener('iframeSubmitted', function (e) {
         // Fire tracking
@@ -1309,7 +1170,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           el = document.getElementById('en__field_supporter_address1');
 
           if (el) {
-            // CSS will hide eveything below .last-visible except the submit block
+            // CSS will hide everything below .last-visible except the submit block
             addClass(getClosestEl(el, '.en__component--formblock'), 'last-visible');
           }
         }
@@ -1372,7 +1233,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var isInvalid = false;
     var formType = null;
     var el = null;
-    var score = 0;
 
     var getFormType = function getFormType(form) {
       var emailUnsubscribeChecked = form.querySelector('.en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox') ? form.querySelector('.en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox').checked : false;
@@ -1413,7 +1273,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
     if (leadGenModal) {
-      // Set placholder on mobile phone field so it can be slected with :placeholder-shown
+      // Set placeholder on mobile phone field so it can be selected with :placeholder-shown
       el = leadGenModal.querySelector('#en__field_supporter_phoneNumber2');
 
       if (el) {
@@ -1677,7 +1537,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var mobilePhoneInput = theForm.querySelector(mobilePhoneInputSelector);
       var homePhoneInput = theForm.querySelector(homePhoneInputSelector);
       var mobileSameAsHomeCheckbox = theForm.querySelector(mobilePhoneSameAsHomeCheckboxSelector);
-      var submitButton = theForm.querySelector('.en__submit button');
 
       if (mobilePhoneInput.value.length && homePhoneInput.value.length && homePhoneInput.value !== mobilePhoneInput.value && mobileSameAsHomeCheckbox.checked) {
         mobileSameAsHomeCheckbox.click();
@@ -1787,10 +1646,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         e.preventDefault();
       }); // No browser form validation
 
-      theForm.setAttribute('novalidate', true); // Allow form submit with invalid fields
-      //theForm.addEventListener('submit', e => {
-      //  e.preventDefault();
-      //});
+      theForm.setAttribute('novalidate', true);
     }); // Processing error don't always trigger a reload
 
     var errorList = theForm.querySelector('.en__errorList');
@@ -1849,23 +1705,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var donationAmount = parseFloat(getTotalDonationAmount());
       var ecardFields = theForm.querySelector(ecardFieldsSelector);
       var ecardSelect = theForm.querySelector(ecardSelectSelector);
+      var feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]');
       var mobilePhoneNumber = theForm.querySelector('.en__field--phoneNumber2:not(:placeholder-shown) .en__field__input');
       var mobilePhoneOptIn = theForm.querySelector('.en__field--mobile-text-opt-in .en__field__input--checkbox:checked');
-      var tipJar = theForm.querySelector('.en__field--tip-jar');
       var trackSubmit = theForm.querySelector('.track-submit');
       var donationData = {};
       var ecardData = sessionStorage.getItem('ecardData');
       var extraAmount = 0;
       var mobilePhoneData = {};
       var upsellDone = false;
-
-      var tipJarSelected = function tipJarSelected() {
-        if (!tipJar) {
-          return false;
-        }
-
-        return tipJar.querySelector('.en__field__input--checkbox').checked;
-      };
 
       var doUpsell = function doUpsell() {
         if (!upsellDone) {
@@ -1916,20 +1764,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       if (address2) {
         address2.value = address2.value === '' ? '-' : address2.value;
       } // Set other amount field to tip jar amount if needed
+      // if (otherAmountInput && !getSelectedAmount()) {
+      //   if (otherAmountInput.value !== '') {
+      //     otherAmountOriginal = otherAmountInput.value;
+      //     otherAmountInput.value = (tipJarSelected() && otherAmountInput.dataset.tipjar) ? otherAmountInput.dataset.tipjar : otherAmountInput.value;
+      //   }
+      // }
 
 
-      if (otherAmountInput && !getSelectedAmount()) {
-        if (otherAmountInput.value !== '') {
-          otherAmountOriginal = otherAmountInput.value;
-          otherAmountInput.value = tipJarSelected() && otherAmountInput.dataset.tipjar ? otherAmountInput.dataset.tipjar : otherAmountInput.value;
-        }
-      }
-
-      if (tipJar) {
-        // Calculate extra tip jar amount for data layer
-        if (tipJarSelected()) {
-          var totalDonationAmount = getTotalDonationAmount();
-          var originalDonationAmount = otherAmountOriginal || getOriginalDonationAmount();
+      if (feeCoverCheckbox) {
+        // Calculate extra fee cover amount for data layer
+        if (feeCoverCheckbox.checked) {
+          var totalDonationAmount = Number(theForm.querySelector('[data-token="amount-total"]').textContent.replace(/\$/, '')).toFixed(2);
+          var originalDonationAmount = getOriginalDonationAmount();
           extraAmount = (totalDonationAmount - originalDonationAmount).toFixed(2);
           donationData.originalDonationAmount = originalDonationAmount;
         }
@@ -2219,7 +2066,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var thermometers = function thermometers() {
-    // Thermometer goals need to dynaically increase once a certain "raised" is reached
+    // Thermometer goals need to dynamically increase once a certain "raised" is reached
     getAll('.enWidget--progressBar').forEach(function (el) {
       var fill = el.querySelector('.enWidget__fill');
       var raisedPct = parseInt(fill.style.width);
@@ -2254,7 +2101,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
    * Adds aria-expanded attribute to collapsible elements
    *
    * @param {node} el Target element
-   * @param {nodeList} collapsibles List of collapsibles in same comnponent as target
+   * @param {nodeList} collapsibles List of collapsibles in same component as target
    */
 
 
@@ -2279,7 +2126,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var addAriaLabelledBy = function addAriaLabelledBy(el) {
-    var maybeLabel = el.firstElementChild; //if (maybeLabel.nodeName.toLowerCase() === 'label') {
+    var maybeLabel = el.firstElementChild;
 
     if (hasClass(maybeLabel, 'en__field__label')) {
       setTimeout(function () {
@@ -2623,7 +2470,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   /**
    * Returns Donation amount with tip jar added
    *
-   * @param {string} amt Daontion amount to add tip to
+   * @param {string} amt Donation amount to add tip to
    */
 
 
@@ -2768,7 +2615,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
   /**
-   * Dynamiccaly resizes iframe to fit content
+   * Dynamically resizes iframe to fit content
    *
    * @param {node} el The iframe to resize
    */
