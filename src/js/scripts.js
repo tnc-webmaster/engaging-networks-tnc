@@ -841,6 +841,7 @@
     const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]');
     const giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
+    const recurrenceCheckbox = theForm.querySelector('[name="transaction.recurrpay"][type="checkbox"]');
     const recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq');
     let donationAmtRadios = null;
     let modal = null;
@@ -880,19 +881,23 @@
       }
     };
 
+    resetDonationAmount = () => {
+      setTimeout(() => {
+        initDonationAmount();
+        // window.initMasks();
+      }, 500);
+    };
+
     if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
       if (donationAmt) {
         initDonationAmount();
         // Listen for recurrence change
         if (recurrenceFrequency) {
           getAll('.en__field__input--radio', recurrenceFrequency).forEach(el => {
-            el.addEventListener('click', e => {
-              setTimeout(() => {
-                initDonationAmount();
-                window.initMasks();
-              }, 500);
-            });
+            el.addEventListener('click', resetDonationAmount);
           });
+        } else if (recurrenceCheckbox) {
+          recurrenceCheckbox.addEventListener('click', resetDonationAmount);
         }
       }
 
@@ -1745,18 +1750,10 @@
         address2.value = address2.value === '' ? '-' : address2.value;
       }
 
-      // Set other amount field to tip jar amount if needed
-      // if (otherAmountInput && !getSelectedAmount()) {
-      //   if (otherAmountInput.value !== '') {
-      //     otherAmountOriginal = otherAmountInput.value;
-      //     otherAmountInput.value = (tipJarSelected() && otherAmountInput.dataset.tipjar) ? otherAmountInput.dataset.tipjar : otherAmountInput.value;
-      //   }
-      // }
-
       if (feeCoverCheckbox) {
         // Calculate extra fee cover amount for data layer
         if (feeCoverCheckbox.checked) {
-          const totalDonationAmount = Number(theForm.querySelector('[data-token="amount-total"]').textContent.replace(/\$/, '')).toFixed(2);
+          const totalDonationAmount = Number(theForm.querySelector('[data-token="amount-total"]').textContent.replace(/\$/, '').replace(/\,/g, '')).toFixed(2);
           const originalDonationAmount = getOriginalDonationAmount();
 
           extraAmount = (totalDonationAmount - originalDonationAmount).toFixed(2);
