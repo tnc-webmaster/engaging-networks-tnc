@@ -1845,7 +1845,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     };
 
     window.enOnValidate = function () {
-      var address2 = document.getElementById('en__field_supporter_address2');
       var donationAmount = parseFloat(getTotalDonationAmount());
       var ecardFields = theForm.querySelector(ecardFieldsSelector);
       var ecardSelect = theForm.querySelector(ecardSelectSelector);
@@ -1910,12 +1909,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           });
           upsellDone = true;
         }
-      }; // Set Address 2 value to '-' if left blank by user
-
-
-      if (address2) {
-        address2.value = address2.value === '' ? '-' : address2.value;
-      } // Set other amount field to tip jar amount if needed
+      }; // Set other amount field to tip jar amount if needed
 
 
       if (otherAmountInput && !getSelectedAmount()) {
