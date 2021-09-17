@@ -16,7 +16,6 @@
   const hiddenWebOnlyClass = 'd-none--web';
   const paypalSelectedClass = 'paypal-selected';
   const photoInfoClass = 'photo-info';
-  const popoverClass = 'popover';
   const popoverContainerClass = 'popover-container';
   const validClass = 'is-active';
   const validationFailedClass = 'en__field--validationFailed';
@@ -53,9 +52,7 @@
   const supporterEmailAddressSelector = '#en__field_supporter_emailAddress';
   const supporterStateSelector = '#en__field_supporter_region';
   const supporterZipCodeSelector = '#en__field_supporter_postcode';
-  const tipJarSelector = '.en__field--tip-jar';
   const tipJarAmountSelector = '.js-total-gift--tipjar';
-  const tipJarToggle = '.tip-jar-toggle';
   const totalAmountSelector = '.js-total-gift';
   const tributeOptionsSelector = 'select#en__field_transaction_trbopts';
 
@@ -93,7 +90,6 @@
     let el = null;
     let els = null;
     let _parent = null;
-    let wrap = null;
     let stateProvinceChoices = null;
     let honoreeStateProvinceChoices = null;
     let informStateProvinceChoices = null;
@@ -128,11 +124,7 @@
     const resetSelect = (_choices, e) => {
       const selectOne = _choices.passedElement.element;
       const selectValue = selectOne.value;
-      let html = '';
-      let index = 1;
 
-      // Only do this for state selects
-      //if (_choices._baseId.indexOf('region') > -1) {
       // Clear the native select
       selectOne.innerHTML = '';
       //Remove the duplicate that this method generates at bottom of list
@@ -154,7 +146,6 @@
       // Listen for an autofill (change event)
       selectOne.removeEventListener('change', handleChoicesChange);
       selectOne.addEventListener('change', handleChoicesChange);
-      //}
     };
 
     /**
@@ -194,7 +185,7 @@
           // restrict the search field to one character to avoid false results
           //_choices.input.element.setAttribute('maxlength', '1');
 
-          // role=textbox is unneccesary in our setup
+          // role=textbox is unnecessary in our setup
           getAll('[role="textbox"]', _choices.containerOuter.element).forEach(el => {
             el.removeAttribute('role');
           });
@@ -847,159 +838,54 @@
     const bequestIframe = theForm.querySelector('.iframe--bequest iframe');
     const bequestModal = theForm.querySelector('.modal--bequest');
     const donationAmt = theForm.querySelector('.en__field--donationAmt');
+    const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]');
     const giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
+    const recurrenceCheckbox = theForm.querySelector('[name="transaction.recurrpay"][type="checkbox"]');
     const recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq');
-    const tipJar = theForm.querySelector('.en__field--tip-jar');
     let donationAmtRadios = null;
     let modal = null;
-    let selectedAmount = getSelectedAmount();
-    let tipJarCheckbox = null;
-    let tipJarUserChecked = false;
+    let feeCoverUserChecked = false;
 
-    const disableTipJar = () => {
-      restoreDonationAmounts();
-      updateTotalGift(getOriginalDonationAmount());
-      addClass(tipJar, disabledClass);
-    };
-
-    const enableTipJar = () => {
-      removeClass(tipJar, disabledClass);
-    };
-
-    const increaseDonationAmounts = () => {
-      if (otherAmountInput) {
-        if (otherAmountInput.value !== '') {
-          otherAmountInput.dataset.tipjar = getTipJar(otherAmountInput.value);
-          return;
-        }
-      }
-
-      getAll('.en__field__input--radio:not([value=""])', donationAmt).forEach(el => {
-        if (!el.dataset.original) {
-          el.dataset.original = el.value.replace(/\,/g, '');
-        }
-        el.value = getTipJar(el.dataset.original).replace(/\,/g, '');
-      });
-    };
-
-    const restoreDonationAmounts = () => {
-      getAll('.en__field__input--radio:not([value=""])', donationAmt).forEach(el => {
-        el.value = el.dataset.original ? el.dataset.original : el.value.replace(/\,/g, '');
-      });
-    };
-
-    const updateDonationAmounts = (el, fieldType) => {
-      if (el.checked) {
-        increaseDonationAmounts();
-      } else {
-        restoreDonationAmounts();
-      }
-    };
-
-    const maybeUncheckTipJar = (amt) => {
-      if (tipJarCheckbox.checked && !tipJarUserChecked && !isNaN(amt)) {
+    const maybeUncheckFeeCover = (amt) => {
+      if (feeCoverCheckbox.checked && !feeCoverUserChecked && !isNaN(amt)) {
         if (Number(amt) >= 1000) {
-          tipJarCheckbox.checked = false;
+          feeCoverCheckbox.checked = false;
         }
       }
     };
 
     const handleDonationAmountChange = (e) => {
-      if (tipJarCheckbox) {
-        maybeUncheckTipJar(getOriginalDonationAmount());
-        updateDonationAmounts(tipJarCheckbox);
-        updateTipJar(getTipJar(getOriginalDonationAmount()));
-        updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : e.target.value);
-      } else {
-        updateTotalGift(e.target.value);
-      }
-      // Work around for mobile pay not getting latest amount
-      if (e.type === 'click') {
-        doubleClickAmount(e.target);
-      }
-    };
-
-    const doubleClickAmount = (el) => {
-      // Don't want to get stuck in an endless loop
-      donationAmtRadios.forEach(el => {
-        el.removeEventListener('click', handleDonationAmountChange, { once: true });
-      });
-      setTimeout(function() {
-        if (el) {
-          // Re-clicking the button makes mobile pay get the correct amount
-          el.checked = false;
-          el.click();
-        }
-        // Re add the click handler
-        donationAmtRadios.forEach(el => {
-          el.addEventListener('click', handleDonationAmountChange, { once: true });
-        });
-      }, 100);
-    };
-
-    const setDefaultAmount = (el) => {
-      const amountButtons = getAll('[name="transaction.donationAmt"]');
-      const index = Array.prototype.indexOf.call(document.querySelectorAll('[name="transaction.recurrfreq"]'), el);
-      const fieldId = theForm.querySelector('.en__field--withOther') ? theForm.querySelector('.en__field--withOther').getAttribute('class').match(/\d+/g) : null;
-      let altList = fieldId[0] && EngagingNetworks.altLists ? EngagingNetworks.altLists.find(list => list.id === Number(fieldId[0])) : null;
-      let defaultAmount = null;
-      let foundAmount = null;
-
-      if (index !== -1 && altList) {
-        altList = altList.data[index];
-        if (altList) {
-          defaultAmount = altList.data.find(item => item.selected === true);
-          if (defaultAmount) {
-            defaultAmount = defaultAmount.value;
-            foundAmount = amountButtons.find(el => parseInt(el.value) === parseInt(defaultAmount));
-            if (foundAmount) {
-              foundAmount.click();
-            }
-          }
-        }
+      if (feeCoverCheckbox) {
+        maybeUncheckFeeCover(getOriginalDonationAmount());
       }
     };
 
     const initDonationAmount = () => {
       donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
       selectedAmount = getSelectedAmount();
-      // Display tip jar amount
-      el = theForm.querySelector(tipJarSelector);
-      if (el) {
-        updateTipJar(getTipJar(getOriginalDonationAmount()));
-        updateTotalGift(getTipJar(getOriginalDonationAmount()));
-      } else {
-        updateTotalGift(getOriginalDonationAmount());
-      }
 
-      // Maybe a tip jar?
-      if (tipJar && tipJarPct) {
-        tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox');
-        // Handle tip jar click
-        tipJarCheckbox.addEventListener('click', e => {
-          tipJarUserChecked = true;
-          updateDonationAmounts(e.target);
-          updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount());
+      donationAmtRadios.forEach(el => {
+        el.addEventListener('click', handleDonationAmountChange);
+      });
 
-          // Work around for mobile pay not getting latest amount
-          doubleClickAmount(selectedAmount || null);
+      if (feeCoverCheckbox) {
+        feeCoverCheckbox.addEventListener('click', e => {
+          feeCoverUserChecked = true;
         });
-
-        // Initialize tip jar
-        maybeUncheckTipJar(getOriginalDonationAmount());
-        if (tipJarCheckbox.checked) {
-          updateDonationAmounts(tipJarCheckbox);
-        }
       }
-
-      // Work around for mobile pay not getting latest amount
-      doubleClickAmount(selectedAmount || null);
 
       // Listen for other amount change
       if (otherAmountInput) {
         otherAmountInput.addEventListener('input', handleDonationAmountChange);
       }
+    };
+
+    resetDonationAmount = () => {
+      setTimeout(() => {
+        initDonationAmount();
+        // window.initMasks();
+      }, 500);
     };
 
     if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
@@ -1008,14 +894,10 @@
         // Listen for recurrence change
         if (recurrenceFrequency) {
           getAll('.en__field__input--radio', recurrenceFrequency).forEach(el => {
-            el.addEventListener('click', e => {
-              setTimeout(() => {
-                initDonationAmount();
-                window.initMasks();
-                setDefaultAmount(e.target);
-              }, 500);
-            });
+            el.addEventListener('click', resetDonationAmount);
           });
+        } else if (recurrenceCheckbox) {
+          recurrenceCheckbox.addEventListener('click', resetDonationAmount);
         }
       }
 
@@ -1044,7 +926,6 @@
       });
 
       // Listen for submitted message from iframe
-      // window.addEventListener('message', e => {
       window.addEventListener('iframeSubmitted', e => {
         // Fire tracking
         if (typeof utag !== 'undefined') {
@@ -1280,7 +1161,7 @@
           // Find the form block with address info
           el = document.getElementById('en__field_supporter_address1');
           if (el) {
-            // CSS will hide eveything below .last-visible except the submit block
+            // CSS will hide everything below .last-visible except the submit block
             addClass(getClosestEl(el, '.en__component--formblock'), 'last-visible');
           }
         }
@@ -1341,7 +1222,6 @@
     let isInvalid = false;
     let formType = null;
     let el = null;
-    let score = 0;
 
     const getFormType = (form) => {
       const emailUnsubscribeChecked = form.querySelector('.en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox') ? form.querySelector('.en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox').checked : false;
@@ -1394,7 +1274,7 @@
 
     // Maybe display lead gen modal
     if (leadGenModal) {
-      // Set placholder on mobile phone field so it can be slected with :placeholder-shown
+      // Set placeholder on mobile phone field so it can be selected with :placeholder-shown
       el = leadGenModal.querySelector('#en__field_supporter_phoneNumber2');
       if (el) {
         el.setAttribute('placeholder', ' ');
@@ -1647,7 +1527,6 @@
       let mobilePhoneInput = theForm.querySelector(mobilePhoneInputSelector);
       let homePhoneInput = theForm.querySelector(homePhoneInputSelector);
       let mobileSameAsHomeCheckbox = theForm.querySelector(mobilePhoneSameAsHomeCheckboxSelector);
-      let submitButton = theForm.querySelector('.en__submit button');
 
       if (mobilePhoneInput.value.length && homePhoneInput.value.length && homePhoneInput.value !== mobilePhoneInput.value && mobileSameAsHomeCheckbox.checked) {
         mobileSameAsHomeCheckbox.click();
@@ -1754,11 +1633,6 @@
 
       // No browser form validation
       theForm.setAttribute('novalidate', true);
-
-      // Allow form submit with invalid fields
-      //theForm.addEventListener('submit', e => {
-      //  e.preventDefault();
-      //});
     });
 
     // Processing error don't always trigger a reload
@@ -1818,22 +1692,15 @@
       const donationAmount = parseFloat(getTotalDonationAmount());
       const ecardFields = theForm.querySelector(ecardFieldsSelector);
       const ecardSelect = theForm.querySelector(ecardSelectSelector);
+      const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]');
       const mobilePhoneNumber = theForm.querySelector('.en__field--phoneNumber2:not(:placeholder-shown) .en__field__input');
       const mobilePhoneOptIn = theForm.querySelector('.en__field--mobile-text-opt-in .en__field__input--checkbox:checked');
-      const tipJar = theForm.querySelector('.en__field--tip-jar');
       const trackSubmit = theForm.querySelector('.track-submit');
       let donationData = {};
       let ecardData = sessionStorage.getItem('ecardData');
       let extraAmount = 0;
       let mobilePhoneData = {};
       let upsellDone = false;
-
-      const tipJarSelected = () => {
-        if (!tipJar) {
-          return false;
-        }
-        return tipJar.querySelector('.en__field__input--checkbox').checked;
-      };
 
       const doUpsell = () => {
         if (!upsellDone) {
@@ -1883,19 +1750,11 @@
         address2.value = address2.value === '' ? '-' : address2.value;
       }
 
-      // Set other amount field to tip jar amount if needed
-      if (otherAmountInput && !getSelectedAmount()) {
-        if (otherAmountInput.value !== '') {
-          otherAmountOriginal = otherAmountInput.value;
-          otherAmountInput.value = (tipJarSelected() && otherAmountInput.dataset.tipjar) ? otherAmountInput.dataset.tipjar : otherAmountInput.value;
-        }
-      }
-
-      if (tipJar) {
-        // Calculate extra tip jar amount for data layer
-        if (tipJarSelected()) {
-          const totalDonationAmount = getTotalDonationAmount();
-          const originalDonationAmount = otherAmountOriginal || getOriginalDonationAmount();
+      if (feeCoverCheckbox) {
+        // Calculate extra fee cover amount for data layer
+        if (feeCoverCheckbox.checked) {
+          const totalDonationAmount = Number(theForm.querySelector('[data-token="amount-total"]').textContent.replace(/\$/, '').replace(/\,/g, '')).toFixed(2);
+          const originalDonationAmount = getOriginalDonationAmount();
 
           extraAmount = (totalDonationAmount - originalDonationAmount).toFixed(2);
           donationData.originalDonationAmount = originalDonationAmount;
@@ -2189,7 +2048,7 @@
    * Thermometer enhancements
    */
   const thermometers = () => {
-    // Thermometer goals need to dynaically increase once a certain "raised" is reached
+    // Thermometer goals need to dynamically increase once a certain "raised" is reached
     getAll('.enWidget--progressBar').forEach(el => {
       const fill = el.querySelector('.enWidget__fill');
       const raisedPct = parseInt(fill.style.width);
@@ -2224,7 +2083,7 @@
    * Adds aria-expanded attribute to collapsible elements
    *
    * @param {node} el Target element
-   * @param {nodeList} collapsibles List of collapsibles in same comnponent as target
+   * @param {nodeList} collapsibles List of collapsibles in same component as target
    */
   const addAriaCollapsedAttr = (el, collapsibles) => {
     if (el) {
@@ -2247,7 +2106,6 @@
   const addAriaLabelledBy = el => {
     const maybeLabel = el.firstElementChild;
 
-    //if (maybeLabel.nodeName.toLowerCase() === 'label') {
     if (hasClass(maybeLabel, 'en__field__label')) {
       setTimeout(function() {
         labelId = `label${generateId()}`;
@@ -2561,7 +2419,7 @@
   /**
    * Returns Donation amount with tip jar added
    *
-   * @param {string} amt Daontion amount to add tip to
+   * @param {string} amt Donation amount to add tip to
    */
   const getTipJar = amt => {
     if (typeof amt === 'string') {
@@ -2687,7 +2545,7 @@
   };
 
   /**
-   * Dynamiccaly resizes iframe to fit content
+   * Dynamically resizes iframe to fit content
    *
    * @param {node} el The iframe to resize
    */
