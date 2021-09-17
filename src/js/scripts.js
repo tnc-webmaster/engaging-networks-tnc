@@ -52,7 +52,6 @@
   const supporterEmailAddressSelector = '#en__field_supporter_emailAddress';
   const supporterStateSelector = '#en__field_supporter_region';
   const supporterZipCodeSelector = '#en__field_supporter_postcode';
-  const tipJarAmountSelector = '.js-total-gift--tipjar';
   const totalAmountSelector = '.js-total-gift';
   const tributeOptionsSelector = 'select#en__field_transaction_trbopts';
 
@@ -81,7 +80,6 @@
   // Constants
   const thermThresholdPct = 80;
   const thermIncrease = 1.25;
-  const tipJarPct = 0.03;
 
   /**
    * Form interface enhancements
@@ -2411,18 +2409,6 @@
   };
 
   /**
-   * Returns Donation amount with tip jar added
-   *
-   * @param {string} amt Donation amount to add tip to
-   */
-  const getTipJar = amt => {
-    if (typeof amt === 'string') {
-      amt = amt.replace(/\,/g, '');
-      return !isNaN(amt) ? (parseFloat(amt) + (parseFloat(amt) * tipJarPct)).toFixed(2) : '';
-    }
-  };
-
-  /**
    * Returns Donation amount with or without upsell fee or null
    */
   const getTotalDonationAmount = () => {
@@ -2632,17 +2618,6 @@
       }
       paymentType.value = paymentTypeCode;
     }
-  };
-
-  /**
-   * Updates everywhere tip jar amount is displayed.
-   *
-   * @param {string} amt Total donation amount
-   */
-  const updateTipJar = amt => {
-    getAll(tipJarAmountSelector).forEach(el => {
-      el.textContent = !isNaN(amt) ? `$${numberPipe(amt)}` : '';
-    });
   };
 
   /**
