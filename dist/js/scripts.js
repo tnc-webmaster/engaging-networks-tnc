@@ -12,7 +12,7 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-(function () {
+(function() {
   var root = document.documentElement;
   var body = document.body;
   var appealCodeRedirect = document.querySelector('a[data-campaign-id][href*="appealCode"]');
@@ -139,7 +139,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } // Re-add all <options> to native select
 
 
-      getAll('.choices__item', _choices.choiceList.element).forEach(function (el) {
+      getAll('.choices__item', _choices.choiceList.element).forEach(function(el) {
         var choiceSelected = el.dataset.value === selectValue ? true : false;
         var opt = document.createElement('option');
         opt.value = el.dataset.value;
@@ -196,7 +196,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           // role=textbox is unnecessary in our setup
 
 
-          getAll('[role="textbox"]', _choices.containerOuter.element).forEach(function (el) {
+          getAll('[role="textbox"]', _choices.containerOuter.element).forEach(function(el) {
             el.removeAttribute('role');
           });
           resetSelect(_choices, null);
@@ -239,14 +239,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
     var scrollbarWidth = window.innerWidth - document.body.clientWidth;
-    getAll('.page--quiz .en__component--advrow, .page--hub.page--1 .en__component--advrow, .hero-full-bleed').forEach(function (el) {
+    getAll('.page--quiz .en__component--advrow, .page--hub.page--1 .en__component--advrow, .hero-full-bleed').forEach(function(el) {
       el.style.width = "calc(100vw - " + scrollbarWidth + "px)";
       el.style.marginLeft = "calc(-50vw + " + scrollbarWidth / 2 + "px)";
     }); // Don't forget pseudo elements
 
     root.style.setProperty('--scrollbarWidth', scrollbarWidth + "px"); // Initiate choices.js
 
-    getAll("select:not(" + stateProvinceSelect + "):not(" + informStateProvinceSelect + "):not(" + giftDesignationSelect + ")").forEach(function (el) {
+    getAll("select:not(" + stateProvinceSelect + "):not(" + informStateProvinceSelect + "):not(" + giftDesignationSelect + ")").forEach(function(el) {
       createChoices(el);
     }); // Structure modals
 
@@ -256,10 +256,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       wrapAll(els, 'div', 'modal-content');
     }
 
-    getAll('.modal-content').forEach(function (el) {
+    getAll('.modal-content').forEach(function(el) {
       wrapEl(el, 'div', ['modal-dialog', 'modal-lg']);
     });
-    getAll('.modal').forEach(function (el) {
+    getAll('.modal').forEach(function(el) {
       // Add attributes
       setAttributes(el, {
         'data-bs-backdrop': 'static',
@@ -282,10 +282,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (el) {
       if (stateProvinceChoices) {
-        el.addEventListener('change', function (e) {
+        el.addEventListener('change', function(e) {
           // Rebuild state/province choices
           destroyChoices(stateProvinceChoices);
-          setTimeout(function () {
+          setTimeout(function() {
             stateProvinceChoices = createChoices(theForm.querySelector(stateProvinceSelect));
           }, 100);
         });
@@ -304,10 +304,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (el) {
       if (honoreeStateProvinceChoices) {
-        el.addEventListener('change', function (e) {
+        el.addEventListener('change', function(e) {
           // Rebuild state/province choices
           destroyChoices(honoreeStateProvinceChoices);
-          setTimeout(function () {
+          setTimeout(function() {
             honoreeStateProvinceChoices = createChoices(theForm.querySelector(honoreeStateProvinceSelect));
           }, 100);
         });
@@ -326,10 +326,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (el) {
       if (informStateProvinceChoices) {
-        el.addEventListener('change', function (e) {
+        el.addEventListener('change', function(e) {
           // Rebuild state/province choices
           destroyChoices(informStateProvinceChoices);
-          setTimeout(function () {
+          setTimeout(function() {
             informStateProvinceChoices = createChoices(theForm.querySelector(informStateProvinceSelect));
           }, 100);
         });
@@ -341,12 +341,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (el) {
       giftDesignationChoices = createChoices(el);
-      getAll('.en__field--gift-designation-managed-donors-yn .en__field__input--radio').forEach(function (el) {
+      getAll('.en__field--gift-designation-managed-donors-yn .en__field__input--radio').forEach(function(el) {
         if (giftDesignationChoices) {
-          el.addEventListener('click', function (e) {
+          el.addEventListener('click', function(e) {
             // Rebuild gift designation choices
             destroyChoices(giftDesignationChoices);
-            setTimeout(function () {
+            setTimeout(function() {
               giftDesignationChoices = createChoices(theForm.querySelector(giftDesignationSelect));
             }, 100);
           });
@@ -362,11 +362,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     var showTributeHeadings = function showTributeHeadings(headingClass) {
       // Hide everything
-      getAll('.heading-honor, .heading-memory, .heading-gift').forEach(function (el) {
+      getAll('.heading-honor, .heading-memory, .heading-gift').forEach(function(el) {
         addClass(el, hiddenWebOnlyClass);
       }); // Show the right heading
 
-      getAll(headingClass).forEach(function (el) {
+      getAll(headingClass).forEach(function(el) {
         removeClass(el, hiddenWebOnlyClass);
       });
     }; // Selecting a tribute option might change headings on the form
@@ -375,7 +375,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     el = theForm.querySelector(tributeOptionsSelector);
 
     if (el) {
-      el.addEventListener('change', function (e) {
+      el.addEventListener('change', function(e) {
         switch (e.target.value) {
           case 'In Honor':
             showTributeHeadings('.heading-honor');
@@ -411,7 +411,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     } // Placeholders for some inputs
 
 
-    getAll(otherAmountInputSelector).forEach(function (el) {
+    getAll(otherAmountInputSelector).forEach(function(el) {
       var fieldItem = getClosestEl(el, enFieldItemSelector);
 
       if (fieldItem) {
@@ -419,15 +419,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     }); // Placeholders for address 2 fields
 
-    getAll('[name*="address2"], [name*="add2"]').forEach(function (el) {
+    getAll('[name*="address2"], [name*="add2"]').forEach(function(el) {
       el.setAttribute('placeholder', 'Apt, ste, bldg.');
     }); // Hard code placeholder for date fields
 
-    getAll(dateInputSelector).forEach(function (el) {
+    getAll(dateInputSelector).forEach(function(el) {
       addPlaceholder(el, 'Select Date');
     }); // Maybe convert event address to Google maps link
 
-    getAll('.link-to-map address').forEach(function (el) {
+    getAll('.link-to-map address').forEach(function(el) {
       var wrap = wrapEl(el, 'a');
 
       if (wrap) {
@@ -438,7 +438,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     }); // Wrap event ticket selector
 
-    getAll('.en__ticket__selector').forEach(function (el) {
+    getAll('.en__ticket__selector').forEach(function(el) {
       els = getAll('.en__ticket__minus, .en__ticket__quantity, .en__ticket__plus', el);
 
       if (els.length > 0) {
@@ -446,15 +446,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     }); // Missing event ticket quantity labels
 
-    getAll('.en__ticket__quantity').forEach(function (el) {
+    getAll('.en__ticket__quantity').forEach(function(el) {
       addLabel(el, el.parentElement, 'Quantity');
     }); // Missing additional donation label
 
-    getAll('.en__additional__input').forEach(function (el) {
+    getAll('.en__additional__input').forEach(function(el) {
       addLabel(el, el.parentElement, 'Additional donation (optional)');
     }); // Missing promo code label
 
-    getAll('.en__additional__code').forEach(function (el) {
+    getAll('.en__additional__code').forEach(function(el) {
       addLabel(el, el.parentElement, 'Promo code');
     }); // Move additional donation fields
 
@@ -485,29 +485,29 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
 
     if (el && _parent) {
-      addLabel(el, el.parentElement, 'Credit card expiration year').then(function (labelId) {
+      addLabel(el, el.parentElement, 'Credit card expiration year').then(function(labelId) {
         var _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
 
-        getAll('[role="combobox"], [role="listbox"]', _parent).forEach(function (el) {
+        getAll('[role="combobox"], [role="listbox"]', _parent).forEach(function(el) {
           el.setAttribute('aria-labelledby', labelId);
         });
       });
     } // Missing triple select labels
 
 
-    getAll('.en__field--tripleselect').forEach(function (el) {
+    getAll('.en__field--tripleselect').forEach(function(el) {
       var label = el.querySelector('.en__field__label');
 
       if (label) {
         labelId = label.id ? label.id : "label" + generateId();
         label.id = labelId;
-        getAll('[role="combobox"], [role="listbox"]', el).forEach(function (el) {
+        getAll('[role="combobox"], [role="listbox"]', el).forEach(function(el) {
           el.setAttribute('aria-labelledby', labelId);
         });
       }
     }); // Radio element accessibility
 
-    getAll('.en__field--radio').forEach(function (el) {
+    getAll('.en__field--radio').forEach(function(el) {
       // Some radio elements have loose labels
       var looseLabel = el.querySelector('label:first-child');
       var replaceLabel = null;
@@ -530,7 +530,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     }); // Checkbox element accessibility
 
-    getAll('.en__field--checkbox.en__field--survey').forEach(function (el) {
+    getAll('.en__field--checkbox.en__field--survey').forEach(function(el) {
       // Some checkbox elements have loose labels
       var looseLabel = el.querySelector('label:first-child');
       var replaceLabel = null;
@@ -556,12 +556,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     } // Aria role for split selects
 
 
-    getAll('.en__field--splitselect').forEach(function (el) {
+    getAll('.en__field--splitselect').forEach(function(el) {
       el.setAttribute('role', 'group');
       addAriaLabelledBy(el);
     }); // Labels are sometimes blank
 
-    getAll('.en__field__label').forEach(function (el) {
+    getAll('.en__field__label').forEach(function(el) {
       if (isEmpty(el)) {
         if (el.parentNode) {
           el.parentNode.removeChild(el);
@@ -572,13 +572,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     el = theForm.querySelector('[class*="select-an-ecard"]');
 
     if (el) {
-      getAll('.en__field__label--item', el).forEach(function (el) {
+      getAll('.en__field__label--item', el).forEach(function(el) {
         createImgFromUrl(el.textContent, el);
       });
     } // Add mask and inputmode attribute for currency fields. Also prevent autofill
 
 
-    getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(function (el) {
+    getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(function(el) {
       setAttributes(el, {
         'autocomplete': 'photo',
         'inputmode': 'decimal'
@@ -596,7 +596,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     }); // Prevent autofill on mem/trib fields
 
-    getAll('.en__field--ecard-recipient-email-addresses .en__field__input, .en__field--honname .en__field__input, .en__field--honname ~ .en__field .en__field__input, .en__field--infname .en__field__input, .en__field--infname ~ .en__field .en__field__input').forEach(function (el) {
+    getAll('.en__field--ecard-recipient-email-addresses .en__field__input, .en__field--honname .en__field__input, .en__field--honname ~ .en__field .en__field__input, .en__field--infname .en__field__input, .en__field--infname ~ .en__field .en__field__input').forEach(function(el) {
       el.setAttribute('autocomplete', 'photo');
     }); // Autocomplete attributes for CC expiration fields
 
@@ -613,7 +613,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     } // Add inputmode attribute for credit card fields
 
 
-    getAll('[name*="ccnumber"], [name*="ccvv"]').forEach(function (el) {
+    getAll('[name*="ccnumber"], [name*="ccvv"]').forEach(function(el) {
       el.setAttribute('inputmode', 'numeric');
     }); // Display minimum donation amount
 
@@ -621,7 +621,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (el) {
       // Getting the minimum amount from the EN validator
-      var minAmountValidator = EngagingNetworks.validators.filter(function (obj) {
+      var minAmountValidator = EngagingNetworks.validators.filter(function(obj) {
         if (obj.format) {
           return obj.format.indexOf('~') > -1;
         }
@@ -639,7 +639,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     el = theForm.querySelector('.en__field__input--other');
 
     if (el) {
-      el.addEventListener('focus', function (e) {
+      el.addEventListener('focus', function(e) {
         var otherRadio = e.target.closest('.en__field__item').previousElementSibling.querySelector('.en__field__input--radio');
 
         if (otherRadio) {
@@ -649,7 +649,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     } // Reposition help text found in labels
 
 
-    getAll('.field__help').forEach(function (el) {
+    getAll('.field__help').forEach(function(el) {
       getClosestEl(el, enFieldSelector).append(el);
     }); // Provide credit card type feedback
 
@@ -674,8 +674,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     el = theForm.querySelector(paymentMethodRadioSelector);
 
     if (el && cleave) {
-      getAll('.en__field__input--radio', el).forEach(function (el) {
-        el.addEventListener('click', function (e) {
+      getAll('.en__field__input--radio', el).forEach(function(el) {
+        el.addEventListener('click', function(e) {
           var paymentMethod = e.target.value;
 
           if (paymentMethod === 'CC') {
@@ -713,7 +713,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     _parent = theForm.querySelector(paymentMethodSelector);
 
     if (el && _parent) {
-      el.addEventListener('click', function (e) {
+      el.addEventListener('click', function(e) {
         var paymentType = theForm.querySelector(paymentTypeSelector);
         _parent = getClosestEl(_parent, '.en__component--formblock');
 
@@ -730,7 +730,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     } // Set sharing URLs for action center items
 
 
-    getAll('.advocacy-related-actions:not(:only-of-type)').forEach(function (el) {
+    getAll('.advocacy-related-actions:not(:only-of-type)').forEach(function(el) {
       var facebookShareLink = el.querySelector('.en__socialShare--facebook');
       var twitterShareLink = el.querySelector('.en__socialShare--twitter');
       var shareLink = el.querySelector('a[data-campaign-id]');
@@ -743,13 +743,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     }); // Active state for field containers
 
-    getAll('.en__field__input').forEach(function (el) {
+    getAll('.en__field__input').forEach(function(el) {
       el.addEventListener('focus', activateField);
       el.addEventListener('blur', deactivateField);
     }); // Init datepickers
 
     var datepickers = [].slice.call(document.querySelectorAll(dateInputSelector));
-    var datepickersList = datepickers.map(function (el) {
+    var datepickersList = datepickers.map(function(el) {
       var today = new Date();
       var maxDate = new Date(today); // Restrict date selection to one year out
 
@@ -768,35 +768,35 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     }); // Add inputmode attribute for date fields to prevent mobile keyboard
 
-    getAll('.datepicker-input').forEach(function (el) {
+    getAll('.datepicker-input').forEach(function(el) {
       el.setAttribute('inputmode', 'none');
       el.readOnly = true;
     }); // Each photo in hero and sidebar elements needs description and meta info popover
 
-    getAll('.en__component--imageblock, .en__component--copyblock .card').forEach(function (el) {
+    getAll('.en__component--imageblock, .en__component--copyblock .card').forEach(function(el) {
       createImgTooltip(el);
     }); // Create popovers elements
 
     if (typeof popoverTranslations !== 'undefined' && typeof pageJson !== 'undefined') {
-      popoverTranslations.forEach(function (translation) {
+      popoverTranslations.forEach(function(translation) {
         var locale = translation[pageJson.locale] ? pageJson.locale : 'en-US';
         createPopover(translation.field, translation.placement, translation[locale].label, translation[locale].text);
       });
     } // Init accordions
 
 
-    getAll('.accordion').forEach(function (accordion) {
-      getAll('.accordion-button').forEach(function (el) {
-        el.addEventListener('click', function (e) {
-          setTimeout(function () {
+    getAll('.accordion').forEach(function(accordion) {
+      getAll('.accordion-button').forEach(function(el) {
+        el.addEventListener('click', function(e) {
+          setTimeout(function() {
             addAriaCollapsedAttr(document.getElementById(e.target.dataset.bsTarget.replace(/#/, '')), getAll('.accordion-collapse', accordion));
           }, 500);
         });
       });
     }); // Init collapsibles
 
-    getAll('.btn-collapse').forEach(function (el) {
-      el.addEventListener('click', function (e) {
+    getAll('.btn-collapse').forEach(function(el) {
+      el.addEventListener('click', function(e) {
         var _target = e.target;
 
         if (hasClass(_target, 'expanded')) {
@@ -810,7 +810,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }); //Init popovers
 
     var popoverTriggerList = [].slice.call(theForm.querySelectorAll('[data-bs-toggle="popover"]'));
-    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    var popoverList = popoverTriggerList.map(function(popoverTriggerEl) {
       return new bootstrap.Popover(popoverTriggerEl, {
         boundry: theForm,
         container: getClosestEl(popoverTriggerEl, '.popover-container') ? getClosestEl(popoverTriggerEl, '.popover-container') : getClosestEl(popoverTriggerEl, enFieldSelector),
@@ -826,7 +826,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var _loop = function _loop(i) {
       var _index = i;
       var _root = root;
-      popoverTriggerList[i].addEventListener('shown.bs.popover', function (e) {
+      popoverTriggerList[i].addEventListener('shown.bs.popover', function(e) {
         _root.style.setProperty('--popperTranslateX', popoverList[_index]._popper.state.styles.popper.transform.match(/\d*\.?\d+(?:px)?/gi)[0]);
 
         _root.style.setProperty('--popperTranslateY', popoverList[_index]._popper.state.styles.popper.transform.match(/\d*\.?\d+(?:px)?/gi)[1]);
@@ -883,12 +883,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var initDonationAmount = function initDonationAmount() {
       donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
       selectedAmount = getSelectedAmount();
-      donationAmtRadios.forEach(function (el) {
+      donationAmtRadios.forEach(function(el) {
         el.addEventListener('click', handleDonationAmountChange);
       });
 
       if (feeCoverCheckbox) {
-        feeCoverCheckbox.addEventListener('click', function (e) {
+        feeCoverCheckbox.addEventListener('click', function(e) {
           feeCoverUserChecked = true;
         });
       } // Listen for other amount change
@@ -900,7 +900,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     };
 
     resetDonationAmount = function resetDonationAmount() {
-      setTimeout(function () {
+      setTimeout(function() {
         initDonationAmount(); // window.initMasks();
       }, 500);
     };
@@ -910,7 +910,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         initDonationAmount(); // Listen for recurrence change
 
         if (recurrenceFrequency) {
-          getAll('.en__field__input--radio', recurrenceFrequency).forEach(function (el) {
+          getAll('.en__field__input--radio', recurrenceFrequency).forEach(function(el) {
             el.addEventListener('click', resetDonationAmount);
           });
         } else if (recurrenceCheckbox) {
@@ -920,10 +920,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
       if (giftDesignationYN && appealCode) {
-        giftDesignationYN.querySelector('.en__field__input--radio[value="N"]').addEventListener('click', function (e) {
+        giftDesignationYN.querySelector('.en__field__input--radio[value="N"]').addEventListener('click', function(e) {
           disableEl(appealCode);
         });
-        giftDesignationYN.querySelector('.en__field__input--radio[value="Y"]').addEventListener('click', function (e) {
+        giftDesignationYN.querySelector('.en__field__input--radio[value="Y"]').addEventListener('click', function(e) {
           enableEl(appealCode);
         });
 
@@ -934,8 +934,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     if (bequestIframe) {
-      bequestIframe.addEventListener('load', function (e) {
-        bequestIframe.contentWindow.enOnError = function () {
+      bequestIframe.addEventListener('load', function(e) {
+        bequestIframe.contentWindow.enOnError = function() {
           // Fit iframe to parent
           resizeIframe(bequestIframe);
         }; // Fit iframe to parent
@@ -944,7 +944,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         resizeIframe(bequestIframe);
       }); // Listen for submitted message from iframe
 
-      window.addEventListener('iframeSubmitted', function (e) {
+      window.addEventListener('iframeSubmitted', function(e) {
         // Fire tracking
         if (typeof utag !== 'undefined') {
           utag.link({
@@ -958,7 +958,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         focusFirst();
       }); // Fit iframe to parent
 
-      window.addEventListener('resize', function (e) {
+      window.addEventListener('resize', function(e) {
         resizeIframe(bequestIframe);
       });
     }
@@ -971,7 +971,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       modal.show(); // Fire tracking
 
-      setTimeout(function () {
+      setTimeout(function() {
         if (typeof utag !== 'undefined') {
           utag.link({
             'event_name': 'lightbox_impression',
@@ -1003,7 +1003,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var additionalInput = theForm.querySelector('.en__additional__input');
       var totalAmount = 0; // Sum all tickets
 
-      getAll('.en__ticket__quantity').forEach(function (el) {
+      getAll('.en__ticket__quantity').forEach(function(el) {
         var row = getClosestEl(el, '.en__ticket');
         var price = Number(row.querySelector('.en__ticket__price').textContent);
 
@@ -1017,7 +1017,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } // Display total amount
 
 
-      getAll(totalAmountSelector).forEach(function (el) {
+      getAll(totalAmountSelector).forEach(function(el) {
         el.textContent = numberPipe(String(totalAmount));
       }); // Save total for use on billing page
 
@@ -1029,20 +1029,20 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }; // Make ticket quantity field readonly to avoid invalid ticket numbers
 
 
-    getAll('.en__ticket__quantity').forEach(function (el) {
+    getAll('.en__ticket__quantity').forEach(function(el) {
       el.readOnly = true;
       el.setAttribute('tabindex', '-1');
     }); // Add ticket quantity plus/minus to tab order
 
-    getAll('.en__ticket__minus, .en__ticket__plus').forEach(function (el) {
+    getAll('.en__ticket__minus, .en__ticket__plus').forEach(function(el) {
       el.setAttribute('tabindex', '0');
     }); // Strip currency indicators and $ signs
 
-    getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(function (el) {
+    getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(function(el) {
       el.textContent = el.textContent.replace(/USD/, '');
     }); // Strip label colons
 
-    getAll('.en__orderSummary__header').forEach(function (el) {
+    getAll('.en__orderSummary__header').forEach(function(el) {
       el.textContent = el.textContent.replace(/\:/, '');
     }); // Maybe on page 1
 
@@ -1056,7 +1056,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
       if (waitListLink) {
-        getAll('.en__ticket__soldout').forEach(function (el) {
+        getAll('.en__ticket__soldout').forEach(function(el) {
           var clone = waitListLink.cloneNode(true);
           el.parentElement.append(clone);
         });
@@ -1066,15 +1066,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       el = theForm.querySelector('.en__additional__input');
 
       if (el) {
-        el.addEventListener('change', function (e) {
+        el.addEventListener('change', function(e) {
           updateTotalAmount();
         });
       } // Listen for ticket selection
 
 
-      getAll('.en__ticket__quantity').forEach(function (el) {
-        el.addEventListener('change', function (e) {
-          setTimeout(function () {
+      getAll('.en__ticket__quantity').forEach(function(el) {
+        el.addEventListener('change', function(e) {
+          setTimeout(function() {
             updateTotalAmount();
           }, 100);
         });
@@ -1083,8 +1083,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       el = theForm.querySelector('button[type="reset"]');
 
       if (el) {
-        el.addEventListener('click', function (e) {
-          setTimeout(function () {
+        el.addEventListener('click', function(e) {
+          setTimeout(function() {
             updateTotalAmount();
           }, 100);
         });
@@ -1093,14 +1093,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       updateTotalAmount(); // Force ticket total cost update
 
-      getAll('.en__ticket__minus, .en__ticket__plus').forEach(function (el) {
+      getAll('.en__ticket__minus, .en__ticket__plus').forEach(function(el) {
         var row = getClosestEl(el, '.en__ticket');
         var ticketQuantity = row.querySelector('.en__ticket__quantity');
-        el.addEventListener('click', function (e) {
+        el.addEventListener('click', function(e) {
           triggerEvent(ticketQuantity, 'change');
         }); // Add keyboard nav to plus/minus buttons
 
-        el.addEventListener('keyup', function (e) {
+        el.addEventListener('keyup', function(e) {
           if (e.key === 'Enter' || e.keyCode === 13) {
             e.target.click();
           }
@@ -1108,7 +1108,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }); // Maybe on page 2
     } else if (pageNumber === 2) {
       // Customize order summary table
-      getAll('.en__orderSummary__item').forEach(function (el) {
+      getAll('.en__orderSummary__item').forEach(function(el) {
         var itemType = el.querySelector('.en__orderSummary__data--type');
         var itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent;
         itemType.textContent = itemQuantity + "x  " + itemType.textContent;
@@ -1132,33 +1132,33 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         } // Cleanup
 
 
-        theForm.querySelector('.en__submit button').addEventListener('click', function (e) {
+        theForm.querySelector('.en__submit button').addEventListener('click', function(e) {
           sessionStorage.removeItem('savedTotalAmount');
         });
       } // Remove attendee index number
 
 
-      getAll('.en__registrants__registrantHead').forEach(function (el) {
+      getAll('.en__registrants__registrantHead').forEach(function(el) {
         el.textContent = el.textContent.replace(/^\d{1,3}/, '').replace(/ticket \d{1,3}$/, '');
       }); // Re-number attendees
 
-      getAll('.en__registrants__ticket').forEach(function (el) {
+      getAll('.en__registrants__ticket').forEach(function(el) {
         var attendees = getAll('.en__registrants__registrantHead', el);
 
         if (attendees.length > 1) {
-          attendees.forEach(function (el, index) {
+          attendees.forEach(function(el, index) {
             el.textContent = el.textContent + " " + (index + 1);
           });
         }
       }); // Labels for Attendee custom checkbox questions do not have for attributes
 
-      getAll('.en__field--checkbox.en__field--registrant .en__field__item').forEach(function (el) {
+      getAll('.en__field--checkbox.en__field--registrant .en__field__item').forEach(function(el) {
         var checkboxId = "checkbox" + generateId();
         el.querySelector('.en__field__input--checkbox').id = checkboxId;
         el.querySelector('.en__field__label--item').setAttribute('for', checkboxId);
       }); // Adding commas to totals
 
-      getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(function (el) {
+      getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(function(el) {
         el.textContent = numberPipe(el.textContent);
       }); // Adjust the page if zero amount due
 
@@ -1167,7 +1167,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       if (el) {
         if (parseInt(el.textContent) === 0) {
           // Some of the form headings have 'Billing' in them
-          getAll('.form-heading h3').forEach(function (el) {
+          getAll('.form-heading h3').forEach(function(el) {
             el.textContent = el.textContent.replace(/Billing\s/i, '');
           }); // Find the form block with address info
 
@@ -1185,10 +1185,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
       if (el) {
         // Prevent double $ symbols
-        setTimeout(function () {
+        setTimeout(function() {
           el.textContent = el.textContent.indexOf('$') > -1 ? el.textContent.replace(/\$/g, '') : el.textContent;
           addClass(el, activeClass);
-          getAll(totalAmountSelector).forEach(function (el) {
+          getAll(totalAmountSelector).forEach(function(el) {
             el.textContent = "$" + theForm.querySelector('.en__orderSummary__data--totalAmount').textContent.replace(/\$/, '');
           });
         }, 500);
@@ -1291,7 +1291,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
       modal.show(); // Fire tracking
 
-      setTimeout(function () {
+      setTimeout(function() {
         if (typeof utag !== 'undefined') {
           utag.link({
             'event_name': 'lightbox_form_impression',
@@ -1324,21 +1324,21 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       };
 
       var enableSubmitButtons = function enableSubmitButtons() {
-        setTimeout(function () {
-          getAll('.en__submit button').forEach(function (el) {
+        setTimeout(function() {
+          getAll('.en__submit button').forEach(function(el) {
             el.disabled = false;
           });
         }, 100);
       }; // Handle modal submit button click
 
 
-      leadGenModal.querySelector('.btn').addEventListener('click', function (e) {
+      leadGenModal.querySelector('.btn').addEventListener('click', function(e) {
         if (isInvalid) {
           validateModal();
           e.preventDefault();
           return false;
         } else {
-          setTimeout(function () {
+          setTimeout(function() {
             validateModal();
             e.preventDefault();
             return false;
@@ -1372,8 +1372,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       });
     }
 
-    getAll('.en__field__input--radio').forEach(function (el) {
-      el.addEventListener('click', function (e) {
+    getAll('.en__field__input--radio').forEach(function(el) {
+      el.addEventListener('click', function(e) {
         var el = void 0; // Clicking any answer removes error message
 
         el = theForm.querySelector(errorSelector);
@@ -1429,7 +1429,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     el = theForm.querySelector('.en__submit button[type="button"]');
 
     if (el) {
-      el.addEventListener('click', function (e) {
+      el.addEventListener('click', function(e) {
         var fieldError = theForm.querySelector('.en__field__error');
 
         if (theForm.querySelector('.en__field__input--radio:checked')) {
@@ -1454,7 +1454,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     el = theForm.querySelector('.en__submit button:not([type="button"])');
 
     if (el) {
-      el.addEventListener('click', function (e) {
+      el.addEventListener('click', function(e) {
         sessionStorage.setItem('alreadyAnswered', 'false');
       });
     } // Display quiz results if on the last page
@@ -1484,7 +1484,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var actionCenter = function actionCenter() {
     // Make image blocks clickable    
-    getAll('.card').forEach(function (el) {
+    getAll('.card').forEach(function(el) {
       var link = el.querySelector('a[data-type="campaignpage_url_pb"]');
       var img = el.querySelector('.en__component--imageblock img');
       var clone = null;
@@ -1507,7 +1507,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (typeof utag !== 'undefined') {
       // Gather invalid fields and error messages
-      getAll('.en__field--validationFailed').forEach(function (el) {
+      getAll('.en__field--validationFailed').forEach(function(el) {
         if (el.querySelector('.en__field__error')) {
           invalidFields += el.querySelector('.en__field__input').getAttribute('name') + "|";
           errors += el.querySelector('.en__field__error').textContent + "|";
@@ -1606,7 +1606,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }; // Set validation patterns
 
 
-    getAll('.en__mandatory .en__field__input').forEach(function (el) {
+    getAll('.en__mandatory .en__field__input').forEach(function(el) {
       el.required = true;
 
       switch (el.type) {
@@ -1646,7 +1646,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } // Don't display browser error messages
 
 
-      el.addEventListener('oninvalid', function (e) {
+      el.addEventListener('oninvalid', function(e) {
         e.preventDefault();
       }); // No browser form validation
 
@@ -1691,7 +1691,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var otherAmountOriginal = null;
     var isInvalid = false; // Don't submit form on ENTER if focused on an input
 
-    window.addEventListener('keydown', function (e) {
+    window.addEventListener('keydown', function(e) {
       if (e.keyIdentifier == 'U+000A' || e.keyIdentifier == 'Enter' || e.keyCode == 13) {
         if (e.target.nodeName == 'INPUT') {
           e.preventDefault();
@@ -1700,12 +1700,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     }, true);
 
-    window.enOnError = function () {
+    window.enOnError = function() {
       trackFormErrors();
     };
 
-    window.enOnValidate = function () {
-      var address2 = document.getElementById('en__field_supporter_address2');
+    window.enOnValidate = function() {
       var donationAmount = parseFloat(getTotalDonationAmount());
       var ecardFields = theForm.querySelector(ecardFieldsSelector);
       var ecardSelect = theForm.querySelector(ecardSelectSelector);
@@ -1722,7 +1721,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var doUpsell = function doUpsell() {
         if (!upsellDone) {
           // Display monthly amount
-          getAll('.js-monthly-gift').forEach(function (el) {
+          getAll('.js-monthly-gift').forEach(function(el) {
             el.textContent = "$" + numberPipe(String(setMonthlyAmount(donationAmount)));
           });
           setMonthlyAmount(donationAmount); // Open modal
@@ -1741,7 +1740,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           } // Handle modal clicks
 
 
-          upsellButton.addEventListener('click', function (e) {
+          upsellButton.addEventListener('click', function(e) {
             // Fire tracking
             if (typeof utag !== 'undefined') {
               utag.link({
@@ -1755,19 +1754,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             otherAmountInput.value = setMonthlyAmount(donationAmount);
             theForm.submit();
           });
-          getAll('.btn-close, .btn-continue').forEach(function (el) {
-            el.addEventListener('click', function (e) {
+          getAll('.btn-close, .btn-continue').forEach(function(el) {
+            el.addEventListener('click', function(e) {
               theForm.submit();
             });
           });
           upsellDone = true;
         }
-      }; // Set Address 2 value to '-' if left blank by user
-
-
-      if (address2) {
-        address2.value = address2.value === '' ? '-' : address2.value;
-      }
+      };
 
       if (feeCoverCheckbox) {
         // Calculate extra fee cover amount for data layer
@@ -1833,7 +1827,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
             doUpsell();
           }
         } else {
-          setTimeout(function () {
+          setTimeout(function() {
             if (formIsValid()) {
               doUpsell();
             } else {
@@ -1848,10 +1842,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     };
 
-    window.enOnSubmit = function () {
+    window.enOnSubmit = function() {
       // handle async code with promises
-      return new Promise(function (resolve, reject) {
-        setTimeout(function () {
+      return new Promise(function(resolve, reject) {
+        setTimeout(function() {
           resolve(); // will allow submit when timeout runs in 1000ms
         }, 1000);
       });
@@ -1868,20 +1862,20 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var optIns = getAll('.hide-opt-ins .en__field--question .en__field__input--checkbox');
 
     var unCheckOptIns = function unCheckOptIns() {
-      optIns.forEach(function (el) {
+      optIns.forEach(function(el) {
         el.checked = false;
       });
     };
 
     var checkOptIns = function checkOptIns() {
-      optIns.forEach(function (el) {
+      optIns.forEach(function(el) {
         el.checked = true;
       });
     }; // Auto check/uncheck opt in checkboxes
 
 
     if (emailAddress && generateEmailButton) {
-      emailAddress.addEventListener('change', function (e) {
+      emailAddress.addEventListener('change', function(e) {
         if (e.target.value.indexOf('fakeemail') > -1) {
           unCheckOptIns();
         } else {
@@ -1890,7 +1884,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }); // For anonymous actions, or actions that don't require an email address, 
       // the database still needs an email address to be able to store the data.
 
-      generateEmailButton.addEventListener('click', function (e) {
+      generateEmailButton.addEventListener('click', function(e) {
         var theDate = new Date();
         var milliseconds = theDate.getTime();
         var anonAddress = milliseconds + ".first.last@fakeemail.com";
@@ -1905,8 +1899,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var socialShareTracking = function socialShareTracking() {
-    getAll('.en__socialShare__image').forEach(function (el) {
-      el.addEventListener('click', function (e) {
+    getAll('.en__socialShare__image').forEach(function(el) {
+      el.addEventListener('click', function(e) {
         if (typeof utag !== 'undefined') {
           utag.link({
             'event_name': 'social_share',
@@ -1924,8 +1918,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var advocacyTracking = function advocacyTracking() {
     if (pageJson.pageType === 'advocacypetition' || pageJson.pageType === 'emailtotarget') {
-      theForm.addEventListener('submit', function (e) {
-        setTimeout(function () {
+      theForm.addEventListener('submit', function(e) {
+        setTimeout(function() {
           if (formIsValid() && typeof utag !== 'undefined') {
             utag.link({
               'event_name': 'form_submit',
@@ -1949,8 +1943,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var footer = document.querySelector('.footer');
 
     if (footer) {
-      getAll('a', footer).forEach(function (el) {
-        el.addEventListener('click', function (e) {
+      getAll('a', footer).forEach(function(el) {
+        el.addEventListener('click', function(e) {
           if (typeof utag !== 'undefined') {
             utag.link({
               'event_name': 'footer_nav_click',
@@ -1971,7 +1965,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var trackers = ['src', 'vid', 'vid2', 'en_txn1', 'en_txn2', 'en_txn3', 'en_txn4', 'en_txn5', 'en_txn7', 'en_txn8', 'en_txn9', 'en_txn10'];
     var visitData = sessionStorage.getItem('visitData') ? JSON.parse(sessionStorage.getItem('visitData')) : {}; // Add tracking params as found
 
-    trackers.forEach(function (tracker) {
+    trackers.forEach(function(tracker) {
       if (params.has(tracker)) {
         visitData[tracker] = params.get(tracker);
       }
@@ -2043,7 +2037,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     };
 
     if (ecardData) {
-      setTimeout(function () {
+      setTimeout(function() {
         // Populate fields
         ecardData = JSON.parse(ecardData);
         document.querySelector(".en__ecarditems__thumb:nth-child(" + ecardData.selectEcard + ")").click();
@@ -2064,7 +2058,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var thermometers = function thermometers() {
     // Thermometer goals need to dynamically increase once a certain "raised" is reached
-    getAll('.enWidget--progressBar').forEach(function (el) {
+    getAll('.enWidget--progressBar').forEach(function(el) {
       var fill = el.querySelector('.enWidget__fill');
       var raisedPct = parseInt(fill.style.width);
       var raisedNumber = parseInt(el.querySelector('.raised > div').textContent.replace(/\,/g, ''));
@@ -2079,7 +2073,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       } // Therms are hidden with CSS
 
 
-      setTimeout(function () {
+      setTimeout(function() {
         addClass(el, activeClass);
       }, 100);
     });
@@ -2107,7 +2101,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       var isOpen = hasClass(el, collapseShowClass) ? 'true' : 'false';
 
       if (collapsibles.length) {
-        collapsibles.forEach(function (collapsible) {
+        collapsibles.forEach(function(collapsible) {
           collapsible.setAttribute('aria-expanded', 'false');
         });
       }
@@ -2126,7 +2120,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var maybeLabel = el.firstElementChild;
 
     if (hasClass(maybeLabel, 'en__field__label')) {
-      setTimeout(function () {
+      setTimeout(function() {
         labelId = "label" + generateId();
         maybeLabel.id = labelId;
         el.setAttribute('aria-labelledby', labelId);
@@ -2181,7 +2175,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var addLabel = function addLabel(el, _parent, txt) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       el.id = el.id ? el.id : el.name.replace(/\./g, '');
       label = document.createElement('label');
       label.setAttribute('for', el.id);
@@ -2326,7 +2320,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var disableFields = function disableFields(fields) {
-    fields.forEach(function (el) {
+    fields.forEach(function(el) {
       addClass(el, disabledClass);
     });
   };
@@ -2360,7 +2354,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var formatError = function formatError(el) {
     var sentences = el.textContent.replace(/([.?!])\s*(?=[A-Z])/g, '$1|').split('|');
     el.textContent = '';
-    sentences.forEach(function (sentence) {
+    sentences.forEach(function(sentence) {
       addEl(el, 'p', sentence);
     });
   };
@@ -2400,7 +2394,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var focusables = getAll('button, a:not(.skip), input, select, textarea, [tabindex]:not([tabindex="-1"])');
 
     if (focusables.length > 0) {
-      setTimeout(function () {
+      setTimeout(function() {
         focusables[0].focus();
       }, 500);
     }
@@ -2590,7 +2584,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       attrs[_key - 1] = arguments[_key];
     }
 
-    attrs.forEach(function (attr) {
+    attrs.forEach(function(attr) {
       return el.removeAttribute(attr);
     });
   };
@@ -2619,7 +2613,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var resizeIframe = function resizeIframe(el) {
-    setTimeout(function () {
+    setTimeout(function() {
       el.style.height = el.contentWindow.document.body.scrollHeight + "px";
     }, 100);
   };
@@ -2644,7 +2638,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var setAttributes = function setAttributes(el, attrs) {
-    Object.keys(attrs).forEach(function (attr) {
+    Object.keys(attrs).forEach(function(attr) {
       el.setAttribute(attr, attrs[attr]);
     });
   };
@@ -2726,7 +2720,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var updateTipJar = function updateTipJar(amt) {
-    getAll(tipJarAmountSelector).forEach(function (el) {
+    getAll(tipJarAmountSelector).forEach(function(el) {
       el.textContent = !isNaN(amt) ? "$" + numberPipe(amt) : '';
     });
   };
@@ -2738,7 +2732,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   var updateTotalGift = function updateTotalGift(amt) {
-    getAll(totalAmountSelector).forEach(function (el) {
+    getAll(totalAmountSelector).forEach(function(el) {
       el.textContent = !isNaN(amt) ? "$" + numberPipe(amt) : '';
     });
   };
@@ -2797,7 +2791,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   } // On load
 
 
-  document.addEventListener('DOMContentLoaded', function (e) {
+  document.addEventListener('DOMContentLoaded', function(e) {
     if (seamlessEcardBlock) {
       seamlessEcard();
     }
@@ -2841,8 +2835,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     memberCare();
   });
-  window.addEventListener('load', function (e) {
-    var checkThermometer = setInterval(function () {
+  window.addEventListener('load', function(e) {
+    var checkThermometer = setInterval(function() {
       if (theForm.querySelector('.enWidget--progressBar')) {
         clearInterval(checkThermometer);
         thermometers();

@@ -1688,7 +1688,6 @@
     };
 
     window.enOnValidate = function() {
-      const address2 = document.getElementById('en__field_supporter_address2');
       const donationAmount = parseFloat(getTotalDonationAmount());
       const ecardFields = theForm.querySelector(ecardFieldsSelector);
       const ecardSelect = theForm.querySelector(ecardSelectSelector);
@@ -1744,11 +1743,6 @@
           upsellDone = true;
         }
       };
-
-      // Set Address 2 value to '-' if left blank by user
-      if (address2) {
-        address2.value = address2.value === '' ? '-' : address2.value;
-      }
 
       if (feeCoverCheckbox) {
         // Calculate extra fee cover amount for data layer
