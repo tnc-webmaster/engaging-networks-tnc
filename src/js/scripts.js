@@ -899,7 +899,7 @@
         }
       }
 
-      // Gift designation Y/N 
+      // Gift designation Y/N
       if (giftDesignationYN && appealCode) {
         giftDesignationYN.querySelector('.en__field__input--radio[value="N"]').addEventListener('click', e => {
           disableEl(appealCode);
@@ -1245,7 +1245,7 @@
         formType.form_type = 'email_text_signup';
         formType.text_signup_location = "lightbox-" + utag_data.page_name;
 
-        //Unsubscribe not checked, no mobile phone field	
+        //Unsubscribe not checked, no mobile phone field
       } else if (!emailUnsubscribeChecked) {
         formType.event_name = 'frm_ltbx_emt_emo_submit';
         formType.form_type = 'email_signup';
@@ -1262,7 +1262,7 @@
         formType.form_type = 'email_text_signup';
         formType.text_signup_location = "lightbox-" + utag_data.page_name;
 
-        //Unsubscribe checked, mobile phone field doesn't exist	
+        //Unsubscribe checked, mobile phone field doesn't exist
       } else {
         formType.event_name = 'frm_ltbx_emt_submit';
         formType.form_type = 'email_signup';
@@ -1467,7 +1467,7 @@
    * Action center form enhancements
    */
   const actionCenter = () => {
-    // Make image blocks clickable    
+    // Make image blocks clickable
     getAll('.card').forEach(el => {
       const link = el.querySelector('a[data-type="campaignpage_url_pb"]');
       const img = el.querySelector('.en__component--imageblock img');
@@ -1857,7 +1857,7 @@
         }
       });
 
-      // For anonymous actions, or actions that don't require an email address, 
+      // For anonymous actions, or actions that don't require an email address,
       // the database still needs an email address to be able to store the data.
       generateEmailButton.addEventListener('click', e => {
         const theDate = new Date();
@@ -2018,7 +2018,11 @@
     }
 
     if (recurringStatus) {
-      recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';
+  		if (window.navigator.userLanguage === 'es-MX' || window.navigator.language === 'es-MX' || window.location.href.indexOf('locale=es-MX') > -1 || pageJson.locale === 'es-MX') {
+  			recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Mensual' : 'Una vez';
+  		} else {
+  			recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';
+  		}
     }
   };
 

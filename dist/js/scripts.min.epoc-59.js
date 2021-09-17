@@ -115,16 +115,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
      */
 
     var handleChoicesChange = function handleChoicesChange(e) {
-      var _target = e.target; // Don't reset drop downs in event attendee details block
+      var _target = e.target;
 
-      if (e.composedPath().indexOf(document.querySelector('.en__registrants__registrantDetails')) === -1) {
-        _target.choices.setValue([{
-          value: _target.value,
-          label: _target.querySelector("option[value=\"" + _target.value + "\"]").textContent
-        }]);
+      _target.choices.setValue([{
+        value: _target.value,
+        label: _target.querySelector("option[value=\"" + _target.value + "\"]").textContent
+      }]);
 
-        resetSelect(_target.choices, e);
-      }
+      resetSelect(_target.choices, e);
     };
     /**
      * choices.js removes <options> form the native select
@@ -173,7 +171,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var createChoices = function createChoices(el) {
       return new Choices(el, {
         silent: true,
-        addItems: false,
         duplicateItemsAllowed: false,
         itemSelectText: '',
         searchResultLimit: 100,
@@ -278,7 +275,8 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         'tabindex': '-1',
         'aria-labelledby': 'modalTitle',
         'aria-hidden': 'true'
-      });
+      }); // Move modals to end of main form
+      //theForm.append(el);
     }); // Allow EN swap lists for billing state/province field
 
     el = theForm.querySelector(stateProvinceSelect);
@@ -431,7 +429,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     getAll('[name*="address2"], [name*="add2"]').forEach(function (el) {
       el.setAttribute('placeholder', 'Apt, ste, bldg.');
-    }); // Hard code placeholder for date fields
+    }); // Hardcode placeholder for date fields
 
     getAll(dateInputSelector).forEach(function (el) {
       addPlaceholder(el, 'Select Date');
@@ -869,11 +867,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var donationAmt = theForm.querySelector('.en__field--donationAmt');
     var giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     var otherAmountInput = theForm.querySelector(otherAmountInputSelector);
-    var recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq');
+    var selectedAmount = donationAmt ? donationAmt.querySelector('.en__field__input--radio:not([value=""]):checked') : null;
     var tipJar = theForm.querySelector('.en__field--tip-jar');
     var donationAmtRadios = null;
     var modal = null;
-    var selectedAmount = getSelectedAmount();
     var tipJarCheckbox = null;
     var tipJarUserChecked = false;
 
@@ -950,12 +947,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         });
       });
       setTimeout(function () {
-        if (el) {
-          // Re-clicking the button makes mobile pay get the correct amount
-          el.checked = false;
-          el.click();
-        } // Re add the click handler
-
+        // Re-clicking the button makes mobile pay get the correct amount
+        el.checked = false;
+        el.click(); // Re add the click handler
 
         donationAmtRadios.forEach(function (el) {
           el.addEventListener('click', handleDonationAmountChange, {
@@ -965,92 +959,49 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }, 100);
     };
 
-    var setDefaultAmount = function setDefaultAmount(el) {
-      var amountButtons = getAll('[name="transaction.donationAmt"]');
-      var index = Array.prototype.indexOf.call(document.querySelectorAll('[name="transaction.recurrfreq"]'), el);
-      var fieldId = theForm.querySelector('.en__field--withOther') ? theForm.querySelector('.en__field--withOther').getAttribute('class').match(/\d+/g) : null;
-      var altList = fieldId[0] && EngagingNetworks.altLists ? EngagingNetworks.altLists.find(function (list) {
-        return list.id === Number(fieldId[0]);
-      }) : null;
-      var defaultAmount = null;
-      var foundAmount = null;
-
-      if (index !== -1 && altList) {
-        altList = altList.data[index];
-
-        if (altList) {
-          defaultAmount = altList.data.find(function (item) {
-            return item.selected === true;
-          });
-
-          if (defaultAmount) {
-            defaultAmount = defaultAmount.value;
-            foundAmount = amountButtons.find(function (el) {
-              return parseInt(el.value) === parseInt(defaultAmount);
-            });
-
-            if (foundAmount) {
-              foundAmount.click();
-            }
-          }
-        }
-      }
-    };
-
-    var initDonationAmount = function initDonationAmount() {
-      donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
-      selectedAmount = getSelectedAmount(); // Display tip jar amount
-
-      el = theForm.querySelector(tipJarSelector);
-
-      if (el) {
-        updateTipJar(getTipJar(getOriginalDonationAmount()));
-        updateTotalGift(getTipJar(getOriginalDonationAmount()));
-      } else {
-        updateTotalGift(getOriginalDonationAmount());
-      } // Maybe a tip jar?
-
-
-      if (tipJar && tipJarPct) {
-        tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox'); // Handle tip jar click
-
-        tipJarCheckbox.addEventListener('click', function (e) {
-          tipJarUserChecked = true;
-          updateDonationAmounts(e.target);
-          updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount()); // Work around for mobile pay not getting latest amount
-
-          doubleClickAmount(selectedAmount || null);
-        }); // Initialize tip jar
-
-        maybeUncheckTipJar(getOriginalDonationAmount());
-
-        if (tipJarCheckbox.checked) {
-          updateDonationAmounts(tipJarCheckbox);
-        }
-      } // Work around for mobile pay not getting latest amount
-
-
-      doubleClickAmount(selectedAmount || null); // Listen for other amount change
-
-      if (otherAmountInput) {
-        otherAmountInput.addEventListener('input', handleDonationAmountChange);
-      }
-    };
-
-    if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
+    if (pageJson.pageNumber === 1) {
       if (donationAmt) {
-        initDonationAmount(); // Listen for recurrence change
+        donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt); // Display tip jar amount
 
-        if (recurrenceFrequency) {
-          getAll('.en__field__input--radio', recurrenceFrequency).forEach(function (el) {
-            el.addEventListener('click', function (e) {
-              setTimeout(function () {
-                initDonationAmount();
-                window.initMasks();
-                setDefaultAmount(e.target);
-              }, 500);
-            });
-          });
+        el = theForm.querySelector(tipJarSelector);
+
+        if (el) {
+          updateTipJar(getTipJar(getOriginalDonationAmount()));
+          updateTotalGift(getTipJar(getOriginalDonationAmount()));
+        } else {
+          updateTotalGift(getOriginalDonationAmount());
+        } // Maybe a tip jar?
+
+
+        if (tipJar && tipJarPct) {
+          tipJarCheckbox = tipJar.querySelector('.en__field__input--checkbox'); // Handle tip jar click
+
+          tipJarCheckbox.addEventListener('click', function (e) {
+            var selectedAmount = theForm.querySelector('.en__field__input--radio:not([value=""]):checked');
+            tipJarUserChecked = true;
+            updateDonationAmounts(e.target);
+            updateTotalGift(tipJarCheckbox.checked ? getTipJar(getOriginalDonationAmount()) : getOriginalDonationAmount()); // Work around for mobile pay not getting latest amount
+
+            if (selectedAmount) {
+              doubleClickAmount(selectedAmount);
+            }
+          }); // Initiialize tip jar
+
+          maybeUncheckTipJar(getOriginalDonationAmount());
+
+          if (tipJarCheckbox.checked) {
+            updateDonationAmounts(tipJarCheckbox);
+          }
+        } // Work around for mobile pay not getting latest amount
+
+
+        if (selectedAmount) {
+          doubleClickAmount(selectedAmount);
+        } // Listen for other amount change
+
+
+        if (otherAmountInput) {
+          otherAmountInput.addEventListener('input', handleDonationAmountChange);
         }
       } // Gift designation Y/N
 
@@ -1067,55 +1018,55 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           disableEl(appealCode);
         }
       }
-    }
+    } else {
+      if (bequestIframe) {
+        bequestIframe.addEventListener('load', function (e) {
+          bequestIframe.contentWindow.enOnError = function () {
+            // Fit iframe to parent
+            resizeIframe(bequestIframe);
+          }; // Fit iframe to parent
 
-    if (bequestIframe) {
-      bequestIframe.addEventListener('load', function (e) {
-        bequestIframe.contentWindow.enOnError = function () {
-          // Fit iframe to parent
+
           resizeIframe(bequestIframe);
-        }; // Fit iframe to parent
+        }); // Listen for submitted message from iframe
+        // window.addEventListener('message', e => {
+
+        window.addEventListener('iframeSubmitted', function (e) {
+          // Fire tracking
+          if (typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'lightbox_click',
+              'lightbox_name': 'bequest'
+            });
+          } // Close modal
 
 
-        resizeIframe(bequestIframe);
-      }); // Listen for submitted message from iframe
-      // window.addEventListener('message', e => {
+          modal.hide();
+          focusFirst();
+        }); // Fit iframe to parent
 
-      window.addEventListener('iframeSubmitted', function (e) {
-        // Fire tracking
-        if (typeof utag !== 'undefined') {
-          utag.link({
-            'event_name': 'lightbox_click',
-            'lightbox_name': 'bequest'
-          });
-        } // Close modal
+        window.addEventListener('resize', function (e) {
+          resizeIframe(bequestIframe);
+        });
+      }
 
+      if (bequestModal) {
+        modal = new bootstrap.Modal(bequestModal, {
+          backdrop: 'static',
+          keyboard: false
+        }); // Open modal
 
-        modal.hide();
-        focusFirst();
-      }); // Fit iframe to parent
+        modal.show(); // Fire tracking
 
-      window.addEventListener('resize', function (e) {
-        resizeIframe(bequestIframe);
-      });
-    }
-
-    if (bequestModal) {
-      modal = new bootstrap.Modal(bequestModal, {
-        backdrop: 'static',
-        keyboard: false
-      }); // Open modal
-
-      modal.show(); // Fire tracking
-
-      setTimeout(function () {
-        if (typeof utag !== 'undefined') {
-          utag.link({
-            'event_name': 'lightbox_impression',
-            'lightbox_name': 'bequest'
-          });
-        }
-      }, 1000);
+        setTimeout(function () {
+          if (typeof utag !== 'undefined') {
+            utag.link({
+              'event_name': 'lightbox_impression',
+              'lightbox_name': 'bequest'
+            });
+          }
+        }, 1000);
+      }
     }
   };
   /**
@@ -1272,11 +1223,15 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         theForm.querySelector('.en__submit button').addEventListener('click', function (e) {
           sessionStorage.removeItem('savedTotalAmount');
         });
-      } // Remove attendee index number
+      } // Remove ticket index number
 
+
+      getAll('.en__registrants__ticketHead').forEach(function (el) {
+        el.textContent = el.textContent.replace(/\d/g, '');
+      }); // Remove attendee index number
 
       getAll('.en__registrants__registrantHead').forEach(function (el) {
-        el.textContent = el.textContent.replace(/^\d{1,3}/, '').replace(/ticket \d{1,3}$/, '');
+        el.textContent = el.textContent.replace(/\d/g, '');
       }); // Re-number attendees
 
       getAll('.en__registrants__ticket').forEach(function (el) {
@@ -1662,16 +1617,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         });
       }
     }
-  }; // const trackFormSubmit = () => {
-  //   if (typeof utag !== 'undefined') {
-  //     utag.link({
-  //       'event_name': 'form_submit',
-  //       'form_type': pageJson.pageType,
-  //       'form_name': utag_data.page_name
-  //     });
-  //   }
-  // };
+  };
 
+  var trackFormSubmit = function trackFormSubmit() {
+    if (typeof utag !== 'undefined') {
+      utag.link({
+        'event_name': 'form_submit',
+        'form_type': pageJson.pageType,
+        'form_name': utag_data.page_name
+      });
+    }
+  };
 
   var mobilePhone = function mobilePhone() {
     var initPhoneFields = function initPhoneFields() {
@@ -1976,11 +1932,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         }
 
         sessionStorage.setItem('mobilePhoneData', JSON.stringify(mobilePhoneData));
-      } // // Maybe track form submit
-      // if (trackSubmit) {
-      //   trackFormSubmit();
-      // }
-      // Maybe display upsell modal
+      } // Maybe track form submit
+
+
+      if (trackSubmit) {
+        trackFormSubmit();
+      } // Maybe display upsell modal
 
 
       if (hasUpsell && donationAmount >= 5 && donationAmount <= 100 && !monthlyCheckbox.checked) {
@@ -2056,27 +2013,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
   /**
-   * Track data capture submits
-   */
-
-
-  var dataCaptureTracking = function dataCaptureTracking() {
-    if (pageJson.pageType === 'otherdatacapture') {
-      theForm.addEventListener('submit', function (e) {
-        setTimeout(function () {
-          if (formIsValid() && typeof utag !== 'undefined') {
-            utag.link({
-              'event_name': 'frm_emt_submit',
-              'form_type': 'otherdatacapture',
-              'form_name': utag_data.page_name.slice(0, -2),
-              'email_signup_location': 'otherdatacapture'
-            });
-          }
-        }, 100);
-      });
-    }
-  };
-  /**
    * Track social share clicks
    */
 
@@ -2105,13 +2041,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         setTimeout(function () {
           if (formIsValid() && typeof utag !== 'undefined') {
             utag.link({
-              'event_name': 'frm_emt_submit',
-              'form_type': pageJson.pageType,
+              'event_name': 'form_submit',
+              'form_type': 'advocacy',
               'form_name': utag_data.page_name.slice(0, -2),
               'action_id': utag_data.form_name,
               'action_type': pageJson.pageType,
-              'zip_code': document.getElementById('en__field_supporter_postcode') ? document.getElementById('en__field_supporter_postcode').value : '',
-              'email_signup_location': pageJson.pageType
+              'zip_code': document.getElementById('en__field_supporter_postcode') ? document.getElementById('en__field_supporter_postcode').value : ''
             });
           }
         }, 100);
@@ -2198,11 +2133,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     if (recurringStatus) {
-      if (window.navigator.userLanguage === 'es-MX' || window.navigator.language === 'es-MX' || window.location.href.indexOf('&locale=es-MX') > -1) {
-        recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Mensual' : 'Una vez';
-      } else {
-        recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';
-      }
+  		if (window.navigator.userLanguage === 'es-MX' || window.navigator.language === 'es-MX' || window.location.href.indexOf('locale=es-MX') > -1 || pageJson.locale === 'es-MX') {
+  			recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Mensual' : 'Una vez';
+  		} else {
+  			recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';
+  		}
     }
   };
   /**
@@ -3014,7 +2949,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       mobilePhone();
       validation();
       formSubmit();
-      dataCaptureTracking();
       socialShareTracking();
       advocacyTracking();
       footerTracking();
@@ -3034,4 +2968,4 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   });
 })();
 
-//# sourceMappingURL=scripts.min.epoc-267.js.map
+//# sourceMappingURL=scripts.min.dev.js.map
