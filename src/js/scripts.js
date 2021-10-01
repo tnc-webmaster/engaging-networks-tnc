@@ -378,6 +378,7 @@
     els = getAll('.en__errorHeader, .en__errorList');
     if (els.length > 0 && !isEmpty(theForm.querySelector('.en__errorList'))) {
       wrapAll(els, 'div', errorBoxClass);
+      trackProcessingErrors();
     }
 
     // Advocacy share text and share buttons blocks need to be wrapped for layout
@@ -1510,15 +1511,30 @@
     }
   };
 
-  // const trackFormSubmit = () => {
-  //   if (typeof utag !== 'undefined') {
-  //     utag.link({
-  //       'event_name': 'form_submit',
-  //       'form_type': pageJson.pageType,
-  //       'form_name': utag_data.page_name
-  //     });
-  //   }
-  // };
+  /**
+   * Track processing errors
+   */
+  const trackProcessingErrors = () => {
+    let paymentMethod = document.querySelector(paymentTypeSelector);
+
+    if (typeof utag !== 'undefined' && paymentMethod) {
+      utag.link({
+        'event_name': 'form_error',
+        'form_field_error_field': 'payment error',
+        'form_field_error_value': 'payment error',
+        'payment_type': paymentMethod.value,
+        'form_name': utag_data.page_name.slice(0, -2),
+        'form_type': pageJson.pageType
+      });
+      utag.link({
+        'event_name': 'form_error',
+        'form_field_error_field': 'payment rejected',
+        'form_field_error_value': 'payment rejected',
+        'form_name': utag_data.page_name.slice(0, -2),
+        'form_type': pageJson.pageType
+      });
+    }
+  };
 
   const mobilePhone = () => {
     const initPhoneFields = () => {
@@ -1682,11 +1698,22 @@
     }, true);
 
     window.enOnError = () => {
+      setTimeout(() => {
+        // Scroll to first invalid field
+        const firstError = document.querySelector('.en__field__error');
+        const field = firstError ? firstError.closest('.en__field') : null;
+
+        if (firstError && field) {
+          field.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      }, 10);
       trackFormErrors();
     };
 
     window.enOnValidate = function() {
-      const donationAmount = parseFloat(getTotalDonationAmount());
+      const donationAmount = document.querySelector('[data-token="amount-total"]') ? parseFloat(document.querySelector('[data-token="amount-total"]').textContent.replace(/\$/, '')) : parseFloat(getTotalDonationAmount());
       const ecardFields = theForm.querySelector(ecardFieldsSelector);
       const ecardSelect = theForm.querySelector(ecardSelectSelector);
       const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]');
@@ -2018,11 +2045,11 @@
     }
 
     if (recurringStatus) {
-  		if (window.navigator.userLanguage === 'es-MX' || window.navigator.language === 'es-MX' || window.location.href.indexOf('locale=es-MX') > -1 || pageJson.locale === 'es-MX') {
-  			recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Mensual' : 'Una vez';
-  		} else {
-  			recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';
-  		}
+      if (window.navigator.userLanguage === 'es-MX' || window.navigator.language === 'es-MX' || window.location.href.indexOf('locale=es-MX') > -1 || pageJson.locale === 'es-MX') {
+        recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Mensual' : 'Una vez';
+      } else {
+        recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';
+      }
     }
   };
 

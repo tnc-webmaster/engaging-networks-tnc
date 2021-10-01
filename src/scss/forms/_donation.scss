@@ -214,6 +214,6 @@
 }
 
 // untagged field for calculated gift amount
-.en__field--NOT_TAGGED_9 {
-  @extend .visually-hidden;
-}
+// .en__field--NOT_TAGGED_9:not(.en__field--1092105) {
+//   @extend .visually-hidden;
+// }

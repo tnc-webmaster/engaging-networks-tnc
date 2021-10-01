@@ -399,6 +399,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
     if (els.length > 0 && !isEmpty(theForm.querySelector('.en__errorList'))) {
       wrapAll(els, 'div', errorBoxClass);
+      trackProcessingErrors();
     } // Advocacy share text and share buttons blocks need to be wrapped for layout
 
 
@@ -1522,16 +1523,33 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         });
       }
     }
-  }; // const trackFormSubmit = () => {
-  //   if (typeof utag !== 'undefined') {
-  //     utag.link({
-  //       'event_name': 'form_submit',
-  //       'form_type': pageJson.pageType,
-  //       'form_name': utag_data.page_name
-  //     });
-  //   }
-  // };
+  };
+  /**
+   * Track processing errors
+   */
 
+
+  var trackProcessingErrors = function trackProcessingErrors() {
+    var paymentMethod = document.querySelector(paymentTypeSelector);
+
+    if (typeof utag !== 'undefined' && paymentMethod) {
+      utag.link({
+        'event_name': 'form_error',
+        'form_field_error_field': 'payment error',
+        'form_field_error_value': 'payment error',
+        'payment_type': paymentMethod.value,
+        'form_name': utag_data.page_name.slice(0, -2),
+        'form_type': pageJson.pageType
+      });
+      utag.link({
+        'event_name': 'form_error',
+        'form_field_error_field': 'payment rejected',
+        'form_field_error_value': 'payment rejected',
+        'form_name': utag_data.page_name.slice(0, -2),
+        'form_type': pageJson.pageType
+      });
+    }
+  };
 
   var mobilePhone = function mobilePhone() {
     var initPhoneFields = function initPhoneFields() {
@@ -1698,11 +1716,22 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }, true);
 
     window.enOnError = function () {
+      setTimeout(function () {
+        // Scroll to first invalid field
+        var firstError = document.querySelector('.en__field__error');
+        var field = firstError ? firstError.closest('.en__field') : null;
+
+        if (firstError && field) {
+          field.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      }, 10);
       trackFormErrors();
     };
 
     window.enOnValidate = function () {
-      var donationAmount = parseFloat(getTotalDonationAmount());
+      var donationAmount = document.querySelector('[data-token="amount-total"]') ? parseFloat(document.querySelector('[data-token="amount-total"]').textContent.replace(/\$/, '')) : parseFloat(getTotalDonationAmount());
       var ecardFields = theForm.querySelector(ecardFieldsSelector);
       var ecardSelect = theForm.querySelector(ecardSelectSelector);
       var feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]');
