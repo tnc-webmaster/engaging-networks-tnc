@@ -1537,13 +1537,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         'form_name': utag_data.page_name.slice(0, -2),
         'form_type': pageJson.pageType
       });
-      utag.link({
-        'event_name': 'form_error',
-        'form_field_error_field': 'payment rejected',
-        'form_field_error_value': 'payment rejected',
-        'form_name': utag_data.page_name.slice(0, -2),
-        'form_type': pageJson.pageType
-      });
     }
   };
 
