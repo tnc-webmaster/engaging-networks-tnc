@@ -617,25 +617,21 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     getAll('[name*="ccnumber"], [name*="ccvv"]').forEach(function (el) {
       el.setAttribute('inputmode', 'numeric');
     }); // Display minimum donation amount
-
-    el = theForm.querySelector(donationAmountSelector) || theForm.querySelector(otherAmountSelector);
-
-    if (el) {
-      // Getting the minimum amount from the EN validator
-      var minAmountValidator = EngagingNetworks.validators.filter(function (obj) {
-        if (obj.format) {
-          return obj.format.indexOf('~') > -1;
-        }
-
-        return false;
-      });
-
-      if (minAmountValidator[0]) {
-        // Add paragraph with min amount underneath Other Amount field
-        addEl(el, 'p', "$" + minAmountValidator[0].format.split('~')[0] + " minimum", 'fw-medium');
-      }
-    } // Other amount field is always visible, so the corresponding radio need to be button clicked here even though hidden
-
+    // el = theForm.querySelector(donationAmountSelector) || theForm.querySelector(otherAmountSelector);
+    // if (el) {
+    //   // Getting the minimum amount from the EN validator
+    //   const minAmountValidator = EngagingNetworks.validators.filter(obj => {
+    //     if (obj.format) {
+    //       return obj.format.indexOf('~') > -1;
+    //     }
+    //     return false;
+    //   });
+    //   if (minAmountValidator[0]) {
+    //     // Add paragraph with min amount underneath Other Amount field
+    //     addEl(el, 'p', `$${minAmountValidator[0].format.split('~')[0]} minimum`, 'fw-medium');
+    //   }
+    // }
+    // Other amount field is always visible, so the corresponding radio need to be button clicked here even though hidden
 
     el = theForm.querySelector('.en__field__input--other');
 
