@@ -23,6 +23,9 @@
   .en__component--copyblock:not(.hero):not(.form-heading) {
     margin-top: 2.25rem;
   }
+  .en__component--copyblock:not(.form-heading)+.en__component--formblock {
+    margin-top: 2rem;
+  }
   .en__component--formblock+.en__component--formblock {
     margin-top: 1.3333rem;
   }

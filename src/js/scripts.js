@@ -56,6 +56,7 @@
   const tributeOptionsSelector = 'select#en__field_transaction_trbopts';
 
   // Custom events
+  const iframeReady = new CustomEvent('iframeReady');
   const iframeSubmitted = new CustomEvent('iframeSubmitted');
 
   // Elements
@@ -915,15 +916,6 @@
     }
 
     if (bequestIframe) {
-      bequestIframe.addEventListener('load', e => {
-        bequestIframe.contentWindow.enOnError = function() {
-          // Fit iframe to parent
-          resizeIframe(bequestIframe);
-        };
-        // Fit iframe to parent
-        resizeIframe(bequestIframe);
-      });
-
       // Listen for submitted message from iframe
       window.addEventListener('iframeSubmitted', e => {
         // Fire tracking
@@ -950,7 +942,16 @@
         keyboard: false
       });
       // Open modal
-      modal.show();
+      window.addEventListener('iframeReady', e => {
+        modal.show();
+        bequestIframe.contentWindow.enOnError = function() {
+          // Fit iframe to parent
+          resizeIframe(bequestIframe);
+        };
+        // Fit iframe to parent
+        resizeIframe(bequestIframe);
+      });
+
       // Fire tracking
       setTimeout(function() {
         if (typeof utag !== 'undefined') {
@@ -1187,10 +1188,31 @@
    */
   const emailToTarget = () => {
     const contactBlock = theForm.querySelector('.en__component--contactblock');
+    const phone = document.querySelector('.en__field--telephone .en__field__input');
+    const homePhone = document.querySelector('[name="supporter.phoneNumber"]');
+    const mobilePhone = document.querySelector('[name="supporter.phoneNumber2"]');
+    const mobilePhoneCheck = document.querySelector('.en__field--this-is-my-mobile .en__field__input--checkbox');
+
+    const setPhoneFields = () => {
+      //  Set standard phone fields
+      if (mobilePhoneCheck.checked) {
+        homePhone.value = '';
+        mobilePhone.value = phone.value;
+      } else {
+        mobilePhone.value = '';
+        homePhone.value = phone.value;
+      }
+    };
 
     if (contactBlock) {
       // Already visually hidden, but hide from screen readers too without using display: none
       contactBlock.setAttribute('aria-hidden', 'true');
+    }
+
+    if (pageJson.pageType === 'emailtotarget' && phone && homePhone && mobilePhone && mobilePhoneCheck) {
+      phone.addEventListener('input', setPhoneFields);
+      phone.addEventListener('change', setPhoneFields);
+      mobilePhoneCheck.addEventListener('click', setPhoneFields);
     }
   };
 
@@ -2730,6 +2752,9 @@
 
   // On load
   document.addEventListener('DOMContentLoaded', e => {
+    if (window.self !== window.top) {
+      window.parent.dispatchEvent(iframeReady);
+    }
     if (seamlessEcardBlock) {
       seamlessEcard();
     }

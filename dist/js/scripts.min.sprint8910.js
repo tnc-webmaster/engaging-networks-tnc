@@ -69,6 +69,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   var totalAmountSelector = '.js-total-gift';
   var tributeOptionsSelector = 'select#en__field_transaction_trbopts'; // Custom events
 
+  var iframeReady = new CustomEvent('iframeReady');
   var iframeSubmitted = new CustomEvent('iframeSubmitted'); // Elements
 
   var theForm = document.querySelector('.en__component--page') || document.querySelector('.main'); // Masks
@@ -931,16 +932,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
 
     if (bequestIframe) {
-      bequestIframe.addEventListener('load', function (e) {
-        bequestIframe.contentWindow.enOnError = function () {
-          // Fit iframe to parent
-          resizeIframe(bequestIframe);
-        }; // Fit iframe to parent
-
-
-        resizeIframe(bequestIframe);
-      }); // Listen for submitted message from iframe
-
+      // Listen for submitted message from iframe
       window.addEventListener('iframeSubmitted', function (e) {
         // Fire tracking
         if (typeof utag !== 'undefined') {
@@ -966,7 +958,17 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         keyboard: false
       }); // Open modal
 
-      modal.show(); // Fire tracking
+      window.addEventListener('iframeReady', function (e) {
+        modal.show();
+
+        bequestIframe.contentWindow.enOnError = function () {
+          // Fit iframe to parent
+          resizeIframe(bequestIframe);
+        }; // Fit iframe to parent
+
+
+        resizeIframe(bequestIframe);
+      }); // Fire tracking
 
       setTimeout(function () {
         if (typeof utag !== 'undefined') {
@@ -1199,10 +1201,31 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
   var emailToTarget = function emailToTarget() {
     var contactBlock = theForm.querySelector('.en__component--contactblock');
+    var phone = document.querySelector('.en__field--telephone .en__field__input');
+    var homePhone = document.querySelector('[name="supporter.phoneNumber"]');
+    var mobilePhone = document.querySelector('[name="supporter.phoneNumber2"]');
+    var mobilePhoneCheck = document.querySelector('.en__field--this-is-my-mobile .en__field__input--checkbox');
+
+    var setPhoneFields = function setPhoneFields() {
+      //  Set standard phone fields
+      if (mobilePhoneCheck.checked) {
+        homePhone.value = '';
+        mobilePhone.value = phone.value;
+      } else {
+        mobilePhone.value = '';
+        homePhone.value = phone.value;
+      }
+    };
 
     if (contactBlock) {
       // Already visually hidden, but hide from screen readers too without using display: none
       contactBlock.setAttribute('aria-hidden', 'true');
+    }
+
+    if (pageJson.pageType === 'emailtotarget' && phone && homePhone && mobilePhone && mobilePhoneCheck) {
+      phone.addEventListener('input', setPhoneFields);
+      phone.addEventListener('change', setPhoneFields);
+      mobilePhoneCheck.addEventListener('click', setPhoneFields);
     }
   };
   /**
@@ -2809,6 +2832,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 
   document.addEventListener('DOMContentLoaded', function (e) {
+    if (window.self !== window.top) {
+      window.parent.dispatchEvent(iframeReady);
+    }
+
     if (seamlessEcardBlock) {
       seamlessEcard();
     }
@@ -2863,4 +2890,4 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
   });
 })();
 
-//# sourceMappingURL=scripts.min.101321.js.map
+//# sourceMappingURL=scripts.min.sprint8910.js.map

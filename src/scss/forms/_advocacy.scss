@@ -91,6 +91,9 @@
       }
     }
   }
+  .en__field--home-phone-opt-in {
+    @extend .visually-hidden;
+  }
 }
 
 .en__component--contactblock {
