@@ -1567,6 +1567,20 @@
     }
   };
 
+  const optIns = () => {
+    const permissionToContact = document.querySelector('.en__field--permission-to-contact-me');
+    const mobileTextOptIn = document.querySelector('.en__field--mobile-text-opt-in');
+    const mobileCallOptIn = document.querySelector('.en__field--mobile-call-opt-in');
+
+    // Hide the "permission to contact" QCB if user is known and has not opted-in to both
+    // Opt-ins are not added to form if user id known and already opted-in
+    if (permissionToContact) {
+      if (!mobileTextOptIn && !mobileCallOptIn) {
+        permissionToContact.classList.add(hiddenClass);
+      }
+    }
+  };
+
   const mobilePhone = () => {
     const initPhoneFields = () => {
       let mobilePhoneInput = theForm.querySelector(mobilePhoneInputSelector);
@@ -2795,6 +2809,7 @@
       if (hasClass(body, 'page--confirmation')) {
         confirmation();
       }
+      optIns();
       mobilePhone();
       validation();
       formSubmit();

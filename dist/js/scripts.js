@@ -1576,6 +1576,19 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   };
 
+  var optIns = function optIns() {
+    var permissionToContact = document.querySelector('.en__field--permission-to-contact-me');
+    var mobileTextOptIn = document.querySelector('.en__field--mobile-text-opt-in');
+    var mobileCallOptIn = document.querySelector('.en__field--mobile-call-opt-in'); // Hide the "permission to contact" QCB if user is known and has not opted-in to both
+    // Opt-ins are not added to form if user id known and already opted-in
+
+    if (permissionToContact) {
+      if (!mobileTextOptIn && !mobileCallOptIn) {
+        permissionToContact.classList.add(hiddenClass);
+      }
+    }
+  };
+
   var mobilePhone = function mobilePhone() {
     var initPhoneFields = function initPhoneFields() {
       var mobilePhoneInput = theForm.querySelector(mobilePhoneInputSelector);
@@ -2878,6 +2891,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         confirmation();
       }
 
+      optIns();
       mobilePhone();
       validation();
       formSubmit();
