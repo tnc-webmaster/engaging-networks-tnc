@@ -249,17 +249,18 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       createChoices(el);
     }); // OOB FB share only opens new window if image inside button is clicked
 
-    getAll('a.en__socialShare').forEach(function (el) {
-      el.setAttribute('target', '_blank'); // el.addEventListener('click', e => {
-      //   const img = e.currentTarget.querySelector('.en__socialShare__image');
-      //   if (img) {
-      //     // Don't let social share dialog open in same tab
-      //     e.preventDefault();
-      //     // The image opens the new window
-      //     img.click();
-      //     triggerEvent(img, 'click');
-      //   }
-      // });
+    getAll('a.en__socialShare--facebook').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        var img = e.currentTarget.querySelector('.en__socialShare__image');
+
+        if (img) {
+          // Don't let social share dialog open in same tab
+          e.preventDefault(); // The image opens the new window
+
+          img.click();
+          triggerEvent(img, 'click');
+        }
+      });
     }); // Structure modals
 
     els = getAll('.modal-header, .modal-body, .modal-footer');
