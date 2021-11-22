@@ -1985,9 +1985,11 @@
     if (pageJson.pageType === 'advocacypetition' || pageJson.pageType === 'emailtotarget') {
       theForm.addEventListener('submit', e => {
         setTimeout(function() {
+          const phoneOptIn = document.getElementById('en_field_supporter_questions_1107654');
+
           if (formIsValid() && typeof utag !== 'undefined') {
             utag.link({
-              'event_name': 'frm_emt_submit',
+              'event_name': phoneOptIn ? (phoneOptIn.checked ? 'frm_emt_txt_submit' : 'frm_emt_submit') : 'frm_emt_submit',
               'form_type': pageJson.pageType,
               'form_name': utag_data.page_name.slice(0, -2),
               'action_id': utag_data.form_name,

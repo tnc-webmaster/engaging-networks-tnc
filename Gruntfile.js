@@ -15,7 +15,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/js/scripts.js': 'src/js/scripts.js',
+          'dist/scripts.js': 'src/js/scripts.js',
         }
       }
     },
@@ -25,8 +25,8 @@ module.exports = function(grunt) {
         sourceMap: true,
       },
       dist: {
-        src: ['src/js/vendor/**/*.js', 'dist/js/scripts.js'],
-        dest: 'dist/js/scripts.min.sprint8910.js',
+        src: ['src/js/vendor/**/*.js', 'dist/scripts.js'],
+        dest: 'dist/scripts.min.sprint8910.js',
       },
     },
     'dart-sass': {
@@ -36,7 +36,7 @@ module.exports = function(grunt) {
           sourceMap: true,
         },
         files: {
-          'dist/css/styles.sprint8910.css': 'src/scss/styles.scss',
+          'dist/styles.sprint8910.css': 'src/scss/styles.scss',
         }
       }
     },
