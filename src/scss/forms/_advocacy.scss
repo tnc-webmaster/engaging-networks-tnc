@@ -94,6 +94,13 @@
   .en__field--home-phone-opt-in {
     @extend .visually-hidden;
   }
+  .enWidget--progressBar {
+    opacity: 0;
+    transition: $transition-base;
+    &.is-active {
+      opacity: 1 !important;
+    }
+  }
 }
 
 .en__component--contactblock {

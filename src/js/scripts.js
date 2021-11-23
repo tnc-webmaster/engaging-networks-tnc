@@ -1985,18 +1985,23 @@
     if (pageJson.pageType === 'advocacypetition' || pageJson.pageType === 'emailtotarget') {
       theForm.addEventListener('submit', e => {
         setTimeout(function() {
-          const phoneOptIn = document.getElementById('en_field_supporter_questions_1107654');
+          const phoneOptIn = document.getElementById('en__field_supporter_questions_1107654');
+          let utagData = {};
 
           if (formIsValid() && typeof utag !== 'undefined') {
-            utag.link({
-              'event_name': phoneOptIn ? (phoneOptIn.checked ? 'frm_emt_txt_submit' : 'frm_emt_submit') : 'frm_emt_submit',
-              'form_type': pageJson.pageType,
-              'form_name': utag_data.page_name.slice(0, -2),
-              'action_id': utag_data.form_name,
-              'action_type': pageJson.pageType,
-              'zip_code': document.getElementById('en__field_supporter_postcode') ? document.getElementById('en__field_supporter_postcode').value : '',
-              'email_signup_location': pageJson.pageType
-            });
+            utagData.event_name = phoneOptIn ? (phoneOptIn.checked ? 'frm_emt_txt_submit' : 'frm_emt_submit') : 'frm_emt_submit';
+            utagData.form_type = pageJson.pageType;
+            utagData.form_name = utag_data.page_name.slice(0, -2);
+            utagData.action_id = utag_data.form_name;
+            utagData.action_type = pageJson.pageType;
+            utagData.zip_code = document.getElementById('en__field_supporter_postcode') ? document.getElementById('en__field_supporter_postcode').value : '';
+            utagData.email_signup_location = pageJson.pageType;
+            if (phoneOptIn) {
+              if (phoneOptIn.checked) {
+                utagData.text_signup_location = pageJson.pageType;
+              }
+            }
+            utag.link(utagData);
           }
         }, 100);
       });
@@ -2138,8 +2143,8 @@
    * Thermometer enhancements
    */
   const thermometers = () => {
-    // Thermometer goals need to dynamically increase once a certain "raised" is reached
-    getAll('.enWidget--progressBar').forEach(el => {
+    // Advocacy thermometer goals need to dynamically increase once a certain "raised" is reached
+    getAll('.en__component--page[action*="/action/2"] .enWidget--progressBar').forEach(el => {
       const fill = el.querySelector('.enWidget__fill');
       const raisedPct = parseInt(fill.style.width);
       const raisedNumber = parseInt(el.querySelector('.raised > div').textContent.replace(/\,/g, ''));

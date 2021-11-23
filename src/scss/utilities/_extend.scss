@@ -27,6 +27,9 @@
       }
       img {
         width: 100% !important;
+        @include media-breakpoint-up(lg) {
+          width: auto !important;
+        }
       }
     }
   }

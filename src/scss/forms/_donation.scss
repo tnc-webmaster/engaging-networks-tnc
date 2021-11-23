@@ -8,6 +8,9 @@
       @extend .col-lg-4;
     }
   }
+  .enWidget--progressBar {
+    margin-top: 4rem;
+  }
 }
 
 @include media-breakpoint-up(xl) {
