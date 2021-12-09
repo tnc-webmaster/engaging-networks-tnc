@@ -2144,7 +2144,7 @@
    */
   const thermometers = () => {
     // Advocacy thermometer goals need to dynamically increase once a certain "raised" is reached
-    getAll('.en__component--page[action*="/action/2"] .enWidget--progressBar').forEach(el => {
+    getAll('.en__component--page[action*="/action"] .enWidget--progressBar, .en__component--page[action*="/petition"] .enWidget--progressBar').forEach(el => {
       const fill = el.querySelector('.enWidget__fill');
       const raisedPct = parseInt(fill.style.width);
       const raisedNumber = parseInt(el.querySelector('.raised > div').textContent.replace(/\,/g, ''));
@@ -2159,9 +2159,7 @@
         fill.style.width = `${raisedNumber / newGoal * 100}%`;
       }
       // Therms are hidden with CSS
-      setTimeout(function() {
-        addClass(el, activeClass);
-      }, 100);
+      addClass(el, activeClass);
     });
   };
 

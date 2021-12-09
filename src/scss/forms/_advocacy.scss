@@ -6,6 +6,7 @@
 .en__component--page[action*="petition"] {
   .overview {
     @extend %serif-xl;
+
     p,
     ol,
     ul {
@@ -14,20 +15,24 @@
       }
     }
   }
+
   .aside {
     @include media-breakpoint-down(lg) {
       border-top: $border-default;
       padding-top: 1.75rem;
       margin-top: 1.75rem;
     }
+
     h3 {
       +h4 {
         margin-top: .833rem;
       }
+
       +ol,
       +ul {
         margin-bottom: 1.25rem;
         margin-top: 1.25rem;
+
         li {
           font-size: $font-size-sm;
           font-weight: $font-weight-semibold;
@@ -35,43 +40,52 @@
           text-transform: uppercase;
         }
       }
+
       ~h4 {
         font-family: $font-family-sans-serif;
         font-size: 1.375rem;
         font-weight: $font-weight-medium;
         line-height: 1.4545;
         margin-bottom: 1rem;
+
         @include media-breakpoint-down(lg) {
           font-size: 1.125rem;
           line-height: 1.4444;
         }
       }
     }
+
     p:not(:last-child) {
       margin-bottom: 1.5rem;
     }
+
     ul {
       @extend .list-unstyled;
     }
   }
+
   .en__component--advcolumn {
     &:first-child:not(:last-child):not(.card) {
       @extend .col-lg-5;
+
       .en__component--imageblock {
         img {
           width: 100% !important;
         }
       }
+
       h2 {
         font-family: $font-family-sans-serif;
         font-weight: $font-weight-bold;
         margin-bottom: 2.5rem;
+
         @include media-breakpoint-down(lg) {
           font-size: 1.875rem;
           margin-bottom: 1rem;
         }
       }
     }
+
     &:last-child:not(:first-child):not(.card) {
       @include media-breakpoint-up(lg) {
         border: $border-default;
@@ -80,26 +94,23 @@
         padding: 4% 8.5% 6%;
         width: 48%;
       }
+
       .enWidget--progressBar {
         margin-bottom: 2.5rem;
       }
+
       .enWidget__copy--above {
         margin-bottom: 1rem;
       }
+
       .en__submit {
         margin-top: 2.125rem;
       }
     }
   }
+
   .en__field--home-phone-opt-in {
     @extend .visually-hidden;
-  }
-  .enWidget--progressBar {
-    opacity: 0;
-    transition: $transition-base;
-    &.is-active {
-      opacity: 1 !important;
-    }
   }
 }
 
@@ -115,17 +126,21 @@
   border-bottom: $border-default;
   padding-bottom: 1.5rem;
   margin-bottom: 2.5rem;
+
   h3 {
     @extend .h5;
     margin: 0;
   }
+
   .en__socialShare {
     align-items: center;
     display: flex;
     margin-left: 1.25rem !important;
     padding: 0 !important;
+
     &:not(:last-child) {
       margin-right: 1.5rem !important;
+
       &::after {
         border-left: $border-default;
         content: "";
@@ -134,16 +149,20 @@
       }
     }
   }
+
   .en__socialShare--facebook {
     height: 20px !important;
     width: 10px !important;
+
     img {
       width: 10px !important;
     }
   }
+
   .en__socialShare--twitter {
     height: 20px !important;
     width: 24px !important;
+
     img {
       width: 24px !important;
     }

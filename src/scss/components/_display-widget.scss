@@ -5,6 +5,17 @@
 }
 
 .enWidget--progressBar {
+  &.is-active {
+    &::before {
+      display: none !important;
+    }
+
+    .enWidget__copy,
+    .enWidget__display {
+      opacity: 1 !important;
+    }
+  }
+
   .raised,
   .remaining {
     >div {
@@ -13,6 +24,7 @@
           color: $primary !important;
         }
       }
+
       &:last-child {
         >span {
           color: $body-color !important;
@@ -20,12 +32,15 @@
       }
     }
   }
+
   .raised {
     border-color: $border-color !important;
   }
+
   .enWidget__progress {
     border-color: $input-border-color !important;
   }
+
   .enWidget__fill {
     background-color: $primary !important;
   }
