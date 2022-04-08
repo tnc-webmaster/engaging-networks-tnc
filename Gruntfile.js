@@ -1,6 +1,11 @@
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    clean :  {
+      build: 'dist',
+      css: ['dist/*.css', 'dist/*.css.map'],
+      js:  ['dist/*.js', 'dist/*.js.map']
+    },
     jshint: {
       options: {
         browser: true,
@@ -65,6 +70,7 @@ module.exports = function(grunt) {
     },
   });
 
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-babel');
@@ -72,7 +78,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-postcss');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.registerTask('w', ['watch']);
-  grunt.registerTask('css', ['dart-sass', 'postcss']);
-  grunt.registerTask('js', ['jshint', 'babel', 'concat']);
+  grunt.registerTask('css', ['clean:css', 'dart-sass', 'postcss']);
+  grunt.registerTask('js', ['clean:js', 'jshint', 'babel', 'concat']);
+  grunt.registerTask('build', ['clean:build', 'jshint', 'babel', 'concat', 'dart-sass', 'postcss']);
   grunt.registerTask('default', ['dart-sass', 'postcss']);
 };
