@@ -857,7 +857,9 @@
     const giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
     const otherAmountInputMin = theForm.querySelector('.en__otherFieldMin input');
-    const otherAmountErrorContainer = document.createElement('<div class="en__other__field__error"></div>');
+    const otherAmountContainer = theForm.querySelector(otherAmountSelector);
+    let otherAmountErrorContainer = document.createElement('div');
+    otherAmountErrorContainer.classList.add('en__other__field__error');
     const recurrenceCheckbox = theForm.querySelector('[name="transaction.recurrpay"][type="checkbox"]');
     const recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq');
     let donationAmtRadios = null;
@@ -874,7 +876,7 @@
 
     const otherFieldClear = () => {
       otherAmountInput.classList.remove('_checkAmtErr');
-      theForm.querySelector('.en__other__field__error').textContent('');
+      theForm.querySelector('.en__other__field__error').textContent = '';
       otherAmountInputMin.value = '';
       theForm.querySelector('.en__submit button').disabled = false;
     };
@@ -886,15 +888,14 @@
     };
 
     const validateDonationAmountChangeMin = (e) => {
-      otherAmountInput.append(otherAmountErrorContainer);
       if (otherAmountInputMin && otherAmountInputMin != null) {
         if (!e.target.value || e.target.value >= otherAmountInputMin.value) {
           e.target.classList.remove('_checkAmtErr');
-          theForm.querySelector('.en__other__field__error').textContent('');
+          theForm.querySelector('.en__other__field__error').textContent = '';
           theForm.querySelector('.en__submit button').disabled = false;
         } else if (e.target.value < otherAmountInputMin.value) {
           e.target.classList.add('_checkAmtErr');
-          theForm.querySelector('.en__other__field__error').textContent('Your donation must be between $'+otherAmountInputMin.value+'.00 and $50,000.00');
+          theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+otherAmountInputMin.value+'.00 and $50,000.00';
           theForm.querySelector('.en__submit button').disabled = true;
         }
       }
@@ -916,12 +917,12 @@
 
       // Listen for other amount change
       if (otherAmountInput) {
+        otherAmountContainer.append(otherAmountErrorContainer);
         otherAmountInput.addEventListener('input', handleDonationAmountChange);
         otherAmountInput.addEventListener('focusout', validateDonationAmountChangeMin);
 
         document.addEventListener('click', function(event) {
           if (event.target.matches('label.en__field__label[for*="transaction_donationAmt"]')) {
-            event.preventDefault();
             otherFieldClear();
           }
         }, false);
