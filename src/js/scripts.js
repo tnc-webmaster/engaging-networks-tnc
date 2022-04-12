@@ -889,13 +889,15 @@
 
     const validateDonationAmountChangeMin = (e) => {
       if (otherAmountInputMin && otherAmountInputMin != null) {
-        if (!e.target.value || e.target.value >= otherAmountInputMin.value) {
+        var _otherInputParsed = parseInt(e.target.value);
+        var _otherInputMinParsed = parseInt(otherAmountInputMin.value);
+        if (!_otherInputParsed || _otherInputParsed >= _otherInputMinParsed) {
           e.target.classList.remove('_checkAmtErr');
           theForm.querySelector('.en__other__field__error').textContent = '';
           theForm.querySelector('.en__submit button').disabled = false;
-        } else if (e.target.value < otherAmountInputMin.value) {
+        } else if (_otherInputParsed < _otherInputMinParsed) {
           e.target.classList.add('_checkAmtErr');
-          theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+otherAmountInputMin.value+'.00 and $50,000.00';
+          theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00';
           theForm.querySelector('.en__submit button').disabled = true;
         }
       }
