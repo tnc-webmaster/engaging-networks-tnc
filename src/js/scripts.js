@@ -921,8 +921,9 @@
       if (otherAmountInput) {
         otherAmountContainer.append(otherAmountErrorContainer);
         otherAmountInput.addEventListener('input', handleDonationAmountChange);
+        // add front end validation to 'other' field on focusout
         otherAmountInput.addEventListener('focusout', validateDonationAmountChangeMin);
-
+        // clear 'other' field front end validation logic if other amount buttons are click
         document.addEventListener('click', function(event) {
           if (event.target.matches('label.en__field__label[for*="transaction_donationAmt"]')) {
             otherFieldClear();
