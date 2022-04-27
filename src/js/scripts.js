@@ -858,6 +858,7 @@
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
     const otherAmountInputMin = theForm.querySelector('.en__otherFieldMin input');
     const otherAmountContainer = theForm.querySelector(otherAmountSelector);
+    const monthlyGive = document.getElementById('en__field_transaction_recurrpay');
     let otherAmountErrorContainer = document.createElement('div');
     otherAmountErrorContainer.classList.add('en__other__field__error');
     const recurrenceCheckbox = theForm.querySelector('[name="transaction.recurrpay"][type="checkbox"]');
@@ -891,14 +892,28 @@
       if (otherAmountInputMin && otherAmountInputMin != null) {
         var _otherInputParsed = parseInt(e.target.value);
         var _otherInputMinParsed = parseInt(otherAmountInputMin.value);
-        if (!_otherInputParsed || _otherInputParsed >= _otherInputMinParsed) {
-          e.target.classList.remove('_checkAmtErr');
-          theForm.querySelector('.en__other__field__error').textContent = '';
-          theForm.querySelector('.en__submit button').disabled = false;
-        } else if (_otherInputParsed < _otherInputMinParsed) {
-          e.target.classList.add('_checkAmtErr');
-          theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00';
-          theForm.querySelector('.en__submit button').disabled = true;
+        // if monthly box is checked, new min is 15
+        if (monthlyGive.checked) {
+           _otherInputMinParsed = 15;
+        }
+        // other field can't be less than 'Other Field Minimum' code block val or greater than 50k
+        // if monthly box is checked, other field can't be lower than 15 or greater than 50k
+        switch (true) {
+          case ((_otherInputParsed < _otherInputMinParsed || _otherInputParsed > 50000) && monthlyGive.checked):
+            e.target.classList.add('_checkAmtErr');
+            theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00';
+            theForm.querySelector('.en__submit button').disabled = true;
+            break;
+          case _otherInputParsed < _otherInputMinParsed || _otherInputParsed > 50000:
+            e.target.classList.add('_checkAmtErr');
+            theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00';
+            theForm.querySelector('.en__submit button').disabled = true;
+            break;
+          default:
+            e.target.classList.remove('_checkAmtErr');
+            theForm.querySelector('.en__other__field__error').textContent = '';
+            theForm.querySelector('.en__submit button').disabled = false;
+
         }
       }
     };
