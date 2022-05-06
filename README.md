@@ -11,7 +11,7 @@ npm install
 ```
 Production files are compiled to `dist` folder:
 
-JS to `dist/scripts.min.[CURRENT-DATE].js` and CSS to `dist/styles.[CURRENT-DATE].css`
+JS to `dist/scripts.min.js` and CSS to `dist/styles.css`
 
 ## Usage
 All tasks are defined in Gruntfile.js
@@ -19,9 +19,9 @@ All tasks are defined in Gruntfile.js
 # watches for file changes in src/scss/**/*.scss and src/js/**/*.js
 grunt w
 
-# compiles src/scss/styles.scss into dist/styles.[CURRENT-DATE].css
+# compiles src/scss/styles.scss into dist/styles.css
 grunt css
 
-# compiles src/js/vendor/**/*.js and src/js/scripts.js into dist/scripts.min.[CURRENT-DATE].js
+# compiles src/js/vendor/**/*.js and src/js/scripts.js into dist/scripts.min.js
 grunt js
 ```
