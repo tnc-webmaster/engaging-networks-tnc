@@ -163,6 +163,24 @@
   @extend .visually-hidden;
 }
 
+.en__other__field__error {
+  color: #c5351c;
+  font-size: .875rem;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.4285;
+  margin-top: 0.6875rem;
+  order: 1;
+}
+._otherFieldMin {
+  margin: 0;
+  padding: 0;
+}
+
+._checkAmtErr {
+  border: 2px solid #c5351c;
+}
+
 .js-total-gift,
 .js-total-gift--tipjar,
 [data-token="amount-total"] {
