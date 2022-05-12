@@ -14,17 +14,17 @@ body#en__pagebuilder .modal {
   .en__component {
     margin-left: auto;
     margin-right: auto;
-    width: 87%;    
-    
+    width: 87%;
+
     @include media-breakpoint-up(lg) {
       width: 75%;
     }
   }
 
   .en__component--formblock {
-    margin-top: 1.5rem;    
-  }  
-  
+    margin-top: 1.5rem;
+  }
+
   .en__field--radio .en__field__item {
     margin-bottom: .8333rem !important;
   }
@@ -41,33 +41,33 @@ body#en__pagebuilder .modal {
 .modal-header {
   padding-top: 3.5rem;
   position: static;
-  
+
   @include media-breakpoint-up(lg) {
-    padding-top: 4.5rem;    
+    padding-top: 4.5rem;
   }
-  
+
   p {
-    
+
   }
 
   .btn-close {
     @extend %btn-close;
     right: 1.25rem;
-    top: 1.25rem;    
+    top: 1.25rem;
   }
-  
+
   .no-close & {
     display: block;
     padding-top: 2.5rem;
-    
+
     @include media-breakpoint-up(lg) {
-      padding-top: 4.5rem;    
+      padding-top: 4.5rem;
     }
-    
+
     p {
       @extend %sans-serif-lg;
     }
-    
+
     .btn-close {
       display: none;
     }
@@ -80,12 +80,12 @@ body#en__pagebuilder .modal {
   font-weight: $font-weight-semibold;
   line-height: 1.2;
   margin-bottom: 1rem;
-  
+
   @include media-breakpoint-up(lg) {
     font-size: 1.625rem;
     line-height: 1.3076;
     margin-bottom: .8125rem;
-    
+
   }
 
   &[style="text-align: center;"] {
@@ -97,12 +97,12 @@ body#en__pagebuilder .modal {
   p {
     @extend %serif-lg;
   }
-  
+
   &.en__component--formblock {
     &.narrow {
-      max-width: 25rem !important;      
+      max-width: 25rem !important;
     }
-   
+
     + .modal-footer {
       .btn {
         font-size: 1.25rem;
@@ -110,21 +110,21 @@ body#en__pagebuilder .modal {
         line-height: 1.2;
         max-width: 10rem;
         padding-bottom: 1.125rem;
-        padding-top: 1.125rem;        
+        padding-top: 1.125rem;
       }
     }
   }
 
   .en__field:not(:last-child) {
-    margin-bottom: .833rem;  
+    margin-bottom: .833rem;
   }
 
   .en__field--radio {
     > .en__field__label {
       font-family: $font-family-sans-serif;
       font-size: 1rem;
-    }    
-    
+    }
+
     .en__field__label {
       font-weight: $font-weight-medium;
     }
@@ -138,9 +138,9 @@ body#en__pagebuilder .modal {
 .modal-footer {
   justify-content: flex-start;
   padding-bottom: 4.5rem;
-  
+
   button[data-bs-dismiss]:not(.btn) {
-    @extend %btn-text;    
+    @extend %btn-text;
     color: $primary;
     font-weight: $font-weight-semibold;
     margin-top: 1.875rem;
@@ -151,13 +151,13 @@ body#en__pagebuilder .modal {
   .btn {
     font-weight: $font-weight-bold;
     height: auto;
-    width: 100%;   
+    width: 100%;
 
-    &-outline-primary {    
+    &-outline-primary {
       @include button-variant($white, $primary, $primary, $primary, $primary, $white, $primary, $primary, $white);
-    }    
-  }  
-  
+    }
+  }
+
   .en__submit {
     flex: none;
     margin-left: auto;
@@ -171,4 +171,61 @@ body#en__pagebuilder .modal {
     }
   }
 }
+.en__upsellModal__content {
+  h2,h3,h4,h5,h6 {
+    font-family: $font-family-sans-serif;
+    font-size: 1.25rem;
+    font-weight: $font-weight-semibold;
+    line-height: 1.2;
+    margin-bottom: 1rem;
 
+    @include media-breakpoint-up(lg) {
+      font-size: 1.625rem;
+      line-height: 1.3076;
+      margin-bottom: .8125rem;
+
+    }
+
+    &[style="text-align: center;"] {
+      margin-bottom: 1.4rem;
+    }
+  }
+  p {
+    font-family: $font-family-serif;
+    font-size: 1.125rem;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 34px;
+  }
+  #en__upsellModal__buttons{
+    button {
+      font-family:  $font-family-sans-serif;
+      font-weight: $form-select-font-weight;
+      padding: 1rem 1.875rem;
+      border: 1px solid #007931;
+      transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+    #en__upsellModal__yes{
+      button{
+        color: #fff;
+        background-color: #007931;
+        &:hover {
+          color: #fff;
+          background-color: #1a1a1a;
+          border: 1px solid #1a1a1a;
+        }
+      }
+    }
+    #en__upsellModal__no{
+      button{
+        color: #007931;
+        background-color: #fff;
+        &:hover {
+          color: #fff;
+          background-color: #007931;
+          border: 1px solid #007931;
+        }
+      }
+    }
+  }
+}

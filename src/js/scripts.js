@@ -1813,6 +1813,35 @@
         }
       };
 
+      const enSustainerUpsell = () => {
+        setTimeout(() => {
+          var enUpsellLightbox = document.getElementById('en__upsellModal');
+          var enUpsellYesButton = document.getElementById('en__upsellModal__yes');
+
+          if (enUpsellYesButton) {
+            // Fire tracking if EN Upsell yes button is clicked
+            enUpsellYesButton.addEventListener('click', e => {
+              if (typeof utag !== 'undefined') {
+                utag.link({
+                  'event_name': 'lightbox_click',
+                  'lightbox_name': 'sustainer upsell'
+                });
+              }
+            });
+          }
+
+          if (enUpsellLightbox) {
+            // Fire tracking when EN lightbox opens
+            if (typeof utag !== 'undefined') {
+              utag.link({
+                'event_name': 'lightbox_impression',
+                'lightbox_name': 'sustainer upsell'
+              });
+            }
+          }
+        }, 1500);
+      };
+
       if (feeCoverCheckbox) {
         // Calculate extra fee cover amount for data layer
         if (feeCoverCheckbox.checked) {
@@ -1866,7 +1895,12 @@
       // if (trackSubmit) {
       //   trackFormSubmit();
       // }
-
+      // Check for EN lighbox
+      if (window.EngagingNetworks.upsell && window.EngagingNetworks.upsell[0].componentId !== 'undefined') {
+        if (formIsValid()) {
+          enSustainerUpsell();
+        }
+      }
       // Maybe display upsell modal
       if (hasUpsell && donationAmount >= 5 && donationAmount <= 100 && !monthlyCheckbox.checked) {
         if (isInvalid) {
