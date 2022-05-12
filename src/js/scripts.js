@@ -1948,7 +1948,7 @@
       //   trackFormSubmit();
       // }
       // Check for EN lighbox
-      if (window.EngagingNetworks.upsell && window.EngagingNetworks.upsell[0].componentId !== 'undefined') {
+      if (window.EngagingNetworks.upsell.length && window.EngagingNetworks.upsell[0].componentId && window.EngagingNetworks.upsell[0].componentId !== 'undefined') {
         if (formIsValid()) {
           enSustainerUpsell();
         }
