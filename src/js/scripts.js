@@ -934,7 +934,9 @@
 
       // Listen for other amount change
       if (otherAmountInput) {
-        otherAmountContainer.append(otherAmountErrorContainer);
+        if (otherAmountContainer) {
+          otherAmountContainer.append(otherAmountErrorContainer);
+        }
         otherAmountInput.addEventListener('input', handleDonationAmountChange);
         // add front end validation to 'other' field on focusout
         otherAmountInput.addEventListener('focusout', validateDonationAmountChangeMin);
