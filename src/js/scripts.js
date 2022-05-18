@@ -856,6 +856,11 @@
     const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]');
     const giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
+    const otherAmountInputMin = theForm.querySelector('.en__otherFieldMin input');
+    const otherAmountContainer = theForm.querySelector(otherAmountSelector);
+    const monthlyGive = document.getElementById('en__field_transaction_recurrpay');
+    let otherAmountErrorContainer = document.createElement('div');
+    otherAmountErrorContainer.classList.add('en__other__field__error');
     const recurrenceCheckbox = theForm.querySelector('[name="transaction.recurrpay"][type="checkbox"]');
     const recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq');
     let donationAmtRadios = null;
@@ -870,9 +875,46 @@
       }
     };
 
+    const otherFieldClear = () => {
+      otherAmountInput.classList.remove('_checkAmtErr');
+      theForm.querySelector('.en__other__field__error').textContent = '';
+      otherAmountInput.value = '';
+      theForm.querySelector('.en__submit button').disabled = false;
+    };
+
     const handleDonationAmountChange = (e) => {
       if (feeCoverCheckbox) {
         maybeUncheckFeeCover(getOriginalDonationAmount());
+      }
+    };
+
+    const validateDonationAmountChangeMin = (e) => {
+      if (otherAmountInputMin && otherAmountInputMin != null) {
+        var _otherInputParsed = parseInt(e.target.value);
+        var _otherInputMinParsed = parseInt(otherAmountInputMin.value);
+        // if monthly box is checked, new min is 15
+        if (monthlyGive.checked) {
+           _otherInputMinParsed = 15;
+        }
+        // other field can't be less than 'Other Field Minimum' code block val or greater than 50k
+        // if monthly box is checked, other field can't be lower than 15 or greater than 50k
+        switch (true) {
+          case ((_otherInputParsed < _otherInputMinParsed || _otherInputParsed > 50000) && monthlyGive.checked):
+            e.target.classList.add('_checkAmtErr');
+            theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00';
+            theForm.querySelector('.en__submit button').disabled = true;
+            break;
+          case _otherInputParsed < _otherInputMinParsed || _otherInputParsed > 50000:
+            e.target.classList.add('_checkAmtErr');
+            theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00';
+            theForm.querySelector('.en__submit button').disabled = true;
+            break;
+          default:
+            e.target.classList.remove('_checkAmtErr');
+            theForm.querySelector('.en__other__field__error').textContent = '';
+            theForm.querySelector('.en__submit button').disabled = false;
+
+        }
       }
     };
 
@@ -892,8 +934,20 @@
 
       // Listen for other amount change
       if (otherAmountInput) {
+        if (otherAmountContainer) {
+          otherAmountContainer.append(otherAmountErrorContainer);
+        }
         otherAmountInput.addEventListener('input', handleDonationAmountChange);
+        // add front end validation to 'other' field on focusout
+        otherAmountInput.addEventListener('focusout', validateDonationAmountChangeMin);
+        // clear 'other' field front end validation logic if other amount buttons are click
+        document.addEventListener('click', function(event) {
+          if (event.target.matches('label.en__field__label[for*="transaction_donationAmt"]')) {
+            otherFieldClear();
+          }
+        }, false);
       }
+
     };
 
     resetDonationAmount = () => {
@@ -1813,6 +1867,35 @@
         }
       };
 
+      const enSustainerUpsell = () => {
+        setTimeout(() => {
+          var enUpsellLightbox = document.getElementById('en__upsellModal');
+          var enUpsellYesButton = document.getElementById('en__upsellModal__yes');
+
+          if (enUpsellYesButton) {
+            // Fire tracking if EN Upsell yes button is clicked
+            enUpsellYesButton.addEventListener('click', e => {
+              if (typeof utag !== 'undefined') {
+                utag.link({
+                  'event_name': 'lightbox_click',
+                  'lightbox_name': 'sustainer upsell'
+                });
+              }
+            });
+          }
+
+          if (enUpsellLightbox) {
+            // Fire tracking when EN lightbox opens
+            if (typeof utag !== 'undefined') {
+              utag.link({
+                'event_name': 'lightbox_impression',
+                'lightbox_name': 'sustainer upsell'
+              });
+            }
+          }
+        }, 1500);
+      };
+
       if (feeCoverCheckbox) {
         // Calculate extra fee cover amount for data layer
         if (feeCoverCheckbox.checked) {
@@ -1866,7 +1949,12 @@
       // if (trackSubmit) {
       //   trackFormSubmit();
       // }
-
+      // Check for EN lighbox
+      if (window.EngagingNetworks.upsell.length && window.EngagingNetworks.upsell[0].componentId && window.EngagingNetworks.upsell[0].componentId !== 'undefined') {
+        if (formIsValid()) {
+          enSustainerUpsell();
+        }
+      }
       // Maybe display upsell modal
       if (hasUpsell && donationAmount >= 5 && donationAmount <= 100 && !monthlyCheckbox.checked) {
         if (isInvalid) {
