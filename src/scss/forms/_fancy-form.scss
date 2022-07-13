@@ -1,0 +1,811 @@
+$color_1: #1b75bc;
+$color_2: #007931;
+$color_3: #1a1a1a;
+$color_4: #fff;
+$font-family_1: Kalam,cursive;
+$font-family_2: Whitney A,Whitney B,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,Liberation Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
+$background-color_1: #c85c19;
+$background-color_2: #1a1a1a;
+$background-color_3: #fff;
+$border-color_1: #c85c19;
+$border-color_2: #1a1a1a;
+$border-color_3: #949494;
+
+.main {
+	margin-top: 0;
+}
+.footer {
+	margin-top: 2.375rem !important;
+}
+#_ff-container.container {
+	max-width: 100%;
+	padding: 0;
+}
+#_ff-container {
+	.button-trig {
+		cursor: pointer;
+		height: 100%;
+		width: 100%;
+		display: block;
+		position: absolute;
+		top: 0;
+	}
+	.donateNudge {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		max-width: 300px;
+		color: $color_1;
+		font-size: 20px;
+		margin-top: 24px;
+		p {
+			line-height: 24px;
+			margin-right: 10px;
+			font-family: $font-family_1;
+		}
+		img {
+			margin-bottom: 30px;
+		}
+	}
+	.cc-check._ppal.ppal-active {
+		.en__field--payment-method-cc-and-ach- {
+			.en__field__item {
+				label {
+					background: #fff !important;
+					color: $color_2 !important;
+				}
+			}
+		}
+	}
+	#ppal-note {
+		display: none;
+	}
+	.form-heading {
+		margin-top: 45px;
+	}
+	.en__field {
+		.popover-container {
+			margin-bottom: 40px;
+		}
+	}
+	.en__field--postcode {
+		.en__field__input--text {
+			max-width: 100%;
+		}
+	}
+	.en__field--ccnumber {
+		&:after {
+			display: none;
+		}
+	}
+	.en__field--recurrpay {
+		display: none;
+	}
+	.en__field--ccexpire {
+		margin-bottom: 40px;
+	}
+	.en__field__element--email {
+		&:after {
+			content: "You'll receive email updates from The Nature Conservancy. You can unsubscribe at any time.";
+			font-size: 14px;
+			color: $color_3;
+			line-height: 20px;
+		}
+	}
+	.en__field__element--telephone {
+		&:after {
+			content: "By sharing your phone number, you give The Nature Conservancy permission to contact you with updates via phone and text.";
+			font-size: 14px;
+			color: $color_3;
+			line-height: 20px;
+		}
+	}
+	.en__field--bankAccountType {
+		.en__field__label {
+			margin-bottom: .5rem;
+		}
+		.en__field__element--radio {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			height: 56px;
+			.en__field__item {
+				&:first-of-type {
+					margin-right: 20px;
+				}
+			}
+		}
+	}
+	.en__submit {
+		button {
+			background-color: $background-color_1;
+			border-color: $border-color_1;
+			&:hover {
+				background-color: $background-color_2;
+				border-color: $border-color_2;
+			}
+		}
+	}
+	.donateBlock {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		.giveBlock {
+			color: $color_2;
+			background: #fff;
+			cursor: pointer;
+			height: 60px;
+			max-width: 205px;
+			width: 100%;
+			border: 1px solid #007931;
+			text-align: center;
+			text-transform: uppercase;
+			font-weight: 700;
+			label {
+				cursor: pointer;
+				position: relative;
+				top: 50%;
+				-webkit-transform: translateY(-50%);
+				-ms-transform: translateY(-50%);
+				transform: translateY(-50%);
+			}
+		}
+		.giveBlock._active {
+			background: #007931;
+			color: $color_4;
+		}
+	}
+	.byNums {
+		h4 {
+			font-family: $font-family_2;
+			font-size: 30px;
+			text-align: left;
+		}
+	}
+	._bbb {
+		.en__component--imageblock {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-pack: end;
+			-ms-flex-pack: end;
+			justify-content: end;
+			img {
+				height: 80px !important;
+			}
+		}
+	}
+	.en__field--feeCover {
+		border: none;
+		padding-left: 0;
+		padding-top: 0;
+	}
+	.ways-lft {
+		.en__component--copyblock {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-pack: start;
+			-ms-flex-pack: start;
+			justify-content: flex-start;
+		}
+		.byMail-lft {
+			margin-right: 20px;
+		}
+	}
+	.ways-rht {
+		.en__component--copyblock {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-box-pack: start;
+			-ms-flex-pack: start;
+			justify-content: flex-start;
+		}
+		.byPhone-lft {
+			margin-right: 20px;
+		}
+	}
+	.hero-lft {
+		margin: 0;
+		background: #1b75bc;
+		padding-top: 30px;
+		padding-bottom: 30px;
+		.en__component--copyblock {
+			height: 100%;
+		}
+		.heroCopy {
+			font-family: $font-family_2;
+			color: $color_4;
+			max-width: 550px;
+			margin: auto;
+			width: 100%;
+			position: relative;
+			h1,h2,h3,h4 {
+				font-family: $font-family_2;
+				font-weight: 700;
+			}
+			h1 {
+				font-size: 30px;
+			}
+		}
+	}
+	.hero-rht {
+		padding: 0;
+		display: none;
+		img {
+			-o-object-fit: cover;
+			object-fit: cover;
+		}
+	}
+	.en__component--row.en__component--advrow {
+		max-width: 1290px;
+		margin: auto;
+		width: 100%;
+		&.hero-block {
+			max-width: 100%;
+			margin: auto;
+			width: 100%;
+			padding: 0;
+		}
+		&:nth-of-type(7) {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+		}
+		&:nth-of-type(10) {
+			padding-bottom: 50px;
+			border-bottom: 1px solid #cdcdcd;
+		}
+		&:nth-of-type(11) {
+			padding-top: 30px;
+			padding-bottom: 80px;
+		}
+		&:nth-of-type(12) {
+			padding-top: 15px;
+			padding-bottom: 15px;
+			border-top: 5px solid #007931;
+		}
+		&:nth-of-type(13) {
+			border-top: 1px solid #cdcdcd;
+			border-bottom: 1px solid #cdcdcd;
+			padding-top: 30px;
+			padding-bottom: 30px;
+		}
+		&:nth-of-type(14) {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			padding-top: 30px;
+			padding-bottom: 30px;
+		}
+		&:nth-of-type(15) {
+			padding-top: 0;
+			padding-bottom: 30px;
+		}
+		&:nth-of-type(16) {
+			padding-top: 30px;
+			padding-bottom: 20px;
+			border-top: 1px solid #cdcdcd;
+		}
+		&:nth-of-type(17) {
+			h3 {
+				font-size: 60px;
+			}
+			p {
+				font-size: 20px;
+				margin-bottom: 1rem;
+			}
+		}
+	}
+	.cc-check {
+		.en__component--formblock {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+			width: 100%;
+		}
+		.en__field--payment-method-cc-and-ach- {
+			width: 100%;
+			p {
+				&:first-of-type {
+					display: none;
+				}
+			}
+			.en__field__item {
+				max-width: 165px;
+				width: 100%;
+				label {
+					height: 40px;
+					padding: 10px .875rem 1rem;
+					border-top: 1px solid #949494;
+					border-left: 1px solid #949494;
+					border-bottom: 1px solid #949494;
+					border-right: 0;
+				}
+			}
+			.en__field__element--radio {
+				-webkit-box-pack: start;
+				-ms-flex-pack: start;
+				justify-content: flex-start;
+			}
+		}
+	}
+	.en__field--payment-method-paypal {
+		margin-bottom: 0 !important;
+		margin-top: .5rem;
+		width: 55%;
+		.en__field__item {
+			width: 100%;
+			label {
+				padding-top: 10px;
+				border-width: 1px;
+				font-size: 14px;
+				text-align: center;
+				width: 100%;
+				margin: 0 auto;
+				display: block;
+				color: $color_2;
+				padding: 10px .875rem 1rem;
+				background-image: none;
+				border-color: $border-color_3;
+				background-color: $background-color_3;
+				height: 40px;
+				border-radius: 0;
+			}
+		}
+		.en__field__item.is-active {
+			label {
+				background: #007931;
+				color: $color_4;
+			}
+		}
+	}
+	._ff-row {
+		width: 100%;
+		margin: auto;
+		.en__component--formblock {
+			padding: 0;
+		}
+	}
+	._ff-row.shortRow {
+		.form-heading {
+			margin-top: 45px;
+		}
+	}
+	._ff-row._acres {
+		margin: 0 auto auto auto;
+	}
+	._ff-row._fish {
+		margin: 0 auto auto auto;
+	}
+	._ff-row._scope {
+		margin: 0 auto auto auto;
+	}
+	._ff-row.ways-rht {
+		margin: 0 auto auto auto;
+		padding-top: 30px;
+	}
+	._ff-row.ways-lft {
+		padding-bottom: 30px;
+		border-bottom: 1px solid #cdcdcd;
+	}
+	._ff-row.payment-rht {
+		margin: 0 auto auto auto;
+	}
+	._ff-row.donAmts {
+		.en__component--formblock {
+			.en__field__item {
+				width: 50%;
+				max-width: 100%;
+			}
+			.en__field__item.en__field__item--other {
+				max-width: 100%;
+				width: 100%;
+			}
+			.en__field--feeCover {
+				.en__field__item {
+					max-width: 430px;
+					width: 100%;
+				}
+			}
+		}
+	}
+}
+@media screen and (min-width:576px) {
+	#_ff-container {
+		._ff-row {
+			max-width: 540px;
+		}
+		._ff-row.donAmts {
+			.en__component--formblock {
+				.en__field__item {
+					max-width: 173px;
+					width: 100%;
+				}
+				.en__field__item.en__field__item--other {
+					max-width: 50%;
+				}
+			}
+		}
+		.en__field--feeCover {
+			position: absolute;
+			left: 49%;
+			bottom: -25px;
+			border: none;
+			padding: 0 1.25rem;
+		}
+	}
+}
+@media screen and (min-width:768px) {
+	#_ff-container {
+		.en__field {
+			.popover-container {
+				margin-bottom: 0;
+			}
+		}
+		.form-heading {
+			margin-top: 4.75rem;
+		}
+		._ff-row {
+			max-width: 720px;
+		}
+		._ff-row.shortRow {
+			.form-heading {
+				margin-top: 30px;
+			}
+		}
+		._ff-row.ways-lft {
+			padding-left: 30px;
+			padding-bottom: 0;
+			border: none;
+		}
+		._ff-row.ways-rht {
+			padding-left: 30px;
+			padding-top: 0;
+		}
+		._ff-row.donAmts {
+			.en__component--formblock {
+				.en__field__item {
+					max-width: 236px;
+				}
+			}
+		}
+		.ways-lft {
+			.en__component--copyblock {
+				border-right: 1px solid #cdcdcd;
+			}
+		}
+		.en__component--row.en__component--advrow {
+			&:nth-of-type(13) {
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+			}
+		}
+		.cc-check {
+			.en__component--formblock {
+				gap: 20px;
+			}
+			.en__field--payment-method-cc-and-ach- {
+				.en__field__item {
+					max-width: 266px;
+					width: 100%;
+					label {
+						height: 110px;
+						border: 1px solid #949494;
+						padding: 5rem 1.875rem 1rem 1.875rem;
+					}
+					&:nth-of-type(1) {
+						&:before {
+							content: " ";
+							cursor: pointer;
+							width: 96%;
+							height: 70px;
+							position: absolute;
+							background-color: $background-color_3;
+							top: 5px;
+							left: 50%;
+							-webkit-transform: translate(-50%,0);
+							-ms-transform: translate(-50%,0);
+							transform: translate(-50%,0);
+							background-repeat: no-repeat;
+							background-position: center;
+							background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_CCs.png);
+						}
+						&:after {
+							content: " ";
+							cursor: pointer;
+							position: absolute;
+							left: 0;
+							bottom: 43px;
+							height: 1px;
+							width: 100%;
+							border-bottom: 1px solid #949494;
+						}
+						margin-right: 20px;
+					}
+					&:nth-of-type(2) {
+						&:before {
+							content: " ";
+							cursor: pointer;
+							width: 96%;
+							height: 70px;
+							position: absolute;
+							background-color: $background-color_3;
+							top: 5px;
+							left: 50%;
+							-webkit-transform: translate(-50%,0);
+							-ms-transform: translate(-50%,0);
+							transform: translate(-50%,0);
+							background-repeat: no-repeat;
+							background-position: center;
+							background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_E-Check.svg);
+						}
+						&:after {
+							content: " ";
+							cursor: pointer;
+							position: absolute;
+							left: 0;
+							bottom: 43px;
+							height: 1px;
+							width: 100%;
+							border-bottom: 1px solid #949494;
+						}
+						margin-right: 0;
+					}
+					&:nth-of-type(1).is-active {
+						&:after {
+							display: none;
+						}
+					}
+					&:nth-of-type(2).is-active {
+						&:after {
+							display: none;
+						}
+					}
+				}
+				.en__field__element--radio {
+					-webkit-box-pack: justify;
+					-ms-flex-pack: justify;
+					justify-content: space-between;
+				}
+			}
+		}
+		.en__field--payment-method-paypal {
+			max-width: 30%;
+			width: 100%;
+			.en__field__item {
+				height: 100%;
+				&:before {
+					content: " ";
+					cursor: pointer;
+					width: 96%;
+					height: 70px;
+					position: absolute;
+					background-color: $background-color_3;
+					top: 5px;
+					left: 50%;
+					-webkit-transform: translate(-50%,0);
+					-ms-transform: translate(-50%,0);
+					transform: translate(-50%,0);
+					background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/PayPal_logo.svg);
+					background-repeat: no-repeat;
+					background-position: center;
+				}
+				&:after {
+					content: " ";
+					position: absolute;
+					left: 0;
+					bottom: 35px;
+					height: 1px;
+					width: 100%;
+					border-bottom: 1px solid #949494;
+				}
+				label {
+					height: 110px;
+					padding: 5rem 1.875rem 1rem 1.875rem;
+				}
+			}
+			.en__field__item.is-active {
+				&:after {
+					display: none;
+				}
+			}
+		}
+	}
+}
+@media screen and (min-width:992px) {
+	#_ff-container {
+		._ff-row {
+			max-width: 960px;
+		}
+		._ff-row.billingInfo {
+			.en__component--formblock {
+				display: -ms-grid;
+				display: grid;
+				-ms-grid-columns: 1fr 36px 1fr;
+				grid-template-columns: 1fr 1fr;
+				-webkit-column-gap: 36px;
+				-moz-column-gap: 36px;
+				column-gap: 36px;
+				.en__field {
+					max-width: 400px;
+					width: 100%;
+				}
+			}
+		}
+		._ff-row.contactInfo {
+			.en__component--formblock {
+				display: -ms-grid;
+				display: grid;
+				-ms-grid-columns: 1fr 36px 1fr;
+				grid-template-columns: 1fr 1fr;
+				-webkit-column-gap: 36px;
+				-moz-column-gap: 36px;
+				column-gap: 36px;
+				.en__field {
+					max-width: 400px;
+					width: 100%;
+				}
+			}
+		}
+		._ff-row.payMethods {
+			.en__component--formblock {
+				display: -ms-grid;
+				display: grid;
+				-ms-grid-columns: 1fr 36px 1fr;
+				grid-template-columns: 1fr 1fr;
+				-webkit-column-gap: 36px;
+				-moz-column-gap: 36px;
+				column-gap: 36px;
+				.en__field {
+					max-width: 400px;
+					width: 100%;
+				}
+			}
+		}
+		._ff-row._fish {
+			max-width: 300px;
+		}
+		._ff-row.donAmts {
+			.en__component--formblock {
+				.en__field__item {
+					max-width: 141px;
+				}
+				.en__field__item.en__field__item--other {
+					max-width: 210px;
+				}
+			}
+		}
+		.byNums {
+			h4 {
+				font-size: 40px;
+				text-align: center;
+			}
+		}
+		.en__field--feeCover {
+			position: absolute;
+			left: 49%;
+			bottom: -2px;
+			border: none;
+			padding: 0 1.25rem;
+		}
+		.en__component--row.en__component--advrow {
+			max-width: 849px;
+			padding-left: 0;
+			padding-right: 0;
+			&:nth-of-type(16) {
+				border: none;
+				padding-top: 50px;
+				padding-bottom: 50px;
+			}
+			&:nth-of-type(17) {
+				h3 {
+					font-size: 45px;
+				}
+				p {
+					margin-bottom: 0;
+				}
+			}
+		}
+		.cc-check {
+			.en__component--formblock {
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				width: 100%;
+				gap: 20px;
+			}
+			.en__field--payment-method-cc-and-ach- {
+				width: 100%;
+				.en__field__item {
+					max-width: 266px;
+					width: 100%;
+					label {
+						height: 110px;
+					}
+					&:nth-of-type(1) {
+						margin-right: 0;
+					}
+				}
+				.en__field__element--radio {
+					-webkit-box-pack: justify;
+					-ms-flex-pack: justify;
+					justify-content: space-between;
+				}
+			}
+		}
+		.hero-lft {
+			padding-top: 0;
+			padding-bottom: 0;
+			padding-left: 30px;
+			padding-right: 30px;
+			.heroCopy {
+        max-width: 530px;
+				top: 50%;
+				transform: translateY(-50%);
+				-webkit-transform: translateY(-50%);
+				-ms-transform: translateY(-50%);
+				h1 {
+					font-size: 40px;
+				}
+			}
+		}
+		.hero-rht {
+			display: block;
+			.en__component--imageblock {
+				height: 100%;
+			}
+			img {
+				max-height: 300px;
+			}
+			img._big {
+				max-height: none;
+				height: 100% !important;
+			}
+		}
+	}
+}
+@media screen and (min-width:1200px) {
+	#_ff-container {
+		._ff-row {
+			max-width: 1290px;
+			padding-left: 0;
+		}
+		._ff-row.donAmts {
+			.en__component--formblock {
+				.en__field__item.en__field__item--other {
+					max-width: 410px;
+				}
+			}
+		}
+		.cc-check {
+			.en__component--formblock {
+				gap: 27px;
+			}
+		}
+		.hero-lft {
+			padding-right: calc(var(--bs-gutter-x)/2);
+			padding-left: calc(var(--bs-gutter-x)/2);
+		}
+		.en__component--row.en__component--advrow {
+			max-width: 849px;
+			&:nth-of-type(17) {
+				max-width: 1289px;
+				h3 {
+					font-size: 60px;
+				}
+			}
+		}
+	}
+}
+@media screen and (min-width:1400px) {
+	#_ff-container {
+		.hero-lft {
+			.heroCopy {
+				margin-left: 142px;
+			}
+		}
+	}
+}
