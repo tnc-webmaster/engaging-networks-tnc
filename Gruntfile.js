@@ -9,7 +9,7 @@ module.exports = function(grunt) {
     jshint: {
       options: {
         browser: true,
-        esversion: 6,
+        esversion: 11,
         reporter: require('jshint-stylish'),
       },
       build: ['Gruntfile.js', 'src/js/scripts.js'],

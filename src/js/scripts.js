@@ -2887,6 +2887,7 @@
         donationForm();
       } else if (pageJson.pageType === 'event') {
         eventForm();
+        eventFormNew();
       } else if (pageJson.pageType === 'emailtotarget' && pageJson.pageNumber === 1) {
         emailToTarget();
       }
@@ -2924,4 +2925,155 @@
       }
     }, 100);
   });
+
+  const eventFormNew = () => {
+
+    const summary = () => {
+      renderSummary();
+
+      if (pageJson.pageNumber === pageJson.pageCount) {
+        sessionStorage.removeItem('eventSummary');
+      }
+    };
+
+    /**
+    * @tickets shows coded tickets as needed, customizes display of ticket names
+    * and attendee labels adn shows additional donation in the summary if needed.
+    */
+    const delimiter = '/'; // The character to separate the ticket name from the ticket code
+    const tickets = () => {
+      if (pageJson.pageNumber === 1) {
+        showTickets();
+      } else {
+        formatTicketNames();
+        formatAttendeeLabels();
+        showAdditionalDonation();
+      }
+    };
+
+    summary();
+    tickets();
+
+
+    /**
+    * @renderSummary Gets event summary text from either the
+    * #event-summary element or sessionStorage and display them
+    * in an <event-summary> element.
+    *
+    * Engaging Networks elements
+    * Requires "Event Settings" text block with #event-summary
+    * element on the first page of the event form.
+    * Add "Event Summary" text block to an event page to display.
+    */
+    const renderSummary = () => {
+      /**
+      * Get event summary from sessionStorage or #event-summary element.
+      */
+      const getSummary = new Promise((resolve, reject) => {
+        if (document.querySelector('#event-summary')) {
+          let eventSummary = {};
+
+          document.querySelector('#event-summary').querySelectorAll('[slot]').forEach(slot => {
+            eventSummary[slot.getAttribute('slot')] = slot.textContent;
+          });
+          sessionStorage.setItem('eventSummary', JSON.stringify(eventSummary));
+          resolve(eventSummary);
+        } else {
+          resolve(JSON.parse(sessionStorage.getItem('eventSummary')));
+        }
+      });
+
+      /**
+      * Populate <event-summary> elements.
+      * @param {Object} summary - Event summary
+      */
+      const setCustomElementContent = (summary) => {
+        return new Promise((resolve, reject) => {
+          const template = pageJson.pageNumber === 1 ? document.getElementById('event-summary-template-overlay').content : document.getElementById('event-summary-template-tabular').content;
+          const clone = template.cloneNode(true);
+
+          document.querySelectorAll('event-summary').forEach(customSummary => {
+            for (const detailItem in summary) {
+              clone.querySelector(`slot[name="${detailItem}"]`).textContent = summary[detailItem];
+            }
+            // Create link to google maps out of address
+            const googleMapLink = `https://www.google.com/maps/place/?q=${encodeURI(clone.querySelector('slot[name="event-location"]')?.textContent)}`;
+            clone.querySelector('a').href = googleMapLink;
+
+            customSummary.appendChild(clone);
+          });
+          resolve();
+        });
+      };
+      getSummary.then(data => setCustomElementContent(data));
+    };
+
+    /**
+    * @showTickets
+    *
+    * Tickets are hidden by default with CSS
+    *
+    * If a "&code" parameter is in the URL, tickets named as [ticket name]~[code]
+    * pattern will be displayed if the url and ticket code match.
+    *
+    * If a "&code" parameter is not in the URL, tickets named normally
+    * will be displayed
+    */
+    const showTickets = () => {
+      let ticketCode = new URLSearchParams(location.href).get('code');
+
+      const showNonCodedTickets = () => {
+        // Show all tickets that donot have a code attached
+        let ticketsToShow = [...document.querySelectorAll('.en__ticket')]
+          .filter(ticket => ticket.querySelector('.en__ticket__name')?.textContent.indexOf(delimiter) === -1)
+          .forEach(ticket => {
+            ticket.classList.add('d-table-row');
+          });
+      };
+
+      const showCodedTickets = () => {
+        let regex = new RegExp(`^${ticketCode}$`);
+
+        // Show tickets who's code matches the url parameter
+        let ticketsToShow = [...document.querySelectorAll('.en__ticket')]
+          .filter(ticket => regex.test(ticket.querySelector('.en__ticket__name')?.textContent.split(delimiter)[1]))
+          .forEach(ticket => {
+            const ticketName = ticket.querySelector('.en__ticket__name').textContent.split(delimiter)[0];
+            ticket.querySelector('.en__ticket__name').textContent = ticketName;
+            ticket.classList.add('d-table-row');
+          });
+      };
+
+      showNonCodedTickets();
+      if (ticketCode) {
+        showCodedTickets();
+      }
+    };
+
+    const formatTicketNames = () => {
+      document.querySelectorAll('.en__orderSummary__data--type, .en__registrants__ticketHead').forEach(el => {
+        // Strip out ticket code so {ticket name}~{ticket code} appears as {ticket name}
+        el.textContent = el.textContent.replace(/\/[0-9A-Za-z]*[0-9A-Za-z]/, '');
+      });
+    };
+
+    const formatAttendeeLabels = () => {
+      document.querySelectorAll('.en__registrants__registrantHead').forEach(el => {
+        // Convert strings like "Attendee 2 1" to "Attendee 2"
+        el.textContent = el.textContent.replace(/(\w+)(\s[0-9]*\s)([0-9]*$)/, '$1 $2');
+      });
+    };
+
+    const showAdditionalDonation = () => {
+      // display non-zero additional donation in the summary
+      const additionalDonationSummary = document.querySelector('.en__orderSummary__additional');
+
+      if (additionalDonationSummary) {
+        if (parseInt(additionalDonationSummary.querySelector('.en__orderSummary__data--cost').textContent) !== 0) {
+          additionalDonationSummary.classList.add('d-table-row');
+        }
+      }
+    };
+  };
+
 })();
