@@ -2928,33 +2928,6 @@
 
   const eventFormNew = () => {
 
-    const summary = () => {
-      renderSummary();
-
-      if (pageJson.pageNumber === pageJson.pageCount) {
-        sessionStorage.removeItem('eventSummary');
-      }
-    };
-
-    /**
-    * @tickets shows coded tickets as needed, customizes display of ticket names
-    * and attendee labels adn shows additional donation in the summary if needed.
-    */
-    const delimiter = '/'; // The character to separate the ticket name from the ticket code
-    const tickets = () => {
-      if (pageJson.pageNumber === 1) {
-        showTickets();
-      } else {
-        formatTicketNames();
-        formatAttendeeLabels();
-        showAdditionalDonation();
-      }
-    };
-
-    summary();
-    tickets();
-
-
     /**
     * @renderSummary Gets event summary text from either the
     * #event-summary element or sessionStorage and display them
@@ -3007,6 +2980,34 @@
       };
       getSummary.then(data => setCustomElementContent(data));
     };
+    
+    const summary = () => {
+      renderSummary();
+
+      if (pageJson.pageNumber === pageJson.pageCount) {
+        sessionStorage.removeItem('eventSummary');
+      }
+    };
+
+    /**
+    * @tickets shows coded tickets as needed, customizes display of ticket names
+    * and attendee labels adn shows additional donation in the summary if needed.
+    */
+    const delimiter = '/'; // The character to separate the ticket name from the ticket code
+    const tickets = () => {
+      if (pageJson.pageNumber === 1) {
+        showTickets();
+      } else {
+        formatTicketNames();
+        formatAttendeeLabels();
+        showAdditionalDonation();
+      }
+    };
+
+    summary();
+    tickets();
+
+
 
     /**
     * @showTickets
