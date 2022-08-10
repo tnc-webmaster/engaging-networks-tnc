@@ -2980,7 +2980,7 @@
       };
       getSummary.then(data => setCustomElementContent(data));
     };
-    
+
     const summary = () => {
       renderSummary();
 
@@ -3003,11 +3003,6 @@
         showAdditionalDonation();
       }
     };
-
-    summary();
-    tickets();
-
-
 
     /**
     * @showTickets
@@ -3075,6 +3070,8 @@
         }
       }
     };
+    summary();
+    tickets();
   };
 
 })();
