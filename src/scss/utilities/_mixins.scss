@@ -1,9 +1,11 @@
+@use "sass:math";
+
 @function url-friendly-colour($colour) {
   @return '%23' + str-slice('#{$colour}', 2, -1)
 }
 
 @function strip-unit($value) {
-  @return $value / ($value * 0 + 1);
+  @return math.div($value, $value * 0 + 1);
 }
 
 @mixin fluid-value($min-vw, $max-vw, $min-px, $max-px, $property: font-size) {
@@ -38,7 +40,7 @@
   $g: green($color);
   $b: blue($color);
 
-  $yiq: (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+  $yiq: (($r * 299) + ($g * 587) + ($b * 114)) * 0.001;
 
   @if ($yiq >= 150) {
     @return $black;

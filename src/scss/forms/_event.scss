@@ -124,7 +124,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
       display: block;
       height: 1px;
       position: absolute;
-      width: calc(100% - #{$event-gutter})
+      width: calc(100% - #{$event-gutter});
     }
   }
   @include media-breakpoint-up(md) {
@@ -162,52 +162,60 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   margin-bottom: 2.25rem;
   margin-top: 1.667rem;
   padding-bottom: 1rem;
+
   &::after {
     @extend %full-bleed;
     @extend %full-bleed-pseudo;
     content: "";
     background-color: $primary;
     bottom: 0;
-    height: .3125rem;
+    height: 0.3125rem;
     position: absolute;
     @include media-breakpoint-up(md) {
       display: none;
     }
   }
+
   @include media-breakpoint-up(md) {
     background-color: $white;
-    border-bottom: .3125rem solid $primary;
+    border-bottom: 0.3125rem solid $primary;
     box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.2);
     margin-bottom: 2.833rem;
     margin-top: -5rem;
-    padding: 1.875rem 2.5rem .75rem;
+    padding: 1.875rem 2.5rem 0.75rem;
     position: relative;
     z-index: 1;
     &::after {
       display: none;
     }
   }
+
   h2 {
     @include media-breakpoint-down(md) {
       margin-bottom: 1rem;
     }
   }
+
   p {
     font-size: 1.25rem;
     line-height: 1.7;
   }
+
   strong {
     font-weight: $font-weight-semibold;
   }
+
   .row {
     @extend .align-items-center;
-    padding-top: .75rem;
+    padding-top: 0.75rem;
     position: relative;
+
     @include media-breakpoint-up(md) {
       justify-content: space-between;
       margin-top: 2.5rem;
       padding-top: 1rem;
     }
+
     &::before {
       @extend %full-bleed;
       @extend %full-bleed-pseudo;
@@ -230,7 +238,8 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   time {
     @extend .col-md-auto;
   }
-  a[href^="https://www.google.com/maps"] {
+  a[href^="https://www.google.com/maps"]
+  {
     display: block;
     color: inherit;
     font-weight: inherit;
@@ -251,12 +260,12 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
     transition: $transition-base;
     @include media-breakpoint-down(md) {
       margin-bottom: 1.25rem;
-      margin-top: .875rem;
+      margin-top: 0.875rem;
     }
     &::before {
       content: $icon-location;
       line-height: 1;
-      margin-right: .5rem;
+      margin-right: 0.5rem;
       vertical-align: middle;
     }
   }
@@ -265,7 +274,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
     font-weight: $font-weight-semibold;
     position: relative;
     @include media-breakpoint-down(md) {
-      margin-bottom: .333rem;
+      margin-bottom: 0.333rem;
       padding-top: 1rem;
     }
     &::before {
@@ -288,7 +297,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   @extend %serif-xl;
   h3,
   h4 {
-    margin-bottom: .9375rem;
+    margin-bottom: 0.9375rem;
   }
   h3 {
     @extend .h5;
@@ -320,6 +329,10 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   .en__component--copyblock & {
     border-bottom: $border-default;
   }
+}
+
+.en__component:not(.en__component--copyblock) > .en__ticketBlock .en__ticket {
+  display: none;
 }
 
 .en__tickets {
@@ -439,7 +452,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
 }
 
 .en__ticket__selector {
-  margin-top: -.75rem;
+  margin-top: -0.75rem;
   .input-group {
     border: $border-light;
     flex-wrap: nowrap;
@@ -450,7 +463,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
 .en__ticket__plus {
   align-items: center;
   background-image: none;
-  background-size: .625rem;
+  background-size: 0.625rem;
   border: 0;
   display: inline-flex;
   height: 3.25rem;
@@ -484,7 +497,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
   line-height: 1.5;
-  margin-top: .25rem;
+  margin-top: 0.25rem;
 }
 
 .en__ticket__soldout {
@@ -508,7 +521,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   @include media-breakpoint-down(md) {
     margin-left: 0;
     margin-right: 0;
-    >* {
+    > * {
       padding-left: 0;
       padding-right: 0;
     }
@@ -525,7 +538,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
     font-size: 1rem;
     font-weight: $font-weight-medium;
     line-height: 1.375;
-    margin-bottom: .6875rem;
+    margin-bottom: 0.6875rem;
     padding-bottom: 0;
     text-transform: none;
   }
@@ -542,12 +555,12 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
 .form-heading--promo {
   display: flex;
   flex-direction: column;
-  >* {
+  > * {
     order: 0;
   }
-  >p {
+  > p {
     order: 1;
-    margin-top: .75rem;
+    margin-top: 0.75rem;
     @include media-breakpoint-down(lg) {
       font-size: 1rem;
       line-height: 1.5;
@@ -578,10 +591,22 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
 .total-amount {
   border-top: $border-default;
   font-weight: $font-weight-bold;
-  margin-bottom: .333rem;
+  margin-bottom: 0.333rem;
   margin-top: 1.25rem;
   padding-top: 1.333rem;
   text-transform: uppercase;
+}
+
+#orderSummaryPromo {
+  display: table-row;
+}
+
+.en__orderSummary.promo-used {
+  .en__orderSummary__data--promo,
+  .en__orderSummary__header--promo,
+  .en__orderSummary__data--fill:nth-child(3) {
+    display: table-cell;
+  }
 }
 
 a[href="javascript:history.back()"] {
@@ -589,14 +614,14 @@ a[href="javascript:history.back()"] {
   margin-bottom: 3rem;
   &::before {
     content: $icon-back;
-    margin-right: .5rem;
+    margin-right: 0.5rem;
   }
 }
 
 .event-confirmation-details {
   table {
     border: $border-default;
-    border-top: .3125rem solid $primary;
+    border-top: 0.3125rem solid $primary;
     margin-top: 1.85rem;
     line-height: 1.6666;
     p {
@@ -650,11 +675,25 @@ a[href="javascript:history.back()"] {
       padding: 1.9333% 2%;
     }
     &::before {
-      margin-right: .75rem;
+      margin-right: 0.75rem;
       vertical-align: middle;
     }
     &:first-child {
       font-weight: $font-weight-semibold;
+    }
+  }
+  a[href^="https://www.google.com/maps"]
+  {
+    display: block;
+    color: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-transform: inherit;
+    &:hover {
+      address {
+        color: $primary;
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -676,10 +715,15 @@ a[href="javascript:history.back()"] {
 }
 
 .en__orderSummary__data {
-  padding-bottom: .75rem;
+  padding-bottom: 0.75rem;
   padding-top: 1rem;
-  &:not(.en__orderSummary__data--totalLabel):not(.en__orderSummary__data--totalAmount) {
-    border-bottom: $border-default;
+}
+
+.en__orderSummary {
+  > :not(:last-child) {
+    .en__orderSummary__data {
+      border-bottom: $border-default;
+    }
   }
 }
 
@@ -749,7 +793,7 @@ body:not(.page--confirmation) .en__orderSummary__data--totalAmount {
   font-size: 1.125rem;
   line-height: 1.4444;
   padding-bottom: 0;
-  margin-bottom: .333rem;
+  margin-bottom: 0.333rem;
 }
 
 .en__registrants__group {
@@ -777,13 +821,13 @@ body:not(.page--confirmation) .en__orderSummary__data--totalAmount {
 }
 
 .en__field--registrant--mandatory {
-  >.en__field__label::before {
+  > .en__field__label::before {
     content: "* ";
-    margin-right: .25rem;
+    margin-right: 0.25rem;
   }
 }
 
-.last-visible~.en__component {
+.last-visible ~ .en__component {
   &:not(:last-child) {
     display: none;
   }
@@ -792,6 +836,6 @@ body:not(.page--confirmation) .en__orderSummary__data--totalAmount {
   }
 }
 
-.waitlist-confirmation:not(.d-none--web)+.event-overview-details--text {
+.waitlist-confirmation:not(.d-none--web) + .event-overview-details--text {
   margin-top: 4rem;
 }

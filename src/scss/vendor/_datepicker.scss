@@ -1,4 +1,6 @@
 //== foundational variables ==//
+@use "sass:math";
+
 $light: hsl(0, 0%, 96%) !default; // white-ter
 $dark: hsl(0, 0%, 21%) !default; // grey-darker
 $grey-dark: lighten($black, 25%) !default;
@@ -39,7 +41,7 @@ $dp-input-in-edit-focus-box-shadow-size: 0 0 0.25em 0.25em !default;
 $dp-padding-x: 4.375rem;
 //== non-configurable variables ==//
 $dp-cell-shrink-threshold: $dp-cell-size-base * 10; // = 8 * 1.25
-$dp-cell-shrinked-width: $dp-cell-size-base * 7 / 8;
+$dp-cell-shrinked-width: $dp-cell-size-base * 7 * 0.125;
 //== mixins ==//
 @import 'mixins';
 //== styles ==//
@@ -135,7 +137,7 @@ $dp-cell-shrinked-width: $dp-cell-size-base * 7 / 8;
 }
 
 %flex-basis-day {
-  flex-basis: calc(#{percentage(1 / 7)} - .5rem);
+  flex-basis: calc(#{percentage(math.div(1, 7))} - .5rem);
   margin-right: .25rem;
   margin-left: .25rem;
 }
