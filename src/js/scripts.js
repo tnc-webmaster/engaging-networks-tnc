@@ -1,66 +1,66 @@
 (function() {
-  let root = document.documentElement;
-  let body = document.body;
-  const appealCodeRedirect = document.querySelector('a[data-campaign-id][href*="appealCode"]');
-  const ecardRedirect = document.querySelector('a[data-campaign-id][href*="action"]');
-  const seamlessEcardBlock = document.querySelector('.seamless-ecard');
+  let root = document.documentElement
+  let body = document.body
+  const appealCodeRedirect = document.querySelector('a[data-campaign-id][href*="appealCode"]')
+  const ecardRedirect = document.querySelector('a[data-campaign-id][href*="action"]')
+  const seamlessEcardBlock = document.querySelector('.seamless-ecard')
 
   // Classes
-  const activeClass = 'is-active';
-  const advocacyShareClass = 'advocacy-share-bar-block';
-  const collapseShowClass = 'show';
-  const disabledClass = 'disabled';
-  const displayClass = 'd-block';
-  const errorBoxClass = 'error-box';
-  const hiddenClass = 'd-none';
-  const hiddenWebOnlyClass = 'd-none--web';
-  const paypalSelectedClass = 'paypal-selected';
-  const photoInfoClass = 'photo-info';
-  const popoverContainerClass = 'popover-container';
-  const validClass = 'is-active';
-  const validationFailedClass = 'en__field--validationFailed';
-  const visuallyHiddenClass = 'visually-hidden';
+  const activeClass = 'is-active'
+  const advocacyShareClass = 'advocacy-share-bar-block'
+  const collapseShowClass = 'show'
+  const disabledClass = 'disabled'
+  const displayClass = 'd-block'
+  const errorBoxClass = 'error-box'
+  const hiddenClass = 'd-none'
+  const hiddenWebOnlyClass = 'd-none--web'
+  const paypalSelectedClass = 'paypal-selected'
+  const photoInfoClass = 'photo-info'
+  const popoverContainerClass = 'popover-container'
+  const validClass = 'is-active'
+  const validationFailedClass = 'en__field--validationFailed'
+  const visuallyHiddenClass = 'visually-hidden'
 
   // Selectors
-  const ccExpMonthSelect = '#en__field_transaction_ccexpire';
-  const ccExpYearSelect = '.en__field--ccexpire .en__field__item:last-child select';
-  const ccNumberFieldSelector = '.en__field--ccnumber';
-  const ccNumberInputSelector = '#en__field_transaction_ccnumber';
-  const countrySelect = '#en__field_supporter_country';
-  const dateInputSelector = '.en__field[class*="date"] .en__field__input--text, .en__field--888858 .en__field__input--text';
-  const donationAmountSelector = '.en__field--donationAmt .en__field__element--text';
-  const ecardFieldsSelector = '.ecard-fields';
-  const ecardSelectSelector = '.ecard-select';
-  const errorSelector = '.en__field__error';
-  const enFieldSelector = '.en__field';
-  const enFieldItemSelector = '.en__field__item';
-  const giftDesignationSelect = '#en__field_transaction_dirgift';
-  const homePhoneInputSelector = '#en__field_supporter_phoneNumber';
-  const honoreeCountrySelect = '#en__field_supporter_NOT_TAGGED_38';
-  const honoreeStateProvinceSelect = '#en__field_supporter_NOT_TAGGED_35';
-  const informCountrySelect = '#en__field_transaction_infcountry';
-  const informStateProvinceSelect = '#en__field_transaction_infreg';
-  const mobilePhoneSameAsHomeCheckboxSelector = '#en__field_supporter_questions_891102, .en__field--my-mobile-phone-is-the-same-as-my-primary-phone .en__field__input--checkbox';
-  const mobilePhoneInputSelector = '#en__field_supporter_phoneNumber2';
-  const otherAmountSelector = '.en__field--donationAmt .en__field__item--other';
-  const otherAmountInputSelector = '.en__field--donationAmt .en__field__input--other, .en__field--donationAmt .en__field__input--text';
-  const paymentMethodSelector = '[class*="en__field--payment-method"]';
-  const paymentMethodRadioSelector = '[class*="en__field--payment-method"].en__field--radio';
-  const paymentTypeSelector = '[name="transaction.paymenttype"]';
-  const paypalInputSelector = '.en__field--payment-method-paypal .en__field__input--checkbox';
-  const stateProvinceSelect = '#en__field_supporter_region';
-  const supporterEmailAddressSelector = '#en__field_supporter_emailAddress';
-  const supporterStateSelector = '#en__field_supporter_region';
-  const supporterZipCodeSelector = '#en__field_supporter_postcode';
-  const totalAmountSelector = '.js-total-gift';
-  const tributeOptionsSelector = 'select#en__field_transaction_trbopts';
+  const ccExpMonthSelect = '#en__field_transaction_ccexpire'
+  const ccExpYearSelect = '.en__field--ccexpire .en__field__item:last-child select'
+  const ccNumberFieldSelector = '.en__field--ccnumber'
+  const ccNumberInputSelector = '#en__field_transaction_ccnumber'
+  const countrySelect = '#en__field_supporter_country'
+  const dateInputSelector = '.en__field[class*="date"] .en__field__input--text, .en__field--888858 .en__field__input--text'
+  const donationAmountSelector = '.en__field--donationAmt .en__field__element--text'
+  const ecardFieldsSelector = '.ecard-fields'
+  const ecardSelectSelector = '.ecard-select'
+  const errorSelector = '.en__field__error'
+  const enFieldSelector = '.en__field'
+  const enFieldItemSelector = '.en__field__item'
+  const giftDesignationSelect = '#en__field_transaction_dirgift'
+  const homePhoneInputSelector = '#en__field_supporter_phoneNumber'
+  const honoreeCountrySelect = '#en__field_supporter_NOT_TAGGED_38'
+  const honoreeStateProvinceSelect = '#en__field_supporter_NOT_TAGGED_35'
+  const informCountrySelect = '#en__field_transaction_infcountry'
+  const informStateProvinceSelect = '#en__field_transaction_infreg'
+  const mobilePhoneSameAsHomeCheckboxSelector = '#en__field_supporter_questions_891102, .en__field--my-mobile-phone-is-the-same-as-my-primary-phone .en__field__input--checkbox'
+  const mobilePhoneInputSelector = '#en__field_supporter_phoneNumber2'
+  const otherAmountSelector = '.en__field--donationAmt .en__field__item--other'
+  const otherAmountInputSelector = '.en__field--donationAmt .en__field__input--other, .en__field--donationAmt .en__field__input--text'
+  const paymentMethodSelector = '[class*="en__field--payment-method"]'
+  const paymentMethodRadioSelector = '[class*="en__field--payment-method"].en__field--radio'
+  const paymentTypeSelector = '[name="transaction.paymenttype"]'
+  const paypalInputSelector = '.en__field--payment-method-paypal .en__field__input--checkbox'
+  const stateProvinceSelect = '#en__field_supporter_region'
+  const supporterEmailAddressSelector = '#en__field_supporter_emailAddress'
+  const supporterStateSelector = '#en__field_supporter_region'
+  const supporterZipCodeSelector = '#en__field_supporter_postcode'
+  const totalAmountSelector = '.js-total-gift'
+  const tributeOptionsSelector = 'select#en__field_transaction_trbopts'
 
   // Custom events
-  const iframeReady = new CustomEvent('iframeReady');
-  const iframeSubmitted = new CustomEvent('iframeSubmitted');
+  const iframeReady = new CustomEvent('iframeReady')
+  const iframeSubmitted = new CustomEvent('iframeSubmitted')
 
   // Elements
-  const theForm = document.querySelector('.en__component--page') || document.querySelector('.main');
+  const theForm = document.querySelector('.en__component--page') || document.querySelector('.main')
 
   // Masks
   const numberPipe = IMask.createPipe({
@@ -73,26 +73,26 @@
         radix: '.'
       }
     }
-  });
+  })
 
   // Widgets
-  let cleave = null;
+  let cleave = null
 
   // Constants
-  const thermThresholdPct = 80;
-  const thermIncrease = 1.25;
+  const thermThresholdPct = 80
+  const thermIncrease = 1.25
 
   /**
    * Form interface enhancements
    */
   const ui = () => {
-    let el = null;
-    let els = null;
-    let _parent = null;
-    let stateProvinceChoices = null;
-    let honoreeStateProvinceChoices = null;
-    let informStateProvinceChoices = null;
-    let currentChoices = null;
+    let el = null
+    let els = null
+    let _parent = null
+    let stateProvinceChoices = null
+    let honoreeStateProvinceChoices = null
+    let informStateProvinceChoices = null
+    let currentChoices = null
 
     /**
      * Set the value of choices when autofill is detected
@@ -101,17 +101,17 @@
      * @param {event} e
      */
     const handleChoicesChange = e => {
-      const _target = e.target;
+      const _target = e.target
 
       // Don't reset drop downs in event attendee details block
       if (e.composedPath().indexOf(document.querySelector('.en__registrants__registrantDetails')) === -1) {
         _target.choices.setValue([{
           value: _target.value,
           label: _target.querySelector(`option[value="${_target.value}"]`).textContent,
-        }]);
-        resetSelect(_target.choices, e);
+        }])
+        resetSelect(_target.choices, e)
       }
-    };
+    }
 
     /**
      * choices.js removes <options> form the native select
@@ -121,31 +121,31 @@
      */
 
     const resetSelect = (_choices, e) => {
-      const selectOne = _choices.passedElement.element;
-      const selectValue = selectOne.value;
+      const selectOne = _choices.passedElement.element
+      const selectValue = selectOne.value
 
       // Clear the native select
-      selectOne.innerHTML = '';
+      selectOne.innerHTML = ''
       //Remove the duplicate that this method generates at bottom of list
       if (e) {
-        _choices.choiceList.element.removeChild(_choices.choiceList.element.lastChild);
+        _choices.choiceList.element.removeChild(_choices.choiceList.element.lastChild)
       }
       // Re-add all <options> to native select
       getAll('.choices__item', _choices.choiceList.element).forEach(el => {
-        let choiceSelected = el.dataset.value === selectValue ? true : false;
-        let opt = document.createElement('option');
+        let choiceSelected = el.dataset.value === selectValue ? true : false
+        let opt = document.createElement('option')
 
-        opt.value = el.dataset.value;
-        opt.text = el.textContent;
-        opt.selected = choiceSelected;
-        selectOne.add(opt, null);
-      });
-      currentChoices = _choices;
-      selectOne.choices = _choices;
+        opt.value = el.dataset.value
+        opt.text = el.textContent
+        opt.selected = choiceSelected
+        selectOne.add(opt, null)
+      })
+      currentChoices = _choices
+      selectOne.choices = _choices
       // Listen for an autofill (change event)
-      selectOne.removeEventListener('change', handleChoicesChange);
-      selectOne.addEventListener('change', handleChoicesChange);
-    };
+      selectOne.removeEventListener('change', handleChoicesChange)
+      selectOne.addEventListener('change', handleChoicesChange)
+    }
 
     /**
      * Creates choices.js instance
@@ -164,21 +164,21 @@
           distance: 0,
         },
         callbackOnInit: function() {
-          const _choices = this;
-          const label = theForm.querySelector(`label[for="${_choices.passedElement.element.id}"]`);
-          const choicesId = `choices${generateId()}`;
+          const _choices = this
+          const label = theForm.querySelector(`label[for="${_choices.passedElement.element.id}"]`)
+          const choicesId = `choices${generateId()}`
 
-          _choices.enable();
+          _choices.enable()
           if (label) {
             // Add aria attributes to combobox
-            _choices.containerOuter.element.setAttribute('aria-label', label.textContent);
+            _choices.containerOuter.element.setAttribute('aria-label', label.textContent)
             setAttributes(_choices.containerOuter.element, {
               'aria-label': label.textContent,
               'aria-owns': choicesId,
-            });
+            })
             // Add aria attributes to listbox
-            _choices.choiceList.element.setAttribute('aria-label', `Select ${label.textContent.replace(/Select/, '')}`);
-            _choices.choiceList.element.id = choicesId;
+            _choices.choiceList.element.setAttribute('aria-label', `Select ${label.textContent.replace(/Select/, '')}`)
+            _choices.choiceList.element.id = choicesId
           }
 
           // restrict the search field to one character to avoid false results
@@ -186,12 +186,12 @@
 
           // role=textbox is unnecessary in our setup
           getAll('[role="textbox"]', _choices.containerOuter.element).forEach(el => {
-            el.removeAttribute('role');
-          });
-          resetSelect(_choices, null);
+            el.removeAttribute('role')
+          })
+          resetSelect(_choices, null)
         },
-      });
-    };
+      })
+    }
 
     /**
      * Destroys a choices.js instance
@@ -199,66 +199,66 @@
      * @param {choices} choices choices.js instance to destroy
      */
     const destroyChoices = (_choices, selector) => {
-      _choices.clearInput();
-      _choices.destroy();
-      _choices = null;
-    };
+      _choices.clearInput()
+      _choices.destroy()
+      _choices = null
+    }
 
     // Add body classes
     if (typeof pageJson !== 'undefined') {
-      addClass(body, `page--${pageJson.pageNumber}`);
+      addClass(body, `page--${pageJson.pageNumber}`)
     }
     if (document.querySelector('.quiz')) {
-      addClass(body, 'page--quiz');
+      addClass(body, 'page--quiz')
     } else if (document.querySelector('.hub')) {
-      addClass(body, 'page--hub');
+      addClass(body, 'page--hub')
     } else if (document.querySelector('.related-actions.card')) {
-      addClass(body, 'has-related-actions');
+      addClass(body, 'has-related-actions')
     } else if (document.querySelector('.action-center')) {
-      addClass(body, 'page--action-center');
+      addClass(body, 'page--action-center')
     } else if (typeof pageJson !== 'undefined') {
       if (pageJson.pageCount === pageJson.pageNumber) {
-        addClass(body, 'page--confirmation');
+        addClass(body, 'page--confirmation')
       }
     }
 
     // Set width of full bleed elements
-    const scrollbarWidth = window.innerWidth - document.body.clientWidth;
+    const scrollbarWidth = window.innerWidth - document.body.clientWidth
     getAll('.page--quiz .en__component--advrow, .page--hub.page--1 .en__component--advrow, .hero-full-bleed').forEach(el => {
-      el.style.width = `calc(100vw - ${scrollbarWidth}px)`;
-      el.style.marginLeft = `calc(-50vw + ${scrollbarWidth / 2}px)`;
-    });
+      el.style.width = `calc(100vw - ${scrollbarWidth}px)`
+      el.style.marginLeft = `calc(-50vw + ${scrollbarWidth / 2}px)`
+    })
     // Don't forget pseudo elements
-    root.style.setProperty('--scrollbarWidth', `${scrollbarWidth}px`);
+    root.style.setProperty('--scrollbarWidth', `${scrollbarWidth}px`)
 
     // Initiate choices.js
     getAll(`select:not(${stateProvinceSelect}):not(${informStateProvinceSelect}):not(${giftDesignationSelect})`).forEach(el => {
-      createChoices(el);
-    });
+      createChoices(el)
+    })
 
     // OOB FB share only opens new window if image inside button is clicked
     getAll('a.en__socialShare--facebook').forEach(el => {
       el.addEventListener('click', e => {
-        const img = e.currentTarget.querySelector('.en__socialShare__image');
+        const img = e.currentTarget.querySelector('.en__socialShare__image')
 
         if (img) {
           // Don't let social share dialog open in same tab
-          e.preventDefault();
+          e.preventDefault()
           // The image opens the new window
-          img.click();
-          triggerEvent(img, 'click');
+          img.click()
+          triggerEvent(img, 'click')
         }
-      });
-    });
+      })
+    })
 
     // Structure modals
-    els = getAll('.modal-header, .modal-body, .modal-footer');
+    els = getAll('.modal-header, .modal-body, .modal-footer')
     if (els.length > 0) {
-      wrapAll(els, 'div', 'modal-content');
+      wrapAll(els, 'div', 'modal-content')
     }
     getAll('.modal-content').forEach(el => {
-      wrapEl(el, 'div', ['modal-dialog', 'modal-lg']);
-    });
+      wrapEl(el, 'div', ['modal-dialog', 'modal-lg'])
+    })
 
     getAll('.modal').forEach(el => {
       // Add attributes
@@ -269,85 +269,85 @@
         'tabindex': '-1',
         'aria-labelledby': 'modalTitle',
         'aria-hidden': 'true',
-      });
-    });
+      })
+    })
 
     // Allow EN swap lists for billing state/province field
-    el = theForm.querySelector(stateProvinceSelect);
+    el = theForm.querySelector(stateProvinceSelect)
     if (el) {
-      stateProvinceChoices = createChoices(el);
+      stateProvinceChoices = createChoices(el)
     }
 
     // Allow EN swap lists on country field change
-    el = theForm.querySelector(countrySelect);
+    el = theForm.querySelector(countrySelect)
     if (el) {
       if (stateProvinceChoices) {
         el.addEventListener('change', e => {
           // Rebuild state/province choices
-          destroyChoices(stateProvinceChoices);
+          destroyChoices(stateProvinceChoices)
           setTimeout(function() {
-            stateProvinceChoices = createChoices(theForm.querySelector(stateProvinceSelect));
-          }, 100);
-        });
+            stateProvinceChoices = createChoices(theForm.querySelector(stateProvinceSelect))
+          }, 100)
+        })
       }
     }
 
     // Allow EN swap lists for honoree state/province field
-    el = theForm.querySelector(honoreeStateProvinceSelect);
+    el = theForm.querySelector(honoreeStateProvinceSelect)
     if (el) {
-      honoreeStateProvinceChoices = createChoices(el);
+      honoreeStateProvinceChoices = createChoices(el)
     }
 
     // Allow EN swap lists on country field change
-    el = theForm.querySelector(honoreeCountrySelect);
+    el = theForm.querySelector(honoreeCountrySelect)
     if (el) {
       if (honoreeStateProvinceChoices) {
         el.addEventListener('change', e => {
           // Rebuild state/province choices
-          destroyChoices(honoreeStateProvinceChoices);
+          destroyChoices(honoreeStateProvinceChoices)
           setTimeout(function() {
-            honoreeStateProvinceChoices = createChoices(theForm.querySelector(honoreeStateProvinceSelect));
-          }, 100);
-        });
+            honoreeStateProvinceChoices = createChoices(theForm.querySelector(honoreeStateProvinceSelect))
+          }, 100)
+        })
       }
     }
 
     // Allow EN swap lists for person to be notified state/province field
-    el = theForm.querySelector(informStateProvinceSelect);
+    el = theForm.querySelector(informStateProvinceSelect)
     if (el) {
-      informStateProvinceChoices = createChoices(el);
+      informStateProvinceChoices = createChoices(el)
     }
 
     // Allow EN swap lists on person to be notified country field change
-    el = theForm.querySelector(informCountrySelect);
+    el = theForm.querySelector(informCountrySelect)
     if (el) {
       if (informStateProvinceChoices) {
         el.addEventListener('change', e => {
           // Rebuild state/province choices
-          destroyChoices(informStateProvinceChoices);
+          destroyChoices(informStateProvinceChoices)
           setTimeout(function() {
-            informStateProvinceChoices = createChoices(theForm.querySelector(informStateProvinceSelect));
-          }, 100);
-        });
+            informStateProvinceChoices = createChoices(theForm.querySelector(informStateProvinceSelect))
+          }, 100)
+        })
       }
     }
 
     // Allow EN swap value for gift designation field
-    el = theForm.querySelector(giftDesignationSelect);
+    el = theForm.querySelector(giftDesignationSelect)
     if (el) {
-      giftDesignationChoices = createChoices(el);
+      giftDesignationChoices = createChoices(el)
 
       getAll('.en__field--gift-designation-managed-donors-yn .en__field__input--radio').forEach(el => {
         if (giftDesignationChoices) {
           el.addEventListener('click', e => {
             // Rebuild gift designation choices
-            destroyChoices(giftDesignationChoices);
+            destroyChoices(giftDesignationChoices)
             setTimeout(function() {
-              giftDesignationChoices = createChoices(theForm.querySelector(giftDesignationSelect));
-            }, 100);
-          });
+              giftDesignationChoices = createChoices(theForm.querySelector(giftDesignationSelect))
+            }, 100)
+          })
         }
-      });
+      })
     }
 
     /**
@@ -358,229 +358,229 @@
     const showTributeHeadings = (headingClass) => {
       // Hide everything
       getAll('.heading-honor, .heading-memory, .heading-gift').forEach(el => {
-        addClass(el, hiddenWebOnlyClass);
-      });
+        addClass(el, hiddenWebOnlyClass)
+      })
       // Show the right heading
       getAll(headingClass).forEach(el => {
-        removeClass(el, hiddenWebOnlyClass);
-      });
-    };
+        removeClass(el, hiddenWebOnlyClass)
+      })
+    }
 
     // Selecting a tribute option might change headings on the form
-    el = theForm.querySelector(tributeOptionsSelector);
+    el = theForm.querySelector(tributeOptionsSelector)
     if (el) {
       el.addEventListener('change', e => {
         switch (e.target.value) {
           case 'In Honor':
-            showTributeHeadings('.heading-honor');
-            break;
+            showTributeHeadings('.heading-honor')
+            break
           case 'In Memory':
-            showTributeHeadings('.heading-memory');
-            break;
+            showTributeHeadings('.heading-memory')
+            break
           case 'Gift':
-            showTributeHeadings('.heading-gift');
-            break;
+            showTributeHeadings('.heading-gift')
+            break
         }
-      });
+      })
     }
 
     // Is there a full bleed hero?
-    addClass(document.body, maybeHasHero());
+    addClass(document.body, maybeHasHero())
 
     // Is there a solid color hero?
-    addClass(document.body, maybeHasHeroSolid());
+    addClass(document.body, maybeHasHeroSolid())
 
     // Is there a processing error?
-    els = getAll('.en__errorHeader, .en__errorList');
+    els = getAll('.en__errorHeader, .en__errorList')
     if (els.length > 0 && !isEmpty(theForm.querySelector('.en__errorList'))) {
-      wrapAll(els, 'div', errorBoxClass);
-      trackProcessingErrors();
+      wrapAll(els, 'div', errorBoxClass)
+      trackProcessingErrors()
     }
 
     // Advocacy share text and share buttons blocks need to be wrapped for layout
-    els = getAll('.advocacy-share-bar, .advocacy-share-bar + .en__component--socialshareblock');
+    els = getAll('.advocacy-share-bar, .advocacy-share-bar + .en__component--socialshareblock')
     if (els.length > 0) {
-      wrapAll(els, 'div', advocacyShareClass);
+      wrapAll(els, 'div', advocacyShareClass)
     }
 
     // Placeholders for some inputs
     getAll(otherAmountInputSelector).forEach(el => {
-      const fieldItem = getClosestEl(el, enFieldItemSelector);
+      const fieldItem = getClosestEl(el, enFieldItemSelector)
 
       if (fieldItem) {
-        addPlaceholder(el, fieldItem.previousElementSibling.querySelector('label').textContent);
+        addPlaceholder(el, fieldItem.previousElementSibling.querySelector('label').textContent)
       }
-    });
+    })
 
     // Placeholders for address 2 fields
     getAll('[name*="address2"], [name*="add2"]').forEach(el => {
-      el.setAttribute('placeholder', 'Apt, ste, bldg.');
-    });
+      el.setAttribute('placeholder', 'Apt, ste, bldg.')
+    })
 
     // Hard code placeholder for date fields
     getAll(dateInputSelector).forEach(el => {
-      addPlaceholder(el, 'Select Date');
-    });
+      addPlaceholder(el, 'Select Date')
+    })
 
     // Maybe convert event address to Google maps link
     getAll('.link-to-map address').forEach(el => {
-      const wrap = wrapEl(el, 'a');
+      const wrap = wrapEl(el, 'a')
 
       if (wrap) {
         setAttributes(wrap, {
           'href': `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(el.textContent)}`,
           'target': '_blank',
-        });
+        })
       }
-    });
+    })
 
     // Wrap event ticket selector
     getAll('.en__ticket__selector').forEach(el => {
-      els = getAll('.en__ticket__minus, .en__ticket__quantity, .en__ticket__plus', el);
+      els = getAll('.en__ticket__minus, .en__ticket__quantity, .en__ticket__plus', el)
       if (els.length > 0) {
-        wrapAll(els, 'div', 'input-group');
+        wrapAll(els, 'div', 'input-group')
       }
-    });
+    })
 
     // Missing event ticket quantity labels
     getAll('.en__ticket__quantity').forEach(el => {
-      addLabel(el, el.parentElement, 'Quantity');
-    });
+      addLabel(el, el.parentElement, 'Quantity')
+    })
 
     // Missing additional donation label
     getAll('.en__additional__input').forEach(el => {
-      addLabel(el, el.parentElement, 'Additional donation (optional)');
-    });
+      addLabel(el, el.parentElement, 'Additional donation (optional)')
+    })
 
     // Missing promo code label
     getAll('.en__additional__code').forEach(el => {
-      addLabel(el, el.parentElement, 'Promo code');
-    });
+      addLabel(el, el.parentElement, 'Promo code')
+    })
 
     // Move additional donation fields
-    el = theForm.querySelector('.en__additional__amount');
-    _parent = theForm.querySelector('.form-heading--additional');
+    el = theForm.querySelector('.en__additional__amount')
+    _parent = theForm.querySelector('.form-heading--additional')
     if (el && _parent) {
-      _parent.append(el);
+      _parent.append(el)
     }
 
     // Move promo code field
-    el = theForm.querySelector('.en__additional__promo');
-    _parent = theForm.querySelector('.form-heading--promo');
+    el = theForm.querySelector('.en__additional__promo')
+    _parent = theForm.querySelector('.form-heading--promo')
     if (el && _parent) {
-      _parent.append(el);
+      _parent.append(el)
     }
 
     // Wrap additional donation and promo code fields
-    els = getAll('.form-heading--additional, .form-heading--promo');
+    els = getAll('.form-heading--additional, .form-heading--promo')
     if (els.length > 0) {
-      wrapAll(els, 'div', ['row', 'justify-content-between', 'additional-promo']);
+      wrapAll(els, 'div', ['row', 'justify-content-between', 'additional-promo'])
     }
 
     // Missing split select labels
-    el = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child .en__field__input--splitselect');
-    _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
+    el = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child .en__field__input--splitselect')
+    _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child')
     if (el && _parent) {
       addLabel(el, el.parentElement, 'Credit card expiration year').then(labelId => {
-        const _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child');
+        const _parent = theForm.querySelector('.en__field--ccexpire.en__field--splitselect .en__field__item:last-child')
 
         getAll('[role="combobox"], [role="listbox"]', _parent).forEach(el => {
-          el.setAttribute('aria-labelledby', labelId);
-        });
-      });
+          el.setAttribute('aria-labelledby', labelId)
+        })
+      })
     }
 
     // Missing triple select labels
     getAll('.en__field--tripleselect').forEach(el => {
-      const label = el.querySelector('.en__field__label');
+      const label = el.querySelector('.en__field__label')
 
       if (label) {
-        labelId = label.id ? label.id : `label${generateId()}`;
-        label.id = labelId;
+        labelId = label.id ? label.id : `label${generateId()}`
+        label.id = labelId
 
         getAll('[role="combobox"], [role="listbox"]', el).forEach(el => {
-          el.setAttribute('aria-labelledby', labelId);
-        });
+          el.setAttribute('aria-labelledby', labelId)
+        })
       }
-    });
+    })
 
     // Radio element accessibility
     getAll('.en__field--radio').forEach(el => {
       // Some radio elements have loose labels
-      const looseLabel = el.querySelector('label:first-child');
-      let replaceLabel = null;
+      const looseLabel = el.querySelector('label:first-child')
+      let replaceLabel = null
 
       if (looseLabel) {
-        replaceLabel = document.createElement('p');
-        replaceLabel.textContent = looseLabel.textContent;
-        replaceLabel.id = looseLabel.id;
-        replaceLabel.classList = looseLabel.classList;
-        looseLabel.parentNode.replaceChild(replaceLabel, looseLabel);
+        replaceLabel = document.createElement('p')
+        replaceLabel.textContent = looseLabel.textContent
+        replaceLabel.id = looseLabel.id
+        replaceLabel.classList = looseLabel.classList
+        looseLabel.parentNode.replaceChild(replaceLabel, looseLabel)
       }
 
       // Add aria role
-      el.setAttribute('role', 'radiogroup');
+      el.setAttribute('role', 'radiogroup')
       if (hasClass(el, 'en__field--donationAmt')) {
-        el.setAttribute('aria-labelledby', 'giftAmountLabel');
+        el.setAttribute('aria-labelledby', 'giftAmountLabel')
       } else {
-        addAriaLabelledBy(el);
+        addAriaLabelledBy(el)
       }
-    });
+    })
 
     // Checkbox element accessibility
     getAll('.en__field--checkbox.en__field--survey').forEach(el => {
       // Some checkbox elements have loose labels
-      const looseLabel = el.querySelector('label:first-child');
-      let replaceLabel = null;
+      const looseLabel = el.querySelector('label:first-child')
+      let replaceLabel = null
 
       if (looseLabel) {
-        replaceLabel = document.createElement('p');
-        replaceLabel.textContent = looseLabel.textContent;
-        replaceLabel.id = looseLabel.id;
-        replaceLabel.classList = looseLabel.classList;
-        looseLabel.parentNode.replaceChild(replaceLabel, looseLabel);
+        replaceLabel = document.createElement('p')
+        replaceLabel.textContent = looseLabel.textContent
+        replaceLabel.id = looseLabel.id
+        replaceLabel.classList = looseLabel.classList
+        looseLabel.parentNode.replaceChild(replaceLabel, looseLabel)
       }
 
       // Add aria role
-      el.setAttribute('role', 'group');
-      addAriaLabelledBy(el);
-    });
+      el.setAttribute('role', 'group')
+      addAriaLabelledBy(el)
+    })
 
     // Missing Other Amount label
-    el = theForm.querySelector(otherAmountInputSelector);
-    _parent = theForm.querySelector(otherAmountSelector);
+    el = theForm.querySelector(otherAmountInputSelector)
+    _parent = theForm.querySelector(otherAmountSelector)
     if (el && _parent) {
-      placeholderToLabel(el, _parent);
+      placeholderToLabel(el, _parent)
     }
 
     // Aria role for split selects
     getAll('.en__field--splitselect').forEach(el => {
-      el.setAttribute('role', 'group');
-      addAriaLabelledBy(el);
-    });
+      el.setAttribute('role', 'group')
+      addAriaLabelledBy(el)
+    })
 
     // Labels are sometimes blank
     getAll('.en__field__label').forEach(el => {
       if (isEmpty(el)) {
         if (el.parentNode) {
-          el.parentNode.removeChild(el);
+          el.parentNode.removeChild(el)
         }
       }
-    });
+    })
 
     // Convert URL strings to images for dummy select ecard radios
-    el = theForm.querySelector('[class*="select-an-ecard"]');
+    el = theForm.querySelector('[class*="select-an-ecard"]')
     if (el) {
       getAll('.en__field__label--item', el).forEach(el => {
-        createImgFromUrl(el.textContent, el);
-      });
+        createImgFromUrl(el.textContent, el)
+      })
     }
     // Add mask and inputmode attribute for currency fields. Also prevent autofill
-    getAll('[name*="Amt"]:not([name*="Amt1"]):not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt1"]):not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
+    getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
       setAttributes(el, {
         'autocomplete': 'photo',
         'inputmode': 'decimal',
-      });
+      })
       IMask(el, {
         mask: 'num',
         blocks: {
@@ -591,28 +591,28 @@
             radix: '.',
           }
         }
-      });
-    });
+      })
+    })
 
     // Prevent autofill on mem/trib fields
     getAll('.en__field--ecard-recipient-email-addresses .en__field__input, .en__field--honname .en__field__input, .en__field--honname ~ .en__field .en__field__input, .en__field--infname .en__field__input, .en__field--infname ~ .en__field .en__field__input').forEach(el => {
-      el.setAttribute('autocomplete', 'photo');
-    });
+      el.setAttribute('autocomplete', 'photo')
+    })
 
     // Autocomplete attributes for CC expiration fields
-    el = theForm.querySelector(ccExpMonthSelect);
+    el = theForm.querySelector(ccExpMonthSelect)
     if (el) {
-      el.setAttribute('autocomplete', 'cc-exp-month');
+      el.setAttribute('autocomplete', 'cc-exp-month')
     }
-    el = theForm.querySelector(ccExpYearSelect);
+    el = theForm.querySelector(ccExpYearSelect)
     if (el) {
-      el.setAttribute('autocomplete', 'cc-exp-year');
+      el.setAttribute('autocomplete', 'cc-exp-year')
     }
 
     // Add inputmode attribute for credit card fields
     getAll('[name*="ccnumber"], [name*="ccvv"]').forEach(el => {
-      el.setAttribute('inputmode', 'numeric');
-    });
+      el.setAttribute('inputmode', 'numeric')
+    })
 
     // Display minimum donation amount
     // el = theForm.querySelector(donationAmountSelector) || theForm.querySelector(otherAmountSelector);
@@ -631,123 +631,123 @@
     // }
 
     // Other amount field is always visible, so the corresponding radio need to be button clicked here even though hidden
-    el = theForm.querySelector('.en__field__input--other');
+    el = theForm.querySelector('.en__field__input--other')
     if (el) {
       el.addEventListener('focus', e => {
-        const otherRadio = e.target.closest('.en__field__item').previousElementSibling.querySelector('.en__field__input--radio');
+        const otherRadio = e.target.closest('.en__field__item').previousElementSibling.querySelector('.en__field__input--radio')
 
         if (otherRadio) {
-          otherRadio.click();
+          otherRadio.click()
         }
-      });
+      })
     }
 
     // Reposition help text found in labels
     getAll('.field__help').forEach(el => {
-      getClosestEl(el, enFieldSelector).append(el);
-    });
+      getClosestEl(el, enFieldSelector).append(el)
+    })
 
     // Provide credit card type feedback
-    el = theForm.querySelector(ccNumberInputSelector);
+    el = theForm.querySelector(ccNumberInputSelector)
     if (el) {
       cleave = new Cleave(ccNumberInputSelector, {
         creditCard: true,
         onCreditCardTypeChanged: type => {
-          const ccField = theForm.querySelector(ccNumberFieldSelector);
+          const ccField = theForm.querySelector(ccNumberFieldSelector)
 
-          updatePaymentType(type);
+          updatePaymentType(type)
           if (ccField) {
-            removeClass(ccField, ['amex', 'mastercard', 'visa', 'diners', 'discover', 'jcb', 'dankort', 'instapayment', 'uatp', 'mir', 'unionPay', 'unknown']);
-            addClass(ccField, type);
+            removeClass(ccField, ['amex', 'mastercard', 'visa', 'diners', 'discover', 'jcb', 'dankort', 'instapayment', 'uatp', 'mir', 'unionPay', 'unknown'])
+            addClass(ccField, type)
           }
         }
-      });
+      })
     }
 
     // Handle switching between Check and CC payment methods
-    el = theForm.querySelector(paymentMethodRadioSelector);
+    el = theForm.querySelector(paymentMethodRadioSelector)
     if (el && cleave) {
       getAll('.en__field__input--radio', el).forEach(el => {
         el.addEventListener('click', e => {
-          const paymentMethod = e.target.value;
+          const paymentMethod = e.target.value
 
           if (paymentMethod === 'CC') {
-            updatePaymentType(cleave.properties.creditCardType);
+            updatePaymentType(cleave.properties.creditCardType)
           } else if (paymentMethod === 'Check') {
-            const paymentType = theForm.querySelector(paymentTypeSelector);
+            const paymentType = theForm.querySelector(paymentTypeSelector)
 
             if (paymentType) {
-              paymentType.value = 'ACH';
+              paymentType.value = 'ACH'
             }
           }
-        });
-      });
+        })
+      })
     }
 
     const setPaymentType = (paymentType) => {
-      const hasPaymentMethod = theForm.querySelector(paymentMethodRadioSelector);
-      let selectedPaymentMethod = null;
+      const hasPaymentMethod = theForm.querySelector(paymentMethodRadioSelector)
+      let selectedPaymentMethod = null
 
       if (hasPaymentMethod) {
-        selectedPaymentMethod = hasPaymentMethod.querySelector('.en__field__input--radio:checked').value;
+        selectedPaymentMethod = hasPaymentMethod.querySelector('.en__field__input--radio:checked').value
         if (selectedPaymentMethod === 'CC') {
-          updatePaymentType(cleave.properties.creditCardType);
+          updatePaymentType(cleave.properties.creditCardType)
         } else if (selectedPaymentMethod === 'Check') {
-          paymentType.value = 'ACH';
+          paymentType.value = 'ACH'
         }
       } else {
-        updatePaymentType(cleave.properties.creditCardType);
+        updatePaymentType(cleave.properties.creditCardType)
       }
-    };
+    }
 
     // Paypal checkbox needs to hide credit card blocks and set payment type
-    el = theForm.querySelector(paypalInputSelector);
-    _parent = theForm.querySelector(paymentMethodSelector);
+    el = theForm.querySelector(paypalInputSelector)
+    _parent = theForm.querySelector(paymentMethodSelector)
     if (el && _parent) {
       el.addEventListener('click', e => {
-        const paymentType = theForm.querySelector(paymentTypeSelector);
-        _parent = getClosestEl(_parent, '.en__component--formblock');
+        const paymentType = theForm.querySelector(paymentTypeSelector)
+        _parent = getClosestEl(_parent, '.en__component--formblock')
 
         if (_parent && paymentType) {
           if (e.target.checked) {
-            addClass(_parent, paypalSelectedClass);
-            paymentType.value = 'Paypal';
+            addClass(_parent, paypalSelectedClass)
+            paymentType.value = 'Paypal'
           } else {
-            removeClass(_parent, paypalSelectedClass);
-            setPaymentType(paymentType);
+            removeClass(_parent, paypalSelectedClass)
+            setPaymentType(paymentType)
           }
         }
-      });
+      })
     }
 
     // Set sharing URLs for action center items
     getAll('.advocacy-related-actions:not(:only-of-type)').forEach(el => {
-      const facebookShareLink = el.querySelector('.en__socialShare--facebook');
-      const twitterShareLink = el.querySelector('.en__socialShare--twitter');
-      const shareLink = el.querySelector('a[data-campaign-id]');
-      let shareUrl = null;
+      const facebookShareLink = el.querySelector('.en__socialShare--facebook')
+      const twitterShareLink = el.querySelector('.en__socialShare--twitter')
+      const shareLink = el.querySelector('a[data-campaign-id]')
+      let shareUrl = null
 
       if (facebookShareLink && twitterShareLink && shareLink) {
-        shareUrl = shareLink.getAttribute('href');
-        facebookShareLink.setAttribute('href', makeFacebookUrl(facebookShareLink.getAttribute('href'), shareUrl));
-        twitterShareLink.setAttribute('href', makeTwitterUrl(shareLink.textContent, twitterShareLink.getAttribute('href'), shareUrl));
+        shareUrl = shareLink.getAttribute('href')
+        facebookShareLink.setAttribute('href', makeFacebookUrl(facebookShareLink.getAttribute('href'), shareUrl))
+        twitterShareLink.setAttribute('href', makeTwitterUrl(shareLink.textContent, twitterShareLink.getAttribute('href'), shareUrl))
       }
-    });
+    })
 
     // Active state for field containers
     getAll('.en__field__input').forEach(el => {
-      el.addEventListener('focus', activateField);
-      el.addEventListener('blur', deactivateField);
-    });
+      el.addEventListener('focus', activateField)
+      el.addEventListener('blur', deactivateField)
+    })
 
     // Init datepickers
-    const datepickers = [].slice.call(document.querySelectorAll(dateInputSelector));
+    const datepickers = [].slice.call(document.querySelectorAll(dateInputSelector))
     const datepickersList = datepickers.map(el => {
-      const today = new Date();
-      const maxDate = new Date(today);
+      const today = new Date()
+      const maxDate = new Date(today)
 
       // Restrict date selection to one year out
-      maxDate.setDate(maxDate.getDate() + 90);
+      maxDate.setDate(maxDate.getDate() + 90)
 
       return new Datepicker(el, {
         autohide: true,
@@ -760,27 +760,27 @@
         prevArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="7.121" height="11.414" viewBox="0 0 7.121 11.414"><path id="Stroke_1_Copy_2" data-name="Stroke 1 Copy 2" d="M10,0,5,5,0,0" transform="translate(6.414 0.707) rotate(90)" fill="none" stroke-miterlimit="10" stroke-width="2"/></svg>',
         showOnClick: true,
         todayHighlight: false,
-      });
-    });
+      })
+    })
 
     // Add inputmode attribute for date fields to prevent mobile keyboard
     getAll('.datepicker-input').forEach(el => {
-      el.setAttribute('inputmode', 'none');
-      el.readOnly = true;
-    });
+      el.setAttribute('inputmode', 'none')
+      el.readOnly = true
+    })
 
     // Each photo in hero and sidebar elements needs description and meta info popover
     getAll('.en__component--imageblock, .en__component--copyblock .card').forEach(el => {
-      createImgTooltip(el);
-    });
+      createImgTooltip(el)
+    })
 
     // Create popovers elements
     if (typeof popoverTranslations !== 'undefined' && typeof pageJson !== 'undefined') {
       popoverTranslations.forEach(translation => {
-        const locale = translation[pageJson.locale] ? pageJson.locale : 'en-US';
+        const locale = translation[pageJson.locale] ? pageJson.locale : 'en-US'
 
-        createPopover(translation.field, translation.placement, translation[locale].label, translation[locale].text);
-      });
+        createPopover(translation.field, translation.placement, translation[locale].label, translation[locale].text)
+      })
     }
 
     // Init accordions
@@ -788,29 +788,29 @@
       getAll('.accordion-button').forEach(el => {
         el.addEventListener('click', e => {
           setTimeout(function() {
-            addAriaCollapsedAttr(document.getElementById(e.target.dataset.bsTarget.replace(/#/, '')), getAll('.accordion-collapse', accordion));
-          }, 500);
-        });
-      });
-    });
+            addAriaCollapsedAttr(document.getElementById(e.target.dataset.bsTarget.replace(/#/, '')), getAll('.accordion-collapse', accordion))
+          }, 500)
+        })
+      })
+    })
 
     // Init collapsibles
     getAll('.btn-collapse').forEach(el => {
       el.addEventListener('click', e => {
-        const _target = e.target;
+        const _target = e.target
 
         if (hasClass(_target, 'expanded')) {
-          removeClass(_target, 'expanded');
-          _target.textContent = 'See more';
+          removeClass(_target, 'expanded')
+          _target.textContent = 'See more'
         } else {
-          addClass(_target, 'expanded');
-          _target.textContent = 'See less';
+          addClass(_target, 'expanded')
+          _target.textContent = 'See less'
         }
-      });
-    });
+      })
+    })
 
     //Init popovers
-    const popoverTriggerList = [].slice.call(theForm.querySelectorAll('[data-bs-toggle="popover"]'));
+    const popoverTriggerList = [].slice.call(theForm.querySelectorAll('[data-bs-toggle="popover"]'))
     const popoverList = popoverTriggerList.map(popoverTriggerEl => {
       return new bootstrap.Popover(popoverTriggerEl, {
         boundry: theForm,
@@ -821,165 +821,111 @@
         template: '<div class="popover" role="tooltip"><div class="popover-control"><a class="popover-close" role="button" aria-label="close popover" onclick="closePopover(); return false;"></a></div><div class="popover-arrow"></div><h3 class="popover-header"></h3><div class="popover-body"></div></div>',
         trigger: 'click focus',
         sanitize: false,
-      });
-    });
+      })
+    })
 
     // Workaround for not being able to set popover position explicity
     for (let i = 0; i < popoverTriggerList.length; i++) {
-      const _index = i;
-      const _root = root;
+      const _index = i
+      const _root = root
 
       popoverTriggerList[i].addEventListener('shown.bs.popover', e => {
-        _root.style.setProperty('--popperTranslateX', popoverList[_index]._popper.state.styles.popper.transform.match(/\d*\.?\d+(?:px)?/gi)[0]);
-        _root.style.setProperty('--popperTranslateY', popoverList[_index]._popper.state.styles.popper.transform.match(/\d*\.?\d+(?:px)?/gi)[1]);
-      });
+        _root.style.setProperty('--popperTranslateX', popoverList[_index]._popper.state.styles.popper.transform.match(/\d*\.?\d+(?:px)?/gi)[0])
+        _root.style.setProperty('--popperTranslateY', popoverList[_index]._popper.state.styles.popper.transform.match(/\d*\.?\d+(?:px)?/gi)[1])
+      })
     }
 
     // Close popovers with button
     const closePopover = () => {
       for (let i = 0; i < popoverList.length; i++) {
-        popoverList[i].hide();
+        popoverList[i].hide()
       }
-    };
+    }
     // Globalize for inline onclick
-    window.closePopover = closePopover;
-  };
+    window.closePopover = closePopover
+  }
 
   /**
    * Donation form enhancements
    */
   const donationForm = () => {
-    const appealCode = theForm.querySelector('.en__field--appealCode');
-    const bequestIframe = theForm.querySelector('.iframe--bequest iframe');
-    const bequestModal = theForm.querySelector('.modal--bequest');
-    const donationAmt = theForm.querySelector('.en__field--donationAmt');
-    const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]');
-    const giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn');
-    const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
-    const otherAmountInputMin = theForm.querySelector('.en__otherFieldMin input');
-    const otherAmountContainer = theForm.querySelector(otherAmountSelector);
-    const monthlyGive = document.getElementById('en__field_transaction_recurrpay');
-    let otherAmountErrorContainer = document.createElement('div');
-    otherAmountErrorContainer.classList.add('en__other__field__error');
-    const recurrenceCheckbox = theForm.querySelector('[name="transaction.recurrpay"][type="checkbox"]');
-    const recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq');
-    let donationAmtRadios = null;
-    let modal = null;
-    let feeCoverUserChecked = false;
+    const appealCode = theForm.querySelector('.en__field--appealCode')
+    const bequestIframe = theForm.querySelector('.iframe--bequest iframe')
+    const bequestModal = theForm.querySelector('.modal--bequest')
+    const donationAmt = theForm.querySelector('.en__field--donationAmt')
+    const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]')
+    const giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn')
+    const otherAmountInput = theForm.querySelector(otherAmountInputSelector)
+    const recurrenceCheckbox = theForm.querySelector('[name="transaction.recurrpay"][type="checkbox"]')
+    const recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq')
+    let donationAmtRadios = null
+    let modal = null
+    let feeCoverUserChecked = false
 
     const maybeUncheckFeeCover = (amt) => {
       if (feeCoverCheckbox.checked && !feeCoverUserChecked && !isNaN(amt)) {
         if (Number(amt) >= 1000) {
-          feeCoverCheckbox.checked = false;
+          feeCoverCheckbox.checked = false
         }
       }
-    };
-
-    const otherFieldClear = () => {
-      otherAmountInput.classList.remove('_checkAmtErr');
-      theForm.querySelector('.en__other__field__error').textContent = '';
-      otherAmountInput.value = '';
-      theForm.querySelector('.en__submit button').disabled = false;
-    };
+    }
 
     const handleDonationAmountChange = (e) => {
       if (feeCoverCheckbox) {
-        maybeUncheckFeeCover(getOriginalDonationAmount());
+        maybeUncheckFeeCover(getOriginalDonationAmount())
       }
-    };
-
-    const validateDonationAmountChangeMin = (e) => {
-      if (otherAmountInputMin && otherAmountInputMin != null) {
-        var _otherInputParsed = parseInt(e.target.value);
-        var _otherInputMinParsed = parseInt(otherAmountInputMin.value);
-        // if monthly box is checked, new min is 15
-        if (monthlyGive.checked) {
-           _otherInputMinParsed = 15;
-        }
-        // other field can't be less than 'Other Field Minimum' code block val or greater than 50k
-        // if monthly box is checked, other field can't be lower than 15 or greater than 50k
-        switch (true) {
-          case ((_otherInputParsed < _otherInputMinParsed || _otherInputParsed > 50000) && monthlyGive.checked):
-            e.target.classList.add('_checkAmtErr');
-            theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00';
-            theForm.querySelector('.en__submit button').disabled = true;
-            break;
-          case _otherInputParsed < _otherInputMinParsed || _otherInputParsed > 50000:
-            e.target.classList.add('_checkAmtErr');
-            theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00';
-            theForm.querySelector('.en__submit button').disabled = true;
-            break;
-          default:
-            e.target.classList.remove('_checkAmtErr');
-            theForm.querySelector('.en__other__field__error').textContent = '';
-            theForm.querySelector('.en__submit button').disabled = false;
-
-        }
-      }
-    };
+    }
 
     const initDonationAmount = () => {
-      donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt);
-      selectedAmount = getSelectedAmount();
+      donationAmtRadios = getAll('.en__field__input--radio:not([value=""])', donationAmt)
+      selectedAmount = getSelectedAmount()
 
       donationAmtRadios.forEach(el => {
-        el.addEventListener('click', handleDonationAmountChange);
-      });
+        el.addEventListener('click', handleDonationAmountChange)
+      })
 
       if (feeCoverCheckbox) {
         feeCoverCheckbox.addEventListener('click', e => {
-          feeCoverUserChecked = true;
-        });
+          feeCoverUserChecked = true
+        })
       }
 
       // Listen for other amount change
       if (otherAmountInput) {
-        if (otherAmountContainer) {
-          otherAmountContainer.append(otherAmountErrorContainer);
-        }
-        otherAmountInput.addEventListener('input', handleDonationAmountChange);
-        // add front end validation to 'other' field on focusout
-        otherAmountInput.addEventListener('focusout', validateDonationAmountChangeMin);
-        // clear 'other' field front end validation logic if other amount buttons are click
-        document.addEventListener('click', function(event) {
-          if (event.target.matches('label.en__field__label[for*="transaction_donationAmt"]')) {
-            otherFieldClear();
-          }
-        }, false);
+        otherAmountInput.addEventListener('input', handleDonationAmountChange)
       }
-
-    };
+    }
 
     resetDonationAmount = () => {
       setTimeout(() => {
-        initDonationAmount();
+        initDonationAmount()
         // window.initMasks();
-      }, 500);
-    };
+      }, 500)
+    }
 
     if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
       if (donationAmt) {
-        initDonationAmount();
+        initDonationAmount()
         // Listen for recurrence change
         if (recurrenceFrequency) {
           getAll('.en__field__input--radio', recurrenceFrequency).forEach(el => {
-            el.addEventListener('click', resetDonationAmount);
-          });
+            el.addEventListener('click', resetDonationAmount)
+          })
         } else if (recurrenceCheckbox) {
-          recurrenceCheckbox.addEventListener('click', resetDonationAmount);
+          recurrenceCheckbox.addEventListener('click', resetDonationAmount)
         }
       }
 
       // Gift designation Y/N
       if (giftDesignationYN && appealCode) {
         giftDesignationYN.querySelector('.en__field__input--radio[value="N"]').addEventListener('click', e => {
-          disableEl(appealCode);
-        });
+          disableEl(appealCode)
+        })
         giftDesignationYN.querySelector('.en__field__input--radio[value="Y"]').addEventListener('click', e => {
-          enableEl(appealCode);
-        });
+          enableEl(appealCode)
+        })
         if (giftDesignationYN.querySelector('.en__field__input--radio[value="N"]').checked) {
-          disableEl(appealCode);
+          disableEl(appealCode)
         }
       }
     }
@@ -992,34 +938,34 @@
           utag.link({
             'event_name': 'lightbox_click',
             'lightbox_name': 'bequest'
-          });
+          })
         }
         // Close modal
-        modal.hide();
-        focusFirst();
-      });
+        modal.hide()
+        focusFirst()
+      })
 
       // Fit iframe to parent
       window.addEventListener('resize', e => {
-        resizeIframe(bequestIframe);
-      });
+        resizeIframe(bequestIframe)
+      })
     }
 
     if (bequestModal) {
       modal = new bootstrap.Modal(bequestModal, {
         backdrop: 'static',
         keyboard: false
-      });
+      })
       // Open modal
       window.addEventListener('iframeReady', e => {
-        modal.show();
+        modal.show()
         bequestIframe.contentWindow.enOnError = function() {
           // Fit iframe to parent
-          resizeIframe(bequestIframe);
-        };
+          resizeIframe(bequestIframe)
+        }
         // Fit iframe to parent
-        resizeIframe(bequestIframe);
-      });
+        resizeIframe(bequestIframe)
+      })
 
       // Fire tracking
       setTimeout(function() {
@@ -1027,354 +973,366 @@
           utag.link({
             'event_name': 'lightbox_impression',
             'lightbox_name': 'bequest'
-          });
+          })
         }
-      }, 1000);
+      }, 1000)
     }
-  };
+  }
 
   /**
    * Event form enhancements
    */
   const eventForm = () => {
-    const pageNumber = pageJson.pageNumber;
-    const savedTotalAmount = sessionStorage.getItem('savedTotalAmount');
-    const waitListLink = theForm.querySelector('.waitlist-link a');
-    let el = null;
-    let _parent = null;
-    let hasPromo = false;
-    let totalAmount = 0;
-    let totalDiscount = 0;
+    const savedTotalAmount = sessionStorage.getItem('savedTotalAmount')
+    const waitListLink = theForm.querySelector('.waitlist-link a')
+    let el = null
+    let _parent = null
+    let hasPromo = false
+    let totalAmount = 0
+    let totalDiscount = 0
 
     /**
      * Updates total amount
      */
     const updateTotalAmount = () => {
-      const additionalInput = theForm.querySelector('.en__additional__input');
-      let totalAmount = 0;
+      const additionalInput = theForm.querySelector('.en__additional__input')
+      let totalAmount = 0
 
       // Sum all tickets
       getAll('.en__ticket__quantity').forEach(el => {
-        const row = getClosestEl(el, '.en__ticket');
-        const price = Number(row.querySelector('.en__ticket__price').textContent);
+        const row = getClosestEl(el, '.en__ticket')
+        const price = Number(row.querySelector('.en__ticket__price').textContent)
 
         if (price !== '0') {
-          totalAmount += el.value === '0' ? 0 : Number(Number(el.value) * price);
+          totalAmount += el.value === '0' ? 0 : Number(Number(el.value) * price)
         }
-      });
+      })
       // Include additional donation
       if (additionalInput) {
-        totalAmount += !isNaN(Number(additionalInput.value)) ? Number(additionalInput.value) : 0;
+        totalAmount += !isNaN(Number(additionalInput.value)) ? Number(additionalInput.value) : 0
       }
       // Display total amount
       getAll(totalAmountSelector).forEach(el => {
-        el.textContent = numberPipe(String(totalAmount));
-      });
+        el.textContent = numberPipe(String(totalAmount))
+      })
       // Save total for use on billing page
-      sessionStorage.setItem('savedTotalAmount', totalAmount);
-    };
+      sessionStorage.setItem('savedTotalAmount', totalAmount)
+    }
 
     const getPromo = (el) => {
-      return el.querySelector('.en__orderSummary__data--promo').textContent !== '';
-    };
+      return el.querySelector('.en__orderSummary__data--promo').textContent !== '' ? el.querySelector('.en__orderSummary__data--promo').textContent : false
+    }
 
     // Make ticket quantity field readonly to avoid invalid ticket numbers
     getAll('.en__ticket__quantity').forEach(el => {
-      el.readOnly = true;
-      el.setAttribute('tabindex', '-1');
-    });
+      el.readOnly = true
+      el.setAttribute('tabindex', '-1')
+    })
 
     // Add ticket quantity plus/minus to tab order
     getAll('.en__ticket__minus, .en__ticket__plus').forEach(el => {
-      el.setAttribute('tabindex', '0');
-    });
+      el.setAttribute('tabindex', '0')
+    })
 
     // Strip currency indicators and $ signs
     getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(el => {
-      el.textContent = el.textContent.replace(/USD/, '');
-    });
+      el.textContent = el.textContent.replace(/USD/, '')
+    })
 
     // Strip label colons
     getAll('.en__orderSummary__header').forEach(el => {
-      el.textContent = el.textContent.replace(/\:/, '');
-    });
+      el.textContent = el.textContent.replace(/\:/, '')
+    })
 
     // Maybe on page 1
-    if (pageNumber === 1) {
+    if (pageJson.pageNumber === 1) {
       // Display waitlist confirmation if coming from a chained redirect
-      el = theForm.querySelector('.waitlist-confirmation');
+      el = theForm.querySelector('.waitlist-confirmation')
       if (el && location.href.indexOf('chain') > -1) {
-        removeClass(el, hiddenWebOnlyClass);
+        removeClass(el, hiddenWebOnlyClass)
       }
 
       // Maybe add waitlist links
       if (waitListLink) {
         getAll('.en__ticket__soldout').forEach(el => {
-          let clone = waitListLink.cloneNode(true);
+          let clone = waitListLink.cloneNode(true)
 
-          el.parentElement.append(clone);
-        });
+          el.parentElement.append(clone)
+        })
       }
 
       // Listen for additional donation
-      el = theForm.querySelector('.en__additional__input');
+      el = theForm.querySelector('.en__additional__input')
       if (el) {
         el.addEventListener('change', e => {
-          updateTotalAmount();
-        });
+          updateTotalAmount()
+        })
       }
 
       // Listen for ticket selection
       getAll('.en__ticket__quantity').forEach(el => {
         el.addEventListener('change', e => {
           setTimeout(function() {
-            updateTotalAmount();
-          }, 100);
-        });
-      });
+            updateTotalAmount()
+          }, 100)
+        })
+      })
 
       // Listen for reset
-      el = theForm.querySelector('button[type="reset"]');
+      el = theForm.querySelector('button[type="reset"]')
       if (el) {
         el.addEventListener('click', e => {
           setTimeout(function() {
-            updateTotalAmount();
-          }, 100);
-        });
+            updateTotalAmount()
+          }, 100)
+        })
       }
 
       // Init total amount
-      updateTotalAmount();
+      updateTotalAmount()
 
       // Force ticket total cost update
       getAll('.en__ticket__minus, .en__ticket__plus').forEach(el => {
-        const row = getClosestEl(el, '.en__ticket');
-        const ticketQuantity = row.querySelector('.en__ticket__quantity');
+        const row = getClosestEl(el, '.en__ticket')
+        const ticketQuantity = row.querySelector('.en__ticket__quantity')
 
         el.addEventListener('click', e => {
-          triggerEvent(ticketQuantity, 'change');
-        });
+          triggerEvent(ticketQuantity, 'change')
+        })
 
         // Add keyboard nav to plus/minus buttons
         el.addEventListener('keyup', e => {
           if (e.key === 'Enter' || e.keyCode === 13) {
-            e.target.click();
+            e.target.click()
           }
-        });
-      });
+        })
+      })
       // Maybe on page 2
-    } else if (pageNumber === 2) {
+    } else if (pageJson.pageNumber >= 2) {
       // Customize order summary table
       getAll('.en__orderSummary__item').forEach(el => {
-        const itemType = el.querySelector('.en__orderSummary__data--type');
-        const itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent;
-
-        itemType.textContent = `${itemQuantity}x  ${itemType.textContent}`;
-        hasPromo = hasPromo || getPromo(el);
-      });
+        const itemType = el.querySelector('.en__orderSummary__data--type')
+        const itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent
+        const itemAmount = el.querySelector('.en__orderSummary__data--cost')
+        // look for item in pageJson and get original per-ticket total
+        if(pageJson.tickets && pageJson.tickets.length) {
+          let originalTicket = pageJson.tickets.filter(ticket => ticket.name === itemType.textContent)
+          if(originalTicket.length === 1) {
+            itemAmount.textContent = (originalTicket[0].quantity * originalTicket[0].price).toFixed(2)
+          }
+        }
+        itemType.textContent = `${itemQuantity}x  ${itemType.textContent}`
+        hasPromo = hasPromo || getPromo(el)
+        const itemPromo = el.querySelector('.en__orderSummary__data--promo')
+        if(itemPromo) {
+          itemPromo.textContent = '';
+        }
+      })
 
       // Maybe add promo discount line
-      el = theForm.querySelector('.en__orderSummary__data--totalAmount');
-      _parent = theForm.querySelector('.en__orderSummary');
+      el = theForm.querySelector('.en__orderSummary__data--totalAmount')
+      _parent = theForm.querySelector('.en__orderSummary')
       if (savedTotalAmount && hasPromo && el && _parent) {
-        totalAmount = Number(el.textContent.replace(/\$/, ''));
-        el = document.getElementById('orderSummaryPromo');
+        totalAmount = Number(el.textContent.replace(/\$/, ''))
+        el = document.getElementById('orderSummaryPromo')
         if (el) {
-          totalDiscount = Number(savedTotalAmount) - totalAmount;
-          el.querySelector('.js-applied-promo').textContent = totalDiscount.toFixed(2);
-          _parent.insertBefore(el, theForm.querySelector('.en__orderSummary__total'));
-          removeClass(el, hiddenWebOnlyClass);
+          totalDiscount = Number(savedTotalAmount) - totalAmount
+          el.querySelector('.js-applied-promo').textContent = totalDiscount.toFixed(2)
+          _parent.classList.add("promo-used")
+          el.querySelector('.en__orderSummary__data--fill+.en__orderSummary__data--fill').textContent = hasPromo
+          _parent.insertBefore(el, theForm.querySelector('.en__orderSummary__total'))
+          removeClass(el, hiddenWebOnlyClass)
         }
         // Cleanup
-        theForm.querySelector('.en__submit button').addEventListener('click', e => {
-          sessionStorage.removeItem('savedTotalAmount');
-        });
+        if(pageJson.pageNumber === pageJson.pageCount) {
+          sessionStorage.removeItem('savedTotalAmount')
+        }
       }
 
       // Remove attendee index number
       getAll('.en__registrants__registrantHead').forEach(el => {
-        el.textContent = el.textContent.replace(/^\d{1,3}/, '').replace(/ticket \d{1,3}$/, '');
-      });
+        el.textContent = el.textContent.replace(/^\d{1,3}/, '').replace(/ticket \d{1,3}$/, '')
+      })
 
       // Re-number attendees
       getAll('.en__registrants__ticket').forEach(el => {
-        const attendees = getAll('.en__registrants__registrantHead', el);
+        const attendees = getAll('.en__registrants__registrantHead', el)
 
         if (attendees.length > 1) {
           attendees.forEach((el, index) => {
-            el.textContent = `${el.textContent} ${index + 1}`;
-          });
+            el.textContent = `${el.textContent} ${index + 1}`
+          })
         }
-      });
+      })
       // Labels for Attendee custom checkbox questions do not have for attributes
       getAll('.en__field--checkbox.en__field--registrant .en__field__item').forEach(el => {
-        const checkboxId = `checkbox${generateId()}`;
+        const checkboxId = `checkbox${generateId()}`
 
-        el.querySelector('.en__field__input--checkbox').id = checkboxId;
-        el.querySelector('.en__field__label--item').setAttribute('for', checkboxId);
-      });
+        el.querySelector('.en__field__input--checkbox').id = checkboxId
+        el.querySelector('.en__field__label--item').setAttribute('for', checkboxId)
+      })
 
       // Adding commas to totals
       getAll('.en__orderSummary__data--cost, .en__orderSummary__data--totalAmount').forEach(el => {
-        el.textContent = numberPipe(el.textContent);
-      });
+        el.textContent = numberPipe(el.textContent)
+      })
 
       // Adjust the page if zero amount due
-      el = theForm.querySelector('.en__orderSummary__data--totalAmount');
+      el = theForm.querySelector('.en__orderSummary__data--totalAmount')
       if (el) {
         if (parseInt(el.textContent) === 0) {
           // Some of the form headings have 'Billing' in them
           getAll('.form-heading h3').forEach(el => {
-            el.textContent = el.textContent.replace(/Billing\s/i, '');
-          });
+            el.textContent = el.textContent.replace(/Billing\s/i, '')
+          })
           // Find the form block with address info
-          el = document.getElementById('en__field_supporter_address1');
+          el = document.getElementById('en__field_supporter_address1')
           if (el) {
             // CSS will hide everything below .last-visible except the submit block
-            addClass(getClosestEl(el, '.en__component--formblock'), 'last-visible');
+            addClass(getClosestEl(el, '.en__component--formblock'), 'last-visible')
           }
         }
       }
 
       // Display total amount
-      el = theForm.querySelector('.en__orderSummary__data--totalAmount');
+      el = theForm.querySelector('.en__orderSummary__data--totalAmount')
       if (el) {
         // Prevent double $ symbols
         setTimeout(function() {
-          el.textContent = el.textContent.indexOf('$') > -1 ? el.textContent.replace(/\$/g, '') : el.textContent;
-          addClass(el, activeClass);
+          el.textContent = el.textContent.indexOf('$') > -1 ? el.textContent.replace(/\$/g, '') : el.textContent
+          addClass(el, activeClass)
 
           getAll(totalAmountSelector).forEach(el => {
-            el.textContent = `$${theForm.querySelector('.en__orderSummary__data--totalAmount').textContent.replace(/\$/, '')}`;
-          });
-        }, 500);
+            el.textContent = `$${theForm.querySelector('.en__orderSummary__data--totalAmount').textContent.replace(/\$/, '')}`
+          })
+        }, 500)
       }
     }
-  };
+  }
 
   /**
    * Email to target enhancements
    */
   const emailToTarget = () => {
-    const contactBlock = theForm.querySelector('.en__component--contactblock');
-    const phone = document.querySelector('.en__field--telephone .en__field__input');
-    const homePhone = document.querySelector('[name="supporter.phoneNumber"]');
-    const mobilePhone = document.querySelector('[name="supporter.phoneNumber2"]');
-    const mobilePhoneCheck = document.querySelector('.en__field--this-is-my-mobile .en__field__input--checkbox');
+    const contactBlock = theForm.querySelector('.en__component--contactblock')
+    const phone = document.querySelector('.en__field--telephone .en__field__input')
+    const homePhone = document.querySelector('[name="supporter.phoneNumber"]')
+    const mobilePhone = document.querySelector('[name="supporter.phoneNumber2"]')
+    const mobilePhoneCheck = document.querySelector('.en__field--this-is-my-mobile .en__field__input--checkbox')
 
     const setPhoneFields = () => {
       //  Set standard phone fields
       if (mobilePhoneCheck.checked) {
-        homePhone.value = '';
-        mobilePhone.value = phone.value;
+        homePhone.value = ''
+        mobilePhone.value = phone.value
       } else {
-        mobilePhone.value = '';
-        homePhone.value = phone.value;
+        mobilePhone.value = ''
+        homePhone.value = phone.value
       }
-    };
+    }
 
     if (contactBlock) {
       // Already visually hidden, but hide from screen readers too without using display: none
-      contactBlock.setAttribute('aria-hidden', 'true');
+      contactBlock.setAttribute('aria-hidden', 'true')
     }
 
     if (pageJson.pageType === 'emailtotarget' && phone && homePhone && mobilePhone && mobilePhoneCheck) {
-      phone.addEventListener('input', setPhoneFields);
-      phone.addEventListener('change', setPhoneFields);
-      mobilePhoneCheck.addEventListener('click', setPhoneFields);
+      phone.addEventListener('input', setPhoneFields)
+      phone.addEventListener('change', setPhoneFields)
+      mobilePhoneCheck.addEventListener('click', setPhoneFields)
     }
-  };
+  }
 
   /**
    * Hub enhancements
    */
   const hub = () => {
-    const hubImage = theForm.querySelector('.hub-image .en__component--imageblock:last-child img');
-    const emailAddress = theForm.querySelector('.en__supporterHubLogin__emailAddress .en__field__input');
+    const hubImage = theForm.querySelector('.hub-image .en__component--imageblock:last-child img')
+    const emailAddress = theForm.querySelector('.en__supporterHubLogin__emailAddress .en__field__input')
 
     // Convert large image to a background to better styling
     if (hubImage) {
-      hubImage.parentElement.style.backgroundImage = `url(${hubImage.getAttribute('src')})`;
+      hubImage.parentElement.style.backgroundImage = `url(${hubImage.getAttribute('src')})`
     }
 
     // Enable autocomplete on email address field
     if (emailAddress) {
-      emailAddress.id = emailAddress;
-      emailAddress.setAttribute('autocomplete', 'email');
+      emailAddress.id = emailAddress
+      emailAddress.setAttribute('autocomplete', 'email')
     }
-  };
+  }
 
   /**
    * Quiz form enhancements
    */
   const quiz = () => {
-    const leadGenModal = theForm.querySelector('.modal--lead-gen');
-    let isInvalid = false;
-    let formType = null;
-    let el = null;
+    const leadGenModal = theForm.querySelector('.modal--lead-gen')
+    let isInvalid = false
+    let formType = null
+    let el = null
 
     const getFormType = (form) => {
-      const emailUnsubscribeChecked = form.querySelector('.en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox') ? form.querySelector('.en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox').checked : false;
-      const mobilePhoneField = form.querySelector('#en__field_supporter_phoneNumber2:not(:placeholder-shown)');
-      const textOptInChecked = form.querySelector('.en__field--home-phone-opt-in .en__field__input--checkbox') ? form.querySelector('.en__field--home-phone-opt-in .en__field__input--checkbox').checked : false;
-      let formType = {};
+      const emailUnsubscribeChecked = form.querySelector('.en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox') ? form.querySelector('.en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox').checked : false
+      const mobilePhoneField = form.querySelector('#en__field_supporter_phoneNumber2:not(:placeholder-shown)')
+      const textOptInChecked = form.querySelector('.en__field--home-phone-opt-in .en__field__input--checkbox') ? form.querySelector('.en__field--home-phone-opt-in .en__field__input--checkbox').checked : false
+      let formType = {}
 
-      formType.lightbox_name = `lightbox-${utag_data.page_name}`;
-      formType.form_name = `lightbox-${utag_data.page_name}`;
-      formType.email_signup_location = `lightbox-${utag_data.page_name}`;
+      formType.lightbox_name = `lightbox-${utag_data.page_name}`
+      formType.form_name = `lightbox-${utag_data.page_name}`
+      formType.email_signup_location = `lightbox-${utag_data.page_name}`
 
       //These conditions assume that if the field exists, it is required, e.g. mobilePhoneField
 
       //Unsubscribe not checked, mobile phone field exists and optin checked
       if (!emailUnsubscribeChecked && mobilePhoneField && textOptInChecked) {
-        formType.event_name = 'frm_ltbx_emt_emo_txt_txto_submit';
-        formType.form_type = 'email_text_signup';
-        formType.text_signup_location = "lightbox-" + utag_data.page_name;
+        formType.event_name = 'frm_ltbx_emt_emo_txt_txto_submit'
+        formType.form_type = 'email_text_signup'
+        formType.text_signup_location = "lightbox-" + utag_data.page_name
 
         //Unsubscribe not checked, mobile phone field exists (and optin not checked)
       } else if (!emailUnsubscribeChecked && mobilePhoneField) {
-        formType.event_name = 'frm_ltbx_emt_emo_txt_submit';
-        formType.form_type = 'email_text_signup';
-        formType.text_signup_location = "lightbox-" + utag_data.page_name;
+        formType.event_name = 'frm_ltbx_emt_emo_txt_submit'
+        formType.form_type = 'email_text_signup'
+        formType.text_signup_location = "lightbox-" + utag_data.page_name
 
         //Unsubscribe not checked, no mobile phone field
       } else if (!emailUnsubscribeChecked) {
-        formType.event_name = 'frm_ltbx_emt_emo_submit';
-        formType.form_type = 'email_signup';
+        formType.event_name = 'frm_ltbx_emt_emo_submit'
+        formType.form_type = 'email_signup'
 
         //Unsubscribe checked, mobile phone field exists and optin checked
       } else if (mobilePhoneField && textOptInChecked) {
-        formType.event_name = 'rm_ltbx_emt_txt_txto_submit';
-        formType.form_type = 'email_text_signup';
-        formType.text_signup_location = "lightbox-" + utag_data.page_name;
+        formType.event_name = 'rm_ltbx_emt_txt_txto_submit'
+        formType.form_type = 'email_text_signup'
+        formType.text_signup_location = "lightbox-" + utag_data.page_name
 
         //Unsubscribe checked, mobile phone field exists and optin not checked
       } else if (mobilePhoneField) {
-        formType.event_name = 'frm_ltbx_emt_txt_submit';
-        formType.form_type = 'email_text_signup';
-        formType.text_signup_location = "lightbox-" + utag_data.page_name;
+        formType.event_name = 'frm_ltbx_emt_txt_submit'
+        formType.form_type = 'email_text_signup'
+        formType.text_signup_location = "lightbox-" + utag_data.page_name
 
         //Unsubscribe checked, mobile phone field doesn't exist
       } else {
-        formType.event_name = 'frm_ltbx_emt_submit';
-        formType.form_type = 'email_signup';
+        formType.event_name = 'frm_ltbx_emt_submit'
+        formType.form_type = 'email_signup'
       }
-      return formType;
-    };
+      return formType
+    }
 
     // Maybe display lead gen modal
     if (leadGenModal) {
       // Set placeholder on mobile phone field so it can be selected with :placeholder-shown
-      el = leadGenModal.querySelector('#en__field_supporter_phoneNumber2');
+      el = leadGenModal.querySelector('#en__field_supporter_phoneNumber2')
       if (el) {
-        el.setAttribute('placeholder', ' ');
+        el.setAttribute('placeholder', ' ')
       }
-      formType = getFormType(leadGenModal);
+      formType = getFormType(leadGenModal)
       const modal = new bootstrap.Modal(leadGenModal, {
         backdrop: 'static',
         keyboard: false
-      });
-      modal.show();
+      })
+      modal.show()
       // Fire tracking
       setTimeout(function() {
         if (typeof utag !== 'undefined') {
@@ -1383,177 +1341,177 @@
             'lightbox_name': formType.lightbox_name,
             'form_type': formType.form_type,
             'form_name': formType.form_name
-          });
+          })
         }
-      }, 100);
+      }, 100)
 
       const validateModal = () => {
         if (formIsValid(leadGenModal)) {
-          formType = getFormType(leadGenModal);
-          modal.hide();
-          focusFirst(leadGenModal);
+          formType = getFormType(leadGenModal)
+          modal.hide()
+          focusFirst(leadGenModal)
           // Fire tracking
           if (typeof utag !== 'undefined') {
-            utag.link(formType);
+            utag.link(formType)
           }
           // Submit buttons are disabled after clicking
-          enableSubmitButtons();
+          enableSubmitButtons()
         } else {
           // Submit buttons are disabled after clicking
-          isInvalid = true;
-          enableSubmitButtons();
+          isInvalid = true
+          enableSubmitButtons()
         }
-        return false;
-      };
+        return false
+      }
 
       const enableSubmitButtons = () => {
         setTimeout(function() {
           getAll('.en__submit button').forEach(el => {
-            el.disabled = false;
-          });
-        }, 100);
-      };
+            el.disabled = false
+          })
+        }, 100)
+      }
 
       // Handle modal submit button click
       leadGenModal.querySelector('.btn').addEventListener('click', e => {
         if (isInvalid) {
-          validateModal();
-          e.preventDefault();
-          return false;
+          validateModal()
+          e.preventDefault()
+          return false
         } else {
           setTimeout(function() {
-            validateModal();
-            e.preventDefault();
-            return false;
-          }, 100);
+            validateModal()
+            e.preventDefault()
+            return false
+          }, 100)
         }
-      });
+      })
     }
 
     // Listen for validation error
-    el = theForm.querySelector('.en__field--survey');
+    el = theForm.querySelector('.en__field--survey')
     if (el) {
       const mutationCallback = (mutationsList, observer) => {
         for (let i = 0; i < mutationsList.length; i++) {
           if (mutationsList[i].addedNodes.length > 0) {
             // Move error message to end of form
-            const el = theForm.querySelector(errorSelector);
+            const el = theForm.querySelector(errorSelector)
 
             if (el) {
-              theForm.querySelector('.en__component--formblock').append(el);
+              theForm.querySelector('.en__component--formblock').append(el)
             }
           }
         }
-      };
+      }
 
-      const errorObserver = new MutationObserver(mutationCallback);
+      const errorObserver = new MutationObserver(mutationCallback)
 
       errorObserver.observe(el, {
         attributes: false,
         childList: true,
         subtree: false,
-      });
+      })
     }
 
     getAll('.en__field__input--radio').forEach(el => {
       el.addEventListener('click', e => {
-        let el;
+        let el
 
         // Clicking any answer removes error message
-        el = theForm.querySelector(errorSelector);
+        el = theForm.querySelector(errorSelector)
         if (el) {
-          el.remove();
+          el.remove()
         }
-      });
-    });
+      })
+    })
 
     const checkAnswer = () => {
-      const correctAnswer = theForm.querySelector('.correct');
-      const incorrectAnswer = theForm.querySelector('.incorrect');
-      const selectedAnswerRadio = theForm.querySelector('.en__field__input--radio:checked');
-      const correctAnswerRadio = theForm.querySelector('.en__field__input--radio[value="1"]');
-      let questionCount = sessionStorage.getItem('questionCount') ? sessionStorage.getItem('questionCount') : 0;
-      let quizScore = sessionStorage.getItem('quizScore') ? sessionStorage.getItem('quizScore') : 0;
-      let alreadyAnswered = sessionStorage.getItem('alreadyAnswered') ? sessionStorage.getItem('alreadyAnswered') : 'false';
+      const correctAnswer = theForm.querySelector('.correct')
+      const incorrectAnswer = theForm.querySelector('.incorrect')
+      const selectedAnswerRadio = theForm.querySelector('.en__field__input--radio:checked')
+      const correctAnswerRadio = theForm.querySelector('.en__field__input--radio[value="1"]')
+      let questionCount = sessionStorage.getItem('questionCount') ? sessionStorage.getItem('questionCount') : 0
+      let quizScore = sessionStorage.getItem('quizScore') ? sessionStorage.getItem('quizScore') : 0
+      let alreadyAnswered = sessionStorage.getItem('alreadyAnswered') ? sessionStorage.getItem('alreadyAnswered') : 'false'
 
       // Prevent more answer clicks
-      disableFields(getAll('.en__field__input--radio'));
+      disableFields(getAll('.en__field__input--radio'))
 
       if (correctAnswer && incorrectAnswer && correctAnswerRadio) {
         // Check for correct answer
         if (selectedAnswerRadio === correctAnswerRadio) {
-          correctAnswer.style.display = 'inline';
+          correctAnswer.style.display = 'inline'
           // Update running score
           if (alreadyAnswered === 'false') {
-            quizScore++;
+            quizScore++
           }
         } else {
-          addClass(selectedAnswerRadio.nextElementSibling, 'is-incorrect');
-          incorrectAnswer.style.display = 'inline';
+          addClass(selectedAnswerRadio.nextElementSibling, 'is-incorrect')
+          incorrectAnswer.style.display = 'inline'
         }
-        addClass(correctAnswerRadio.nextElementSibling, 'is-correct');
+        addClass(correctAnswerRadio.nextElementSibling, 'is-correct')
         // Show answer
-        theForm.querySelector('.quiz-answer p').style.display = 'block';
+        theForm.querySelector('.quiz-answer p').style.display = 'block'
         // Show next question button
-        theForm.querySelector('.en__component--formblock:last-child').style.display = 'block';
+        theForm.querySelector('.en__component--formblock:last-child').style.display = 'block'
 
         if (alreadyAnswered === 'false') {
           // Update running count of quiz questions
-          questionCount++;
-          sessionStorage.setItem('questionCount', questionCount);
+          questionCount++
+          sessionStorage.setItem('questionCount', questionCount)
           // Save running score
-          sessionStorage.setItem('quizScore', quizScore);
-          sessionStorage.setItem('alreadyAnswered', 'true');
+          sessionStorage.setItem('quizScore', quizScore)
+          sessionStorage.setItem('alreadyAnswered', 'true')
         }
       }
-    };
+    }
 
     // Handle check answer button click
-    el = theForm.querySelector('.en__submit button[type="button"]');
+    el = theForm.querySelector('.en__submit button[type="button"]')
     if (el) {
       el.addEventListener('click', e => {
-        const fieldError = theForm.querySelector('.en__field__error');
+        const fieldError = theForm.querySelector('.en__field__error')
 
         if (theForm.querySelector('.en__field__input--radio:checked')) {
-          addClass(getClosestEl(e.target, '.en__submit'), hiddenClass);
+          addClass(getClosestEl(e.target, '.en__submit'), hiddenClass)
           if (fieldError) {
-            removeClass(fieldError, displayClass);
-            addClass(fieldError, hiddenClass);
+            removeClass(fieldError, displayClass)
+            addClass(fieldError, hiddenClass)
           }
-          checkAnswer();
+          checkAnswer()
         } else {
           if (fieldError) {
-            removeClass(fieldError, hiddenClass);
-            addClass(fieldError, displayClass);
+            removeClass(fieldError, hiddenClass)
+            addClass(fieldError, displayClass)
           }
         }
-      });
+      })
     }
 
     // Handle submit button click
-    el = theForm.querySelector('.en__submit button:not([type="button"])');
+    el = theForm.querySelector('.en__submit button:not([type="button"])')
     if (el) {
       el.addEventListener('click', e => {
-        sessionStorage.setItem('alreadyAnswered', 'false');
-      });
+        sessionStorage.setItem('alreadyAnswered', 'false')
+      })
     }
 
     // Display quiz results if on the last page
     if (pageJson.pageNumber === pageJson.pageCount) {
       // Display quiz score
       if (theForm.querySelector('.js-quiz-score') && sessionStorage.getItem('quizScore')) {
-        theForm.querySelector('.js-quiz-score').textContent = sessionStorage.getItem('quizScore');
+        theForm.querySelector('.js-quiz-score').textContent = sessionStorage.getItem('quizScore')
       }
       // Display number of questions
       if (theForm.querySelector('.js-question-count') && sessionStorage.getItem('questionCount')) {
-        theForm.querySelector('.js-question-count').textContent = sessionStorage.getItem('questionCount');
+        theForm.querySelector('.js-question-count').textContent = sessionStorage.getItem('questionCount')
       }
       // Clean up
-      sessionStorage.removeItem('quizScore');
-      sessionStorage.removeItem('questionCount');
-      sessionStorage.removeItem('alreadyAnswered');
+      sessionStorage.removeItem('quizScore')
+      sessionStorage.removeItem('questionCount')
+      sessionStorage.removeItem('alreadyAnswered')
     }
-  };
+  }
 
   /**
    * Action center form enhancements
@@ -1561,33 +1519,33 @@
   const actionCenter = () => {
     // Make image blocks clickable
     getAll('.card').forEach(el => {
-      const link = el.querySelector('a[data-type="campaignpage_url_pb"]');
-      const img = el.querySelector('.en__component--imageblock img');
-      let clone = null;
+      const link = el.querySelector('a[data-type="campaignpage_url_pb"]')
+      const img = el.querySelector('.en__component--imageblock img')
+      let clone = null
 
       if (link && img) {
-        clone = link.cloneNode();
-        img.parentNode.insertBefore(clone, img);
-        clone.appendChild(img);
+        clone = link.cloneNode()
+        img.parentNode.insertBefore(clone, img)
+        clone.appendChild(img)
       }
-    });
-  };
+    })
+  }
 
   /**
    * Track form errors
    */
   const trackFormErrors = () => {
-    let invalidFields = '';
-    let errors = '';
+    let invalidFields = ''
+    let errors = ''
 
     if (typeof utag !== 'undefined') {
       // Gather invalid fields and error messages
       getAll('.en__field--validationFailed').forEach(el => {
         if (el.querySelector('.en__field__error')) {
-          invalidFields += `${el.querySelector('.en__field__input').getAttribute('name')}|`;
-          errors += `${el.querySelector('.en__field__error').textContent}|`;
+          invalidFields += `${el.querySelector('.en__field__input').getAttribute('name')}|`
+          errors += `${el.querySelector('.en__field__error').textContent}|`
         }
-      });
+      })
 
       // Fire tracking if errors were found
       if (invalidFields !== '') {
@@ -1597,16 +1555,16 @@
           'form_field_error_value': errors.slice(0, -1),
           'form_name': utag_data.page_name.slice(0, -2),
           'form_type': pageJson.pageType
-        });
+        })
       }
     }
-  };
+  }
 
   /**
    * Track processing errors
    */
   const trackProcessingErrors = () => {
-    let paymentMethod = document.querySelector(paymentTypeSelector);
+    let paymentMethod = document.querySelector(paymentTypeSelector)
 
     if (typeof utag !== 'undefined' && paymentMethod) {
       utag.link({
@@ -1616,233 +1574,233 @@
         'payment_type': paymentMethod.value,
         'form_name': utag_data.page_name.slice(0, -2),
         'form_type': pageJson.pageType
-      });
+      })
     }
-  };
+  }
 
   const optIns = () => {
-    const permissionToContact = document.querySelector('.en__field--permission-to-contact-me');
-    const mobileTextOptIn = document.querySelector('.en__field--mobile-text-opt-in');
-    const mobileCallOptIn = document.querySelector('.en__field--mobile-call-opt-in');
+    const permissionToContact = document.querySelector('.en__field--permission-to-contact-me')
+    const mobileTextOptIn = document.querySelector('.en__field--mobile-text-opt-in')
+    const mobileCallOptIn = document.querySelector('.en__field--mobile-call-opt-in')
 
     // Hide the "permission to contact" QCB if user is known and has not opted-in to both
     // Opt-ins are not added to form if user id known and already opted-in
     if (permissionToContact) {
       if (!mobileTextOptIn && !mobileCallOptIn) {
-        permissionToContact.classList.add(hiddenClass);
+        permissionToContact.classList.add(hiddenClass)
       }
     }
-  };
+  }
 
   const mobilePhone = () => {
     const initPhoneFields = () => {
-      let mobilePhoneInput = theForm.querySelector(mobilePhoneInputSelector);
-      let homePhoneInput = theForm.querySelector(homePhoneInputSelector);
-      let mobileSameAsHomeCheckbox = theForm.querySelector(mobilePhoneSameAsHomeCheckboxSelector);
+      let mobilePhoneInput = theForm.querySelector(mobilePhoneInputSelector)
+      let homePhoneInput = theForm.querySelector(homePhoneInputSelector)
+      let mobileSameAsHomeCheckbox = theForm.querySelector(mobilePhoneSameAsHomeCheckboxSelector)
 
       if (mobilePhoneInput.value.length && homePhoneInput.value.length && homePhoneInput.value !== mobilePhoneInput.value && mobileSameAsHomeCheckbox.checked) {
-        mobileSameAsHomeCheckbox.click();
+        mobileSameAsHomeCheckbox.click()
       } else if (mobilePhoneInput.value.length === 0 && homePhoneInput.value.length && mobileSameAsHomeCheckbox.checked) {
-        mobilePhoneInput.disabled = false;
-        mobilePhoneInput.value = homePhoneInput.value;
+        mobilePhoneInput.disabled = false
+        mobilePhoneInput.value = homePhoneInput.value
       }
 
       const setMobilePhoneField = (e) => {
         if (e.target.checked) {
           //override EN's disabling of the field
-          setTimeout(syncMobilePhoneField, 500);
+          setTimeout(syncMobilePhoneField, 500)
         } else {
-          mobilePhoneInput.value = '';
+          mobilePhoneInput.value = ''
         }
-      };
+      }
 
       const syncMobilePhoneField = (e) => {
         if (mobileSameAsHomeCheckbox.checked) {
-          mobilePhoneInput.disabled = false;
-          mobilePhoneInput.value = homePhoneInput.value;
+          mobilePhoneInput.disabled = false
+          mobilePhoneInput.value = homePhoneInput.value
         }
-      };
+      }
 
       //attach event handler to the checkbox
-      mobileSameAsHomeCheckbox.addEventListener('change', setMobilePhoneField);
+      mobileSameAsHomeCheckbox.addEventListener('change', setMobilePhoneField)
       //attach event handler to the home input
-      homePhoneInput.addEventListener('input', syncMobilePhoneField);
-    };
+      homePhoneInput.addEventListener('input', syncMobilePhoneField)
+    }
 
     //if all three fields are present
     if (theForm.querySelectorAll(mobilePhoneInputSelector).length && theForm.querySelectorAll(homePhoneInputSelector).length && theForm.querySelectorAll(mobilePhoneSameAsHomeCheckboxSelector).length) {
       //initialize phone field features
-      initPhoneFields();
+      initPhoneFields()
     }
-  };
+  }
 
   /**
    * Form validation enhancements
    */
   const validation = () => {
     const setValidation = el => {
-      const field = el.closest(enFieldSelector);
+      const field = el.closest(enFieldSelector)
 
       // Hide/display error formatting
       if (el.validity.valid) {
-        addClass(el, validClass);
-        removeClass(field, validationFailedClass);
+        addClass(el, validClass)
+        removeClass(field, validationFailedClass)
       } else {
-        removeClass(el, validClass);
-        addClass(field, validationFailedClass);
+        removeClass(el, validClass)
+        addClass(field, validationFailedClass)
       }
-    };
+    }
 
     const handleInput = e => {
-      e.preventDefault();
-      setValidation(e.target);
-    };
+      e.preventDefault()
+      setValidation(e.target)
+    }
 
     const handleChange = e => {
-      e.preventDefault();
-      setValidation(e.target);
-    };
+      e.preventDefault()
+      setValidation(e.target)
+    }
 
     // Set validation patterns
     getAll('.en__mandatory .en__field__input').forEach(el => {
-      el.required = true;
+      el.required = true
       switch (el.type) {
         case 'email':
           // Check for valid email
-          el.setAttribute('pattern', '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-z]{2,}$');
-          el.addEventListener('input', handleInput);
-          break;
+          el.setAttribute('pattern', '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-z]{2,}$')
+          el.addEventListener('input', handleInput)
+          break
         case 'number':
-          break;
+          break
         case 'select-one':
-          el.addEventListener('change', handleChange);
-          break;
+          el.addEventListener('change', handleChange)
+          break
         default:
           if (el.getAttribute('inputmode') === 'decimal') {
             // Check for US currency
-            el.setAttribute('pattern', '^\\$?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\\.[0-9]{1,2})?$');
+            el.setAttribute('pattern', '^\\$?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\\.[0-9]{1,2})?$')
           } else if (el.name.indexOf('ccnumber') > -1) {
             // Check for valid credit card (https://www.w3resource.com/javascript-exercises/javascript-regexp-exercise-2.php)
-            el.setAttribute('pattern', '^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$');
+            el.setAttribute('pattern', '^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$')
           } else if (el.name.indexOf('ccvv') > -1) {
             // Check for 3 or 4 digits
-            el.setAttribute('pattern', '^([0-9]{3,4})$');
+            el.setAttribute('pattern', '^([0-9]{3,4})$')
           } else if (hasClass(el, 'datepicker-input')) {
             // Check for date as mm/dd/yyyy
-            el.setAttribute('pattern', '(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\\d\\d');
-            el.addEventListener('changeDate', handleChange);
+            el.setAttribute('pattern', '(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\\d\\d')
+            el.addEventListener('changeDate', handleChange)
           } else {
             // Check empty pattern
-            el.setAttribute('pattern', '.*\\S.*');
+            el.setAttribute('pattern', '.*\\S.*')
           }
-          el.addEventListener('input', handleInput);
+          el.addEventListener('input', handleInput)
       }
 
       // Don't display browser error messages
       el.addEventListener('oninvalid', e => {
-        e.preventDefault();
-      });
+        e.preventDefault()
+      })
 
       // No browser form validation
-      theForm.setAttribute('novalidate', true);
-    });
+      theForm.setAttribute('novalidate', true)
+    })
 
     // Processing error don't always trigger a reload
-    const errorList = theForm.querySelector('.en__errorList');
+    const errorList = theForm.querySelector('.en__errorList')
     if (errorList) {
       const mutationCallback = (mutationsList, observer) => {
         for (let i = 0; i < mutationsList.length; i++) {
           if (mutationsList[i].addedNodes.length > 0) {
-            formatError(mutationsList[i].addedNodes[0]);
-            addClass(errorList, errorBoxClass);
-            scrollToEl(errorList);
+            formatError(mutationsList[i].addedNodes[0])
+            addClass(errorList, errorBoxClass)
+            scrollToEl(errorList)
           } else {
-            removeClass(errorList, errorBoxClass);
+            removeClass(errorList, errorBoxClass)
           }
         }
-      };
+      }
 
-      const errorObserver = new MutationObserver(mutationCallback);
+      const errorObserver = new MutationObserver(mutationCallback)
 
       errorObserver.observe(errorList, {
         attributes: false,
         childList: true,
         subtree: false,
-      });
+      })
     }
-  };
+  }
 
   /**
    * Form submit enhancements
    */
   const formSubmit = () => {
-    const monthlyCheckbox = document.getElementById('en__field_transaction_recurrpay');
-    const continueButton = theForm.querySelector('.btn-continue');
-    const upsellButton = theForm.querySelector('.btn-upsell');
-    const upsellModal = theForm.querySelector('.modal--upsell');
-    const hasUpsell = monthlyCheckbox && upsellModal && upsellButton && continueButton;
-    const otherAmountInput = theForm.querySelector(otherAmountInputSelector);
-    let otherAmountOriginal = null;
-    let isInvalid = false;
+    const monthlyCheckbox = document.getElementById('en__field_transaction_recurrpay')
+    const continueButton = theForm.querySelector('.btn-continue')
+    const upsellButton = theForm.querySelector('.btn-upsell')
+    const upsellModal = theForm.querySelector('.modal--upsell')
+    const hasUpsell = monthlyCheckbox && upsellModal && upsellButton && continueButton
+    const otherAmountInput = theForm.querySelector(otherAmountInputSelector)
+    let otherAmountOriginal = null
+    let isInvalid = false
 
     // Don't submit form on ENTER if focused on an input
     window.addEventListener('keydown', e => {
       if (e.keyIdentifier == 'U+000A' || e.keyIdentifier == 'Enter' || e.keyCode == 13) {
         if (e.target.nodeName == 'INPUT') {
-          e.preventDefault();
-          return false;
+          e.preventDefault()
+          return false
         }
       }
-    }, true);
+    }, true)
 
     window.enOnError = () => {
       setTimeout(() => {
         // Scroll to first invalid field
-        const firstError = document.querySelector('.en__field__error');
-        const field = firstError ? firstError.closest('.en__field') : null;
+        const firstError = document.querySelector('.en__field__error')
+        const field = firstError ? firstError.closest('.en__field') : null
 
         if (firstError && field) {
           field.scrollIntoView({
             behavior: 'smooth'
-          });
+          })
         }
-      }, 10);
-      trackFormErrors();
-    };
+      }, 10)
+      trackFormErrors()
+    }
 
     window.enOnValidate = function() {
-      const donationAmount = document.querySelector('[data-token="amount-total"]') ? parseFloat(document.querySelector('[data-token="amount-total"]').textContent.replace(/\$/, '')) : parseFloat(getTotalDonationAmount());
-      const ecardFields = theForm.querySelector(ecardFieldsSelector);
-      const ecardSelect = theForm.querySelector(ecardSelectSelector);
-      const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]');
-      const mobilePhoneNumber = theForm.querySelector('.en__field--phoneNumber2:not(:placeholder-shown) .en__field__input');
-      const mobilePhoneOptIn = theForm.querySelector('.en__field--mobile-text-opt-in .en__field__input--checkbox:checked');
-      const trackSubmit = theForm.querySelector('.track-submit');
-      let donationData = {};
-      let ecardData = sessionStorage.getItem('ecardData');
-      let extraAmount = 0;
-      let mobilePhoneData = {};
-      let upsellDone = false;
+      const donationAmount = document.querySelector('[data-token="amount-total"]') ? parseFloat(document.querySelector('[data-token="amount-total"]').textContent.replace(/\$/, '')) : parseFloat(getTotalDonationAmount())
+      const ecardFields = theForm.querySelector(ecardFieldsSelector)
+      const ecardSelect = theForm.querySelector(ecardSelectSelector)
+      const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]')
+      const mobilePhoneNumber = theForm.querySelector('.en__field--phoneNumber2:not(:placeholder-shown) .en__field__input')
+      const mobilePhoneOptIn = theForm.querySelector('.en__field--mobile-text-opt-in .en__field__input--checkbox:checked')
+      const trackSubmit = theForm.querySelector('.track-submit')
+      let donationData = {}
+      let ecardData = sessionStorage.getItem('ecardData')
+      let extraAmount = 0
+      let mobilePhoneData = {}
+      let upsellDone = false
 
       const doUpsell = () => {
         if (!upsellDone) {
           // Display monthly amount
           getAll('.js-monthly-gift').forEach(el => {
-            el.textContent = `$${numberPipe(String(setMonthlyAmount(donationAmount)))}`;
-          });
-          setMonthlyAmount(donationAmount);
+            el.textContent = `$${numberPipe(String(setMonthlyAmount(donationAmount)))}`
+          })
+          setMonthlyAmount(donationAmount)
           // Open modal
           const modal = new bootstrap.Modal(upsellModal, {
             backdrop: 'static',
             keyboard: false
-          });
-          modal.show();
+          })
+          modal.show()
           // Fire tracking
           if (typeof utag !== 'undefined') {
             utag.link({
               'event_name': 'lightbox_impression',
               'lightbox_name': 'sustainer upsell'
-            });
+            })
           }
           // Handle modal clicks
           upsellButton.addEventListener('click', e => {
@@ -1851,59 +1809,30 @@
               utag.link({
                 'event_name': 'lightbox_click',
                 'lightbox_name': 'sustainer upsell'
-              });
+              })
             }
             // Select monthly option and proceed to confirmation
-            monthlyCheckbox.click();
-            otherAmountInput.value = setMonthlyAmount(donationAmount);
-            theForm.submit();
-          });
+            monthlyCheckbox.click()
+            otherAmountInput.value = setMonthlyAmount(donationAmount)
+            theForm.submit()
+          })
           getAll('.btn-close, .btn-continue').forEach(el => {
             el.addEventListener('click', e => {
-              theForm.submit();
-            });
-          });
-          upsellDone = true;
+              theForm.submit()
+            })
+          })
+          upsellDone = true
         }
-      };
-
-      const enSustainerUpsell = () => {
-        setTimeout(() => {
-          var enUpsellLightbox = document.getElementById('en__upsellModal');
-          var enUpsellYesButton = document.getElementById('en__upsellModal__yes');
-
-          if (enUpsellYesButton) {
-            // Fire tracking if EN Upsell yes button is clicked
-            enUpsellYesButton.addEventListener('click', e => {
-              if (typeof utag !== 'undefined') {
-                utag.link({
-                  'event_name': 'lightbox_click',
-                  'lightbox_name': 'sustainer upsell'
-                });
-              }
-            });
-          }
-
-          if (enUpsellLightbox) {
-            // Fire tracking when EN lightbox opens
-            if (typeof utag !== 'undefined') {
-              utag.link({
-                'event_name': 'lightbox_impression',
-                'lightbox_name': 'sustainer upsell'
-              });
-            }
-          }
-        }, 1500);
-      };
+      }
 
       if (feeCoverCheckbox) {
         // Calculate extra fee cover amount for data layer
         if (feeCoverCheckbox.checked) {
-          const totalDonationAmount = Number(theForm.querySelector('[data-token="amount-total"]').textContent.replace(/\$/, '').replace(/\,/g, '')).toFixed(2);
-          const originalDonationAmount = getOriginalDonationAmount();
+          const totalDonationAmount = Number(theForm.querySelector('[data-token="amount-total"]').textContent.replace(/\$/, '').replace(/\,/g, '')).toFixed(2)
+          const originalDonationAmount = getOriginalDonationAmount()
 
-          extraAmount = (totalDonationAmount - originalDonationAmount).toFixed(2);
-          donationData.originalDonationAmount = originalDonationAmount;
+          extraAmount = (totalDonationAmount - originalDonationAmount).toFixed(2)
+          donationData.originalDonationAmount = originalDonationAmount
         }
       }
 
@@ -1912,122 +1841,117 @@
         if (ecardSelect && ecardFields) {
           if (ecardSelect.querySelector('.en__field__input--checkbox').checked) {
             // Set ecardSelected before saving donationData
-            donationData.ecardSelected = 'true';
-            ecardData = {};
-            ecardData.selectEcard = ecardSelect.querySelector('.en__field__input--radio:checked').value;
-            ecardData.recipients = ecardFields.querySelector('.en__field__input--email').value;
-            ecardData.message = ecardFields.querySelector('.en__field--ecard-message .en__field__input--textarea').value;
-            ecardData.sendDate = ecardFields.querySelector('.datepicker-input').value;
-            sessionStorage.setItem('ecardData', JSON.stringify(ecardData));
+            donationData.ecardSelected = 'true'
+            ecardData = {}
+            ecardData.selectEcard = ecardSelect.querySelector('.en__field__input--radio:checked').value
+            ecardData.recipients = ecardFields.querySelector('.en__field__input--email').value
+            ecardData.message = ecardFields.querySelector('.en__field--ecard-message .en__field__input--textarea').value
+            ecardData.sendDate = ecardFields.querySelector('.datepicker-input').value
+            sessionStorage.setItem('ecardData', JSON.stringify(ecardData))
           } else {
-            delete donationData.ecardSelected;
-            sessionStorage.removeItem('ecardData');
+            delete donationData.ecardSelected
+            sessionStorage.removeItem('ecardData')
           }
         }
         // Save donation data for data layer on confirmation page
-        donationData.productId = utag_data.page_name.slice(0, -2);
-        donationData.campaignId = (typeof pageJson !== 'undefined') ? pageJson.campaignId : '';
-        donationData.campaignPageId = (typeof pageJson !== 'undefined') ? pageJson.campaignPageId : '';
-        donationData.extraAmount = extraAmount;
-        donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : '';
-        donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : '';
-        donationData.emailAddress = theForm.querySelector(supporterEmailAddressSelector) ? theForm.querySelector(supporterEmailAddressSelector).value : '';
-        sessionStorage.setItem('donationData', JSON.stringify(donationData));
+        donationData.productId = utag_data.page_name.slice(0, -2)
+        donationData.campaignId = (typeof pageJson !== 'undefined') ? pageJson.campaignId : ''
+        donationData.campaignPageId = (typeof pageJson !== 'undefined') ? pageJson.campaignPageId : ''
+        donationData.extraAmount = extraAmount
+        donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : ''
+        donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : ''
+        donationData.emailAddress = theForm.querySelector(supporterEmailAddressSelector) ? theForm.querySelector(supporterEmailAddressSelector).value : ''
+        sessionStorage.setItem('donationData', JSON.stringify(donationData))
       }
 
       // Looking for non-hidden, non-blank mobile phone field and mobile text opt-in to save and pass to SMS platform
       if (mobilePhoneNumber) {
-        mobilePhoneData.phoneNumber = mobilePhoneNumber.value;
+        mobilePhoneData.phoneNumber = mobilePhoneNumber.value
         if (mobilePhoneOptIn) {
-          mobilePhoneData.optIn = 'Y';
+          mobilePhoneData.optIn = 'Y'
         } else {
-          mobilePhoneData.optIn = null;
+          mobilePhoneData.optIn = null
         }
-        sessionStorage.setItem('mobilePhoneData', JSON.stringify(mobilePhoneData));
+        sessionStorage.setItem('mobilePhoneData', JSON.stringify(mobilePhoneData))
       }
       // // Maybe track form submit
       // if (trackSubmit) {
       //   trackFormSubmit();
       // }
-      // Check for EN lighbox
-      if (window.EngagingNetworks.upsell.length && window.EngagingNetworks.upsell[0].componentId && window.EngagingNetworks.upsell[0].componentId !== 'undefined') {
-        if (formIsValid()) {
-          enSustainerUpsell();
-        }
-      }
+
       // Maybe display upsell modal
       if (hasUpsell && donationAmount >= 5 && donationAmount <= 100 && !monthlyCheckbox.checked) {
         if (isInvalid) {
           if (formIsValid()) {
-            doUpsell();
+            doUpsell()
           }
         } else {
           setTimeout(function() {
             if (formIsValid()) {
-              doUpsell();
+              doUpsell()
             } else {
-              isInvalid = true;
+              isInvalid = true
             }
-          }, 100);
+          }, 100)
         }
-        return false;
+        return false
       } else {
-        return true;
+        return true
       }
-    };
+    }
 
     window.enOnSubmit = function() {
       // handle async code with promises
       return new Promise(function(resolve, reject) {
         setTimeout(function() {
-          resolve(); // will allow submit when timeout runs in 1000ms
-        }, 1000);
-      });
-    };
-  };
+          resolve() // will allow submit when timeout runs in 1000ms
+        }, 1000)
+      })
+    }
+  }
 
   /**
    * Member care form
    */
   const memberCare = () => {
-    const emailAddress = document.getElementById('en__field_supporter_emailAddress');
-    const generateEmailButton = document.getElementById('generateEmail');
-    const optIns = getAll('.hide-opt-ins .en__field--question .en__field__input--checkbox');
+    const emailAddress = document.getElementById('en__field_supporter_emailAddress')
+    const generateEmailButton = document.getElementById('generateEmail')
+    const optIns = getAll('.hide-opt-ins .en__field--question .en__field__input--checkbox')
 
     const unCheckOptIns = () => {
       optIns.forEach(el => {
-        el.checked = false;
-      });
-    };
+        el.checked = false
+      })
+    }
 
     const checkOptIns = () => {
       optIns.forEach(el => {
-        el.checked = true;
-      });
-    };
+        el.checked = true
+      })
+    }
 
     // Auto check/uncheck opt in checkboxes
     if (emailAddress && generateEmailButton) {
       emailAddress.addEventListener('change', e => {
         if (e.target.value.indexOf('fakeemail') > -1) {
-          unCheckOptIns();
+          unCheckOptIns()
         } else {
-          checkOptIns();
+          checkOptIns()
         }
-      });
+      })
 
       // For anonymous actions, or actions that don't require an email address,
       // the database still needs an email address to be able to store the data.
       generateEmailButton.addEventListener('click', e => {
-        const theDate = new Date();
-        const milliseconds = theDate.getTime();
-        const anonAddress = `${milliseconds}.first.last@fakeemail.com`;
+        const theDate = new Date()
+        const milliseconds = theDate.getTime()
+        const anonAddress = `${milliseconds}.first.last@fakeemail.com`
 
-        emailAddress.value = anonAddress;
-        triggerEvent(emailAddress, 'change');
-      });
+        emailAddress.value = anonAddress
+        triggerEvent(emailAddress, 'change')
+      })
     }
-  };
+  }
 
   /**
    * Track data capture submits
@@ -2042,12 +1966,12 @@
               'form_type': 'otherdatacapture',
               'form_name': utag_data.page_name.slice(0, -2),
               'email_signup_location': 'otherdatacapture'
-            });
+            })
           }
-        }, 100);
-      });
+        }, 100)
+      })
     }
-  };
+  }
 
   /**
    * Track social share clicks
@@ -2060,11 +1984,11 @@
             'event_name': 'social_share',
             'social_share_id': `preserve.nature.org.share.${e.target.parentElement.dataset.enshare}`,
             'social_share_platform': e.target.parentElement.dataset.enshare
-          });
+          })
         }
-      });
-    });
-  };
+      })
+    })
+  }
 
   /**
    * Track ETT and petition submits
@@ -2073,34 +1997,34 @@
     if (pageJson.pageType === 'advocacypetition' || pageJson.pageType === 'emailtotarget') {
       theForm.addEventListener('submit', e => {
         setTimeout(function() {
-          const phoneOptIn = document.getElementById('en__field_supporter_questions_1107654');
-          let utagData = {};
+          const phoneOptIn = document.getElementById('en__field_supporter_questions_1107654')
+          let utagData = {}
 
           if (formIsValid() && typeof utag !== 'undefined') {
-            utagData.event_name = phoneOptIn ? (phoneOptIn.checked ? 'frm_emt_txt_submit' : 'frm_emt_submit') : 'frm_emt_submit';
-            utagData.form_type = pageJson.pageType;
-            utagData.form_name = utag_data.page_name.slice(0, -2);
-            utagData.action_id = utag_data.form_name;
-            utagData.action_type = pageJson.pageType;
-            utagData.zip_code = document.getElementById('en__field_supporter_postcode') ? document.getElementById('en__field_supporter_postcode').value : '';
-            utagData.email_signup_location = pageJson.pageType;
+            utagData.event_name = phoneOptIn ? (phoneOptIn.checked ? 'frm_emt_txt_submit' : 'frm_emt_submit') : 'frm_emt_submit'
+            utagData.form_type = pageJson.pageType
+            utagData.form_name = utag_data.page_name.slice(0, -2)
+            utagData.action_id = utag_data.form_name
+            utagData.action_type = pageJson.pageType
+            utagData.zip_code = document.getElementById('en__field_supporter_postcode') ? document.getElementById('en__field_supporter_postcode').value : ''
+            utagData.email_signup_location = pageJson.pageType
             if (phoneOptIn) {
               if (phoneOptIn.checked) {
-                utagData.text_signup_location = pageJson.pageType;
+                utagData.text_signup_location = pageJson.pageType
               }
             }
-            utag.link(utagData);
+            utag.link(utagData)
           }
-        }, 100);
-      });
+        }, 100)
+      })
     }
-  };
+  }
 
   /**
    * Track footer clicks
    */
   const footerTracking = () => {
-    const footer = document.querySelector('.footer');
+    const footer = document.querySelector('.footer')
     if (footer) {
       getAll('a', footer).forEach(el => {
         el.addEventListener('click', e => {
@@ -2108,18 +2032,18 @@
             utag.link({
               'event_name': 'footer_nav_click',
               'nav_click_location': `preserve.nature.org.fnav.${e.target.textContent.toLowerCase()}`
-            });
+            })
           }
-        });
-      });
+        })
+      })
     }
-  };
+  }
 
   /**
    * Track url parameters
    */
   const URLTracking = () => {
-    const params = new URLSearchParams(location.search);
+    const params = new URLSearchParams(location.search)
     const trackers = [
       'src',
       'vid',
@@ -2133,17 +2057,17 @@
       'en_txn8',
       'en_txn9',
       'en_txn10'
-    ];
-    let visitData = sessionStorage.getItem('visitData') ? JSON.parse(sessionStorage.getItem('visitData')) : {};
+    ]
+    let visitData = sessionStorage.getItem('visitData') ? JSON.parse(sessionStorage.getItem('visitData')) : {}
 
     // Add tracking params as found
     trackers.forEach(tracker => {
       if (params.has(tracker)) {
-        visitData[tracker] = params.get(tracker);
+        visitData[tracker] = params.get(tracker)
       }
-    });
-    sessionStorage.setItem('visitData', JSON.stringify(visitData));
-  };
+    })
+    sessionStorage.setItem('visitData', JSON.stringify(visitData))
+  }
 
   /**
    * Redirect enhancements
@@ -2153,7 +2077,7 @@
     if (typeof pageJson !== 'undefined') {
       if (pageJson.pageNumber === 1 && pageJson.appealCode) {
         // Save appeal code for use on redirect page
-        sessionStorage.setItem('appealCode', pageJson.appealCode);
+        sessionStorage.setItem('appealCode', pageJson.appealCode)
       }
     }
 
@@ -2161,42 +2085,42 @@
     if (appealCodeRedirect && sessionStorage.getItem('appealCode')) {
       // The appeal code URL param has already been added to the redirect link with a default value of 'xxx'
       // Replace 'xxx' with saved appeal code
-      appealCodeRedirect.setAttribute('href', appealCodeRedirect.getAttribute('href').replace(/xxx/, sessionStorage.getItem('appealCode')));
-      sessionStorage.removeItem('appealCode');
-      appealCodeRedirect.click();
+      appealCodeRedirect.setAttribute('href', appealCodeRedirect.getAttribute('href').replace(/xxx/, sessionStorage.getItem('appealCode')))
+      sessionStorage.removeItem('appealCode')
+      appealCodeRedirect.click()
     }
-  };
+  }
 
   /**
    * Confirmation page enhancements
    */
   const confirmation = () => {
-    let donationData = sessionStorage.getItem('donationData');
-    const recurringStatus = theForm.querySelector('.js-recurring-status');
+    let donationData = sessionStorage.getItem('donationData')
+    const recurringStatus = theForm.querySelector('.js-recurring-status')
 
     if (window.self !== window.top) {
       // window.parent.postMessage('submitted', '*');
-      window.parent.dispatchEvent(iframeSubmitted);
+      window.parent.dispatchEvent(iframeSubmitted)
     }
 
     if (donationData) {
-      donationData = JSON.parse(donationData);
+      donationData = JSON.parse(donationData)
     }
 
     if (recurringStatus) {
       if (window.navigator.userLanguage === 'es-MX' || window.navigator.language === 'es-MX' || window.location.href.indexOf('locale=es-MX') > -1 || pageJson.locale === 'es-MX') {
-        recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Mensual' : 'Una vez';
+        recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Mensual' : 'Una vez'
       } else {
-        recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time';
+        recurringStatus.textContent = recurringStatus.textContent === 'ACTIVE' ? 'Monthly' : 'One-time'
       }
     }
-  };
+  }
 
   /**
    * Seamless ecard enhancements
    */
   const seamlessEcard = () => {
-    let ecardData = sessionStorage.getItem('ecardData');
+    let ecardData = sessionStorage.getItem('ecardData')
 
     /**
      * Adds an email address to list of ecard recipients
@@ -2204,28 +2128,28 @@
      * @param {string} recipient The email address to add
      */
     const addEcardRecipient = recipient => {
-      document.querySelector('.en__ecardrecipients__name input').value = 'My Recipient';
-      document.querySelector('.en__ecardrecipients__email input').value = recipient;
-      document.querySelector('.en__ecarditems__addrecipient').click();
-    };
+      document.querySelector('.en__ecardrecipients__name input').value = 'My Recipient'
+      document.querySelector('.en__ecardrecipients__email input').value = recipient
+      document.querySelector('.en__ecarditems__addrecipient').click()
+    }
 
     if (ecardData) {
       setTimeout(function() {
         // Populate fields
-        ecardData = JSON.parse(ecardData);
-        document.querySelector(`.en__ecarditems__thumb:nth-child(${ecardData.selectEcard})`).click();
-        document.querySelector('.en__ecardmessage__default').value = ecardData.message;
-        document.querySelector('.en__ecardrecipients__futureDelivery input').value = ecardData.sendDate.replace(/(..).(..).(....)/, '$3-$1-$2');
-        addEcardRecipient(ecardData.recipients);
+        ecardData = JSON.parse(ecardData)
+        document.querySelector(`.en__ecarditems__thumb:nth-child(${ecardData.selectEcard})`).click()
+        document.querySelector('.en__ecardmessage__default').value = ecardData.message
+        document.querySelector('.en__ecardrecipients__futureDelivery input').value = ecardData.sendDate.replace(/(..).(..).(....)/, '$3-$1-$2')
+        addEcardRecipient(ecardData.recipients)
 
         // Cleanup
-        sessionStorage.removeItem('ecardData');
+        sessionStorage.removeItem('ecardData')
 
         // Submit
-        document.querySelector('.en__submit button').click();
-      }, 1000);
+        document.querySelector('.en__submit button').click()
+      }, 1000)
     }
-  };
+  }
 
   /**
    * Thermometer enhancements
@@ -2234,23 +2158,23 @@
     // Advocacy thermometer goals need to dynamically increase once a certain "raised" is reached
     // getAll('.en__component--page[action*="/action"] .enWidget--progressBar, .en__component--page[action*="/petition"] .enWidget--progressBar').forEach(el => {
     getAll('.enWidget--progressBar').forEach(el => {
-      const fill = el.querySelector('.enWidget__fill');
-      const raisedPct = parseInt(fill.style.width);
-      const raisedNumber = parseInt(el.querySelector('.raised > div').textContent.replace(/\,/g, ''));
-      let newGoal = null;
+      const fill = el.querySelector('.enWidget__fill')
+      const raisedPct = parseInt(fill.style.width)
+      const raisedNumber = parseInt(el.querySelector('.raised > div').textContent.replace(/\,/g, ''))
+      let newGoal = null
 
       // Calculate and display updated therm numbers
       if (raisedPct >= thermThresholdPct) {
         // Reset fill width so that animation runs once new width is set
-        fill.style.width = '0';
-        newGoal = Math.ceil((raisedNumber * thermIncrease) / 1000) * 1000;
-        el.querySelector('.remaining > div').textContent = numberPipe(String(newGoal - raisedNumber)).replace(/\.00/, '');
-        fill.style.width = `${raisedNumber / newGoal * 100}%`;
+        fill.style.width = '0'
+        newGoal = Math.ceil((raisedNumber * thermIncrease) / 1000) * 1000
+        el.querySelector('.remaining > div').textContent = numberPipe(String(newGoal - raisedNumber)).replace(/\.00/, '')
+        fill.style.width = `${raisedNumber / newGoal * 100}%`
       }
       // Therms are hidden with CSS
-      addClass(el, activeClass);
-    });
-  };
+      addClass(el, activeClass)
+    })
+  }
 
   /**
    * Adds active class to element
@@ -2258,8 +2182,8 @@
    * @param {node} el The element to add class to
    */
   const activateField = el => {
-    addClass((el.target || el).parentElement, activeClass);
-  };
+    addClass((el.target || el).parentElement, activeClass)
+  }
 
   /**
    * Adds aria-expanded attribute to collapsible elements
@@ -2269,16 +2193,16 @@
    */
   const addAriaCollapsedAttr = (el, collapsibles) => {
     if (el) {
-      const isOpen = hasClass(el, collapseShowClass) ? 'true' : 'false';
+      const isOpen = hasClass(el, collapseShowClass) ? 'true' : 'false'
 
       if (collapsibles.length) {
         collapsibles.forEach(collapsible => {
-          collapsible.setAttribute('aria-expanded', 'false');
-        });
+          collapsible.setAttribute('aria-expanded', 'false')
+        })
       }
-      el.setAttribute('aria-expanded', isOpen);
+      el.setAttribute('aria-expanded', isOpen)
     }
-  };
+  }
 
   /**
    * Adds aria-labelledby attribute to an untitled element
@@ -2286,16 +2210,16 @@
    * @param {node} el Target element to add attribute to
    */
   const addAriaLabelledBy = el => {
-    const maybeLabel = el.firstElementChild;
+    const maybeLabel = el.firstElementChild
 
     if (hasClass(maybeLabel, 'en__field__label')) {
       setTimeout(function() {
-        labelId = `label${generateId()}`;
-        maybeLabel.id = labelId;
-        el.setAttribute('aria-labelledby', labelId);
-      }, 100);
+        labelId = `label${generateId()}`
+        maybeLabel.id = labelId
+        el.setAttribute('aria-labelledby', labelId)
+      }, 100)
     }
-  };
+  }
 
   /**
    * Adds a specified class
@@ -2305,11 +2229,11 @@
    */
   const addClass = (el, _classes) => {
     if (Array.isArray(_classes)) {
-      el.classList.add(..._classes);
+      el.classList.add(..._classes)
     } else {
-      el.classList.add(_classes);
+      el.classList.add(_classes)
     }
-  };
+  }
 
   /**
    * Return an element that has been added to the DOM
@@ -2320,15 +2244,15 @@
    * @param {string} cls Class to add to new element
    */
   const addEl = (parentEl, elType, textContent, cls) => {
-    let el = document.createElement(elType);
+    let el = document.createElement(elType)
 
     if (cls) {
-      addClass(el, cls);
+      addClass(el, cls)
     }
-    el.textContent = textContent;
-    parentEl.append(el);
-    return el;
-  };
+    el.textContent = textContent
+    parentEl.append(el)
+    return el
+  }
 
 
   /**
@@ -2340,16 +2264,16 @@
    */
   const addLabel = (el, _parent, txt) => {
     return new Promise((resolve, reject) => {
-      el.id = el.id ? el.id : el.name.replace(/\./g, '');
-      label = document.createElement('label');
-      label.setAttribute('for', el.id);
-      label.textContent = txt;
-      addClass(label, visuallyHiddenClass);
-      label.id = `label${generateId()}`;
-      _parent.insertBefore(label, el);
-      resolve(label.id);
-    });
-  };
+      el.id = el.id ? el.id : el.name.replace(/\./g, '')
+      label = document.createElement('label')
+      label.setAttribute('for', el.id)
+      label.textContent = txt
+      addClass(label, visuallyHiddenClass)
+      label.id = `label${generateId()}`
+      _parent.insertBefore(label, el)
+      resolve(label.id)
+    })
+  }
 
   /**
    * Adds placeholder attribute
@@ -2358,15 +2282,15 @@
    * @param {string} textContent Placeholder value
    */
   const addPlaceholder = (el, textContent) => {
-    el.setAttribute('placeholder', textContent);
-  };
+    el.setAttribute('placeholder', textContent)
+  }
 
   /**
    * Clears all classes
    *
    * @param {node} el Node to clear classes from
    */
-  const clearClass = el => el.className = '';
+  const clearClass = el => el.className = ''
 
   /**
    * Creates image element from a url string
@@ -2375,17 +2299,17 @@
    * @param {node} el Node to append image to
    */
   const createImgFromUrl = (textContent, el) => {
-    let newImg = new Image();
-    const altText = textContent.split('~')[0];
-    const url = textContent.split('~')[1];
+    let newImg = new Image()
+    const altText = textContent.split('~')[0]
+    const url = textContent.split('~')[1]
 
     if (altText && url) {
-      el.textContent = '';
-      newImg.src = url;
-      newImg.setAttribute('alt', altText);
-      el.appendChild(newImg);
+      el.textContent = ''
+      newImg.src = url
+      newImg.setAttribute('alt', altText)
+      el.appendChild(newImg)
     }
-  };
+  }
 
   /**
    * Creates tooltip element for images
@@ -2393,22 +2317,22 @@
    * @param {node} el The image block to create the tooltip for
    */
   const createImgTooltip = (el) => {
-    const img = el.querySelector('img');
+    const img = el.querySelector('img')
 
     if (img) {
-      const tooltipContent = img.getAttribute('alt');
+      const tooltipContent = img.getAttribute('alt')
 
       if (tooltipContent !== '' && tooltipContent !== 'null') {
-        let tooltip = document.createElement('a');
+        let tooltip = document.createElement('a')
 
-        addClass(tooltip, photoInfoClass);
+        addClass(tooltip, photoInfoClass)
         setAttributes(tooltip, {
           'title': tooltipContent,
           'data-bs-toggle': 'tooltip',
           'tabindex': '0',
           'aria-hidden': 'true',
-        });
-        el.appendChild(tooltip);
+        })
+        el.appendChild(tooltip)
 
         const imageTooltip = new bootstrap.Tooltip(tooltip, {
           container: el,
@@ -2416,10 +2340,10 @@
           placement: 'top',
           template: '<div class="tooltip" role="tooltip"><div class="tooltip-inner"></div></div>',
           trigger: 'click'
-        });
+        })
       }
     }
-  };
+  }
 
   /**
    * Creates popover element
@@ -2429,34 +2353,34 @@
    * @param {string} txt Popover content
    */
   const createPopover = (fieldSelector, placement, label, txt) => {
-    const field = theForm.querySelector(`.${fieldSelector}`);
+    const field = theForm.querySelector(`.${fieldSelector}`)
 
     if (field) {
-      let popoverContainer = document.createElement('p');
+      let popoverContainer = document.createElement('p')
 
-      addClass(popoverContainer, popoverContainerClass);
-      let popover = document.createElement('a');
+      addClass(popoverContainer, popoverContainerClass)
+      let popover = document.createElement('a')
       setAttributes(popover, {
         'data-bs-content': txt,
         'data-bs-toggle': 'popover',
         'data-bs-trigger': 'click focus',
         'role': 'button',
         'tabindex': '0',
-      });
-      popover.textContent = label;
+      })
+      popover.textContent = label
       switch (placement) {
         case 'before':
-          field.insertBefore(popover, field.querySelector('.en__field__element'));
-          break;
+          field.insertBefore(popover, field.querySelector('.en__field__element'))
+          break
         case 'after':
-          popoverContainer.appendChild(popover);
-          getClosestEl(field, enFieldSelector).appendChild(popoverContainer);
-          break;
+          popoverContainer.appendChild(popover)
+          getClosestEl(field, enFieldSelector).appendChild(popoverContainer)
+          break
         default:
-          field.insertBefore(popover, fiel.querySelector('.en__field__element'));
+          field.insertBefore(popover, fiel.querySelector('.en__field__element'))
       }
     }
-  };
+  }
 
   /**
    * Removes active class from element
@@ -2464,8 +2388,8 @@
    * @param {node} el The element to remove class from
    */
   const deactivateField = el => {
-    removeClass((el.target || el).parentElement, activeClass);
-  };
+    removeClass((el.target || el).parentElement, activeClass)
+  }
 
   /**
    * Disables input elements
@@ -2474,9 +2398,9 @@
    */
   const disableFields = (fields) => {
     fields.forEach(el => {
-      addClass(el, disabledClass);
-    });
-  };
+      addClass(el, disabledClass)
+    })
+  }
 
   /**
    * Adds disabled class to element
@@ -2484,8 +2408,8 @@
    * @param {node} el The element to remove class from
    */
   const disableEl = el => {
-    addClass(el, disabledClass);
-  };
+    addClass(el, disabledClass)
+  }
 
   /**
    * Removed disabled class from element
@@ -2493,8 +2417,8 @@
    * @param {node} el The element to remove class from
    */
   const enableEl = el => {
-    removeClass(el, disabledClass);
-  };
+    removeClass(el, disabledClass)
+  }
 
   /**
    * Splits error text blob into sentences.
@@ -2502,13 +2426,13 @@
    * @param {node} el Element containing the error content
    */
   const formatError = el => {
-    const sentences = el.textContent.replace(/([.?!])\s*(?=[A-Z])/g, '$1|').split('|');
+    const sentences = el.textContent.replace(/([.?!])\s*(?=[A-Z])/g, '$1|').split('|')
 
-    el.textContent = '';
+    el.textContent = ''
     sentences.forEach(sentence => {
-      addEl(el, 'p', sentence);
-    });
-  };
+      addEl(el, 'p', sentence)
+    })
+  }
 
   /**
    * Returns does form pass EN validation
@@ -2516,41 +2440,41 @@
    * @param {node} _parent The node to check for validation errors
    */
   const formIsValid = (_parent = theForm) => {
-    const errorList = _parent.querySelector('.en__errorList');
-    const invalidFields = getAll('.en__field--validationFailed', _parent);
-    let valid = true;
+    const errorList = _parent.querySelector('.en__errorList')
+    const invalidFields = getAll('.en__field--validationFailed', _parent)
+    let valid = true
 
     // Looking for form errors
     if (errorList) {
       if (errorList.textContent.trim() !== '') {
-        valid = false;
+        valid = false
       }
     }
     if (invalidFields.length > 0) {
-      valid = false;
+      valid = false
     }
-    return valid;
-  };
+    return valid
+  }
 
   /**
    * Places focus on first focusable element
    */
   const focusFirst = () => {
-    const focusables = getAll('button, a:not(.skip), input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    const focusables = getAll('button, a:not(.skip), input, select, textarea, [tabindex]:not([tabindex="-1"])')
 
     if (focusables.length > 0) {
       setTimeout(function() {
-        focusables[0].focus();
-      }, 500);
+        focusables[0].focus()
+      }, 500)
     }
-  };
+  }
 
   /**
    * Returns a unique ID
    */
   const generateId = () => {
-    return Math.round(new Date().getTime() + (Math.random() * 100));
-  };
+    return Math.round(new Date().getTime() + (Math.random() * 100))
+  }
 
   /**
    * Returns NodeList.
@@ -2559,8 +2483,8 @@
    * @param {node} root The node to select over
    */
   const getAll = (selector, root = document) => {
-    return Array.prototype.slice.call(root.querySelectorAll(selector), 0);
-  };
+    return Array.prototype.slice.call(root.querySelectorAll(selector), 0)
+  }
 
   /**
    * Returns Closest element up tree that matches selector
@@ -2570,42 +2494,42 @@
    */
   const getClosestEl = (el, selector) => {
     if (el) {
-      let closestNode = el.closest(selector);
-      return closestNode ? closestNode : null;
+      let closestNode = el.closest(selector)
+      return closestNode ? closestNode : null
     }
-  };
+  }
 
   /**
    * Returns locale of page
    */
   const getLocale = () => {
-    return typeof pageJson !== 'undefined' ? pageJson.locale : 'en-US';
-  };
+    return typeof pageJson !== 'undefined' ? pageJson.locale : 'en-US'
+  }
 
   /**
    * Returns Donation amount without upsell fee or null
    */
   const getOriginalDonationAmount = () => {
-    const selectedAmount = theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked') || theForm.querySelector(otherAmountInputSelector);
+    const selectedAmount = theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked') || theForm.querySelector(otherAmountInputSelector)
 
-    return selectedAmount ? (selectedAmount.dataset.original ? selectedAmount.dataset.original : selectedAmount.value.replace(/\,/g, '')) : null;
-  };
+    return selectedAmount ? (selectedAmount.dataset.original ? selectedAmount.dataset.original : selectedAmount.value.replace(/\,/g, '')) : null
+  }
 
   /**
    * Returns selected amount radio button or null
    */
   const getSelectedAmount = () => {
-    return theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked');
-  };
+    return theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked')
+  }
 
   /**
    * Returns Donation amount with or without upsell fee or null
    */
   const getTotalDonationAmount = () => {
-    const selectedAmount = theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked') || theForm.querySelector(otherAmountInputSelector);
+    const selectedAmount = theForm.querySelector('[name="transaction.donationAmt"]:not([value=""]):checked') || theForm.querySelector(otherAmountInputSelector)
 
-    return selectedAmount ? selectedAmount.value : null;
-  };
+    return selectedAmount ? selectedAmount.value : null
+  }
 
   /**
    * Returns Element has specified class
@@ -2614,8 +2538,8 @@
    * @param {string} cls Class to check for
    */
   const hasClass = (el, cls) => {
-    return el.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));
-  };
+    return el.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'))
+  }
 
   /**
    * Returns True if element is empty or has only whitespace.
@@ -2624,8 +2548,8 @@
    * @returns {boolean} If element is empty or has only whitespace
    */
   const isEmpty = el => {
-    return el.innerHTML.replace(/^\s*/, '').replace(/\s*$/, '') === '';
-  };
+    return el.innerHTML.replace(/^\s*/, '').replace(/\s*$/, '') === ''
+  }
 
   /**
    * Returns a Facebook sharer URL
@@ -2635,9 +2559,9 @@
    * @returns {string} Share URL
    */
   const makeFacebookUrl = (sharerUrl, url) => {
-    url = encodeURIComponent(`${url.replace(/\?chain/, '')}?locale=${getLocale()}&en_chan=fb`);
-    return `${sharerUrl}?u=${url}`;
-  };
+    url = encodeURIComponent(`${url.replace(/\?chain/, '')}?locale=${getLocale()}&en_chan=fb`)
+    return `${sharerUrl}?u=${url}`
+  }
 
   /*
    * Returns a Twitter tweet URL
@@ -2648,10 +2572,10 @@
    * @returns {string} Tweet URL
    */
   const makeTwitterUrl = (text, sharerUrl, url) => {
-    text = encodeURIComponent(text);
-    url = encodeURIComponent(`${url.replace(/\?chain/, '')}?locale=${getLocale()}&en_chan=tw`);
-    return `${sharerUrl}?text=${text}&url=${url}`;
-  };
+    text = encodeURIComponent(text)
+    url = encodeURIComponent(`${url.replace(/\?chain/, '')}?locale=${getLocale()}&en_chan=tw`)
+    return `${sharerUrl}?text=${text}&url=${url}`
+  }
 
   /**
    * Returns Class for form element.
@@ -2659,8 +2583,8 @@
    * @returns {string} Class for form element
    */
   const maybeHasHero = () => {
-    return theForm.querySelector('.hero-full-bleed') ? 'has-hero' : 'not-has-hero';
-  };
+    return theForm.querySelector('.hero-full-bleed') ? 'has-hero' : 'not-has-hero'
+  }
 
   /**
    * Returns Class for form element.
@@ -2668,8 +2592,8 @@
    * @returns {string} Class for form element
    */
   const maybeHasHeroSolid = () => {
-    return theForm.querySelector('.hero-solid') ? 'has-hero-solid' : 'not-has-hero-solid';
-  };
+    return theForm.querySelector('.hero-solid') ? 'has-hero-solid' : 'not-has-hero-solid'
+  }
 
   /**
    * Creates a label from placeholder value and associates it with an input
@@ -2678,17 +2602,17 @@
    * @param {node} _parent The parent of the newly inserted label.
    */
   const placeholderToLabel = (el, _parent) => {
-    let label;
+    let label
 
     if (el && _parent) {
-      el.id = el.id ? el.id : el.name.replace(/\./g, '');
-      label = document.createElement('label');
-      label.setAttribute('for', el.id);
-      label.textContent = el.getAttribute('placeholder');
-      addClass(label, visuallyHiddenClass);
-      _parent.insertBefore(label, el);
+      el.id = el.id ? el.id : el.name.replace(/\./g, '')
+      label = document.createElement('label')
+      label.setAttribute('for', el.id)
+      label.textContent = el.getAttribute('placeholder')
+      addClass(label, visuallyHiddenClass)
+      _parent.insertBefore(label, el)
     }
-  };
+  }
 
   /**
    * Removes multiple attributes
@@ -2697,8 +2621,8 @@
    * @param {object} attrs Attributes to remove
    */
   const removeAttributes = (el, ...attrs) => {
-    attrs.forEach(attr => el.removeAttribute(attr));
-  };
+    attrs.forEach(attr => el.removeAttribute(attr))
+  }
 
   /**
    * Remove a specified class
@@ -2708,11 +2632,11 @@
    */
   const removeClass = (el, _classes) => {
     if (Array.isArray(_classes)) {
-      el.classList.remove(..._classes);
+      el.classList.remove(..._classes)
     } else {
-      el.classList.remove(_classes);
+      el.classList.remove(_classes)
     }
-  };
+  }
 
   /**
    * Dynamically resizes iframe to fit content
@@ -2721,9 +2645,9 @@
    */
   const resizeIframe = el => {
     setTimeout(function() {
-      el.style.height = el.contentWindow.document.body.scrollHeight + "px";
-    }, 100);
-  };
+      el.style.height = el.contentWindow.document.body.scrollHeight + "px"
+    }, 100)
+  }
 
   /**
    * Scrolls to element on page
@@ -2733,8 +2657,8 @@
   const scrollToEl = el => {
     el.scrollIntoView({
       behavior: 'smooth',
-    });
-  };
+    })
+  }
 
   /**
    * Adds multiple attributes
@@ -2744,9 +2668,9 @@
    */
   const setAttributes = (el, attrs) => {
     Object.keys(attrs).forEach(attr => {
-      el.setAttribute(attr, attrs[attr]);
-    });
-  };
+      el.setAttribute(attr, attrs[attr])
+    })
+  }
 
   /**
    * Returns monthly upsell amount
@@ -2755,13 +2679,13 @@
    */
   const setMonthlyAmount = (amt) => {
     if (amt >= 5 && amt <= 24) {
-      return 5;
+      return 5
     } else if (amt >= 25 && amt <= 50) {
-      return 10;
+      return 10
     } else if (amt > 50 && amt <= 100) {
-      return 15;
+      return 15
     }
-  };
+  }
 
   /**
    * Returns str with no spaces
@@ -2769,8 +2693,8 @@
    * @param {sting} str String to strip spaces from
    */
   const stripSpaces = str => {
-    return str.replace(/\s/g, '');
-  };
+    return str.replace(/\s/g, '')
+  }
 
   /**
    * Triggers an event
@@ -2779,8 +2703,8 @@
    * @param {string} evt Type of event
    */
   const triggerEvent = (el, evt) => {
-    el.dispatchEvent(new Event(evt));
-  };
+    el.dispatchEvent(new Event(evt))
+  }
 
   /**
    * Updates payment method hidden field
@@ -2788,27 +2712,27 @@
    * @param {string} ccType CC type returned from cleave
    */
   const updatePaymentType = (ccType) => {
-    const paymentType = theForm.querySelector(paymentTypeSelector);
-    let paymentTypeCode = '';
+    const paymentType = theForm.querySelector(paymentTypeSelector)
+    let paymentTypeCode = ''
 
     if (paymentType) {
       switch (ccType) {
         case 'amex':
-          paymentTypeCode = 'AX';
-          break;
+          paymentTypeCode = 'AX'
+          break
         case 'discover':
-          paymentTypeCode = 'DI';
-          break;
+          paymentTypeCode = 'DI'
+          break
         case 'mastercard':
-          paymentTypeCode = 'MC';
-          break;
+          paymentTypeCode = 'MC'
+          break
         case 'visa':
-          paymentTypeCode = 'VI';
-          break;
+          paymentTypeCode = 'VI'
+          break
       }
-      paymentType.value = paymentTypeCode;
+      paymentType.value = paymentTypeCode
     }
-  };
+  }
 
   /**
    * Updates everywhere donation amount is displayed.
@@ -2817,9 +2741,9 @@
    */
   const updateTotalGift = amt => {
     getAll(totalAmountSelector).forEach(el => {
-      el.textContent = !isNaN(amt) ? `$${numberPipe(amt)}` : '';
-    });
-  };
+      el.textContent = !isNaN(amt) ? `$${numberPipe(amt)}` : ''
+    })
+  }
 
   /**
    * Returns wrapped nodes.
@@ -2830,22 +2754,22 @@
    * @returns Wrapped elements
    */
   const wrapAll = (nodes, wrapperType, wrapperClass) => {
-    let parent = nodes[0].parentNode;
-    let previousSibling = nodes[0].previousSibling;
-    let wrapper = document.createElement(wrapperType);
+    let parent = nodes[0].parentNode
+    let previousSibling = nodes[0].previousSibling
+    let wrapper = document.createElement(wrapperType)
 
     if (wrapperClass) {
-      addClass(wrapper, wrapperClass);
+      addClass(wrapper, wrapperClass)
     }
 
     for (let i = 0; nodes.length - i; wrapper.firstChild === nodes[0] && i++) {
-      wrapper.appendChild(nodes[i]);
+      wrapper.appendChild(nodes[i])
     }
 
-    let nextSibling = previousSibling ? previousSibling.nextSibling : parent.firstChild;
-    parent.insertBefore(wrapper, nextSibling);
-    return wrapper;
-  };
+    let nextSibling = previousSibling ? previousSibling.nextSibling : parent.firstChild
+    parent.insertBefore(wrapper, nextSibling)
+    return wrapper
+  }
 
   /**
    * Returns wrapped node.
@@ -2856,77 +2780,85 @@
    * @returns Wrapped element
    */
   const wrapEl = (node, wrapperType, wrapperClass) => {
-    let wrapper = document.createElement(wrapperType);
+    let wrapper = document.createElement(wrapperType)
 
     if (wrapperClass) {
-      addClass(wrapper, wrapperClass);
+      addClass(wrapper, wrapperClass)
     }
 
-    node.parentNode.insertBefore(wrapper, node);
-    wrapper.appendChild(node);
+    node.parentNode.insertBefore(wrapper, node)
+    wrapper.appendChild(node)
 
-    return wrapper;
-  };
+    return wrapper
+  }
 
   // Before load
   if (ecardRedirect && sessionStorage.getItem('ecardData')) {
-    ecardRedirect.click();
+    ecardRedirect.click()
   }
 
   // On load
   document.addEventListener('DOMContentLoaded', e => {
     if (window.self !== window.top) {
-      window.parent.dispatchEvent(iframeReady);
+      window.parent.dispatchEvent(iframeReady)
     }
     if (seamlessEcardBlock) {
-      seamlessEcard();
+      seamlessEcard()
     }
-    ui();
+    ui()
     if (typeof pageJson !== 'undefined') {
       if (pageJson.pageType === 'donation') {
-        donationForm();
+        donationForm()
       } else if (pageJson.pageType === 'event') {
-        eventForm();
-        eventFormNew();
+        eventForm()
+        eventFormNew()
       } else if (pageJson.pageType === 'emailtotarget' && pageJson.pageNumber === 1) {
-        emailToTarget();
+        emailToTarget()
       }
       if (hasClass(body, 'page--hub')) {
-        hub();
+        hub()
       }
       if (hasClass(body, 'page--quiz')) {
-        quiz();
+        quiz()
       }
       if (hasClass(body, 'page--action-center')) {
-        actionCenter();
+        actionCenter()
       }
       if (hasClass(body, 'page--confirmation')) {
-        confirmation();
+        confirmation()
       }
-      optIns();
-      mobilePhone();
-      validation();
-      formSubmit();
-      dataCaptureTracking();
-      socialShareTracking();
-      advocacyTracking();
-      footerTracking();
-      URLTracking();
-      redirects();
+      optIns()
+      mobilePhone()
+      validation()
+      formSubmit()
+      dataCaptureTracking()
+      socialShareTracking()
+      advocacyTracking()
+      footerTracking()
+      URLTracking()
+      redirects()
     }
-    memberCare();
-  });
+    memberCare()
+  })
 
   window.addEventListener('load', e => {
     let checkThermometer = setInterval(function() {
       if (theForm.querySelector('.enWidget--progressBar')) {
-        clearInterval(checkThermometer);
-        thermometers();
+        clearInterval(checkThermometer)
+        thermometers()
       }
-    }, 100);
-  });
+    }, 100)
+  })
 
   const eventFormNew = () => {
+
+    const summary = () => {
+      renderSummary()
+
+      if (pageJson.pageNumber === pageJson.pageCount) {
+        sessionStorage.removeItem('eventSummary')
+      }
+    }
 
     /**
     * @renderSummary Gets event summary text from either the
@@ -2944,17 +2876,17 @@
       */
       const getSummary = new Promise((resolve, reject) => {
         if (document.querySelector('#event-summary')) {
-          let eventSummary = {};
+          let eventSummary = {}
 
           document.querySelector('#event-summary').querySelectorAll('[slot]').forEach(slot => {
-            eventSummary[slot.getAttribute('slot')] = slot.textContent;
-          });
-          sessionStorage.setItem('eventSummary', JSON.stringify(eventSummary));
-          resolve(eventSummary);
+            eventSummary[slot.getAttribute('slot')] = slot.textContent
+          })
+          sessionStorage.setItem('eventSummary', JSON.stringify(eventSummary))
+          resolve(eventSummary)
         } else {
-          resolve(JSON.parse(sessionStorage.getItem('eventSummary')));
+          resolve(JSON.parse(sessionStorage.getItem('eventSummary')))
         }
-      });
+      })
 
       /**
       * Populate <event-summary> elements.
@@ -2962,116 +2894,107 @@
       */
       const setCustomElementContent = (summary) => {
         return new Promise((resolve, reject) => {
-          const template = pageJson.pageNumber === 1 ? document.getElementById('event-summary-template-overlay').content : document.getElementById('event-summary-template-tabular').content;
-          const clone = template.cloneNode(true);
+          const template = pageJson.pageNumber === 1 ? document.getElementById('event-summary-template-overlay').content : document.getElementById('event-summary-template-tabular').content
+          const clone = template.cloneNode(true)
 
           document.querySelectorAll('event-summary').forEach(customSummary => {
             for (const detailItem in summary) {
-              clone.querySelector(`slot[name="${detailItem}"]`).textContent = summary[detailItem];
+              clone.querySelector(`slot[name="${detailItem}"]`).textContent = summary[detailItem]
             }
             // Create link to google maps out of address
-            const googleMapLink = `https://www.google.com/maps/place/?q=${encodeURI(clone.querySelector('slot[name="event-location"]')?.textContent)}`;
-            clone.querySelector('a').href = googleMapLink;
+            const googleMapLink = `https://www.google.com/maps/place/?q=${encodeURI(clone.querySelector('slot[name="event-location"]')?.textContent)}`
+            clone.querySelector('a').href = googleMapLink
 
-            customSummary.appendChild(clone);
-          });
-          resolve();
-        });
-      };
-      getSummary.then(data => setCustomElementContent(data));
-    };
-
-    const summary = () => {
-      renderSummary();
-
-      if (pageJson.pageNumber === pageJson.pageCount) {
-        sessionStorage.removeItem('eventSummary');
+            customSummary.appendChild(clone)
+          })
+          resolve()
+        })
       }
-    };
+      getSummary.then(data => setCustomElementContent(data))
+    }
 
     /**
     * @tickets shows coded tickets as needed, customizes display of ticket names
     * and attendee labels adn shows additional donation in the summary if needed.
     */
-    const delimiter = '/'; // The character to separate the ticket name from the ticket code
+    const delimiter = '/' // The character to separate the ticket name from the ticket code
     const tickets = () => {
       if (pageJson.pageNumber === 1) {
-        showTickets();
+        showTickets()
       } else {
-        formatTicketNames();
-        formatAttendeeLabels();
-        showAdditionalDonation();
+        formatTicketNames()
+        formatAttendeeLabels()
+        showAdditionalDonation()
       }
-    };
+    }
 
     /**
     * @showTickets
-    *
+    * 
     * Tickets are hidden by default with CSS
-    *
+    * 
     * If a "&code" parameter is in the URL, tickets named as [ticket name]~[code]
     * pattern will be displayed if the url and ticket code match.
-    *
+    * 
     * If a "&code" parameter is not in the URL, tickets named normally
     * will be displayed
     */
     const showTickets = () => {
-      let ticketCode = new URLSearchParams(location.href).get('code');
+      let ticketCode = new URLSearchParams(location.href).get('code')
 
       const showNonCodedTickets = () => {
         // Show all tickets that donot have a code attached
         let ticketsToShow = [...document.querySelectorAll('.en__ticket')]
           .filter(ticket => ticket.querySelector('.en__ticket__name')?.textContent.indexOf(delimiter) === -1)
           .forEach(ticket => {
-            ticket.classList.add('d-table-row');
-          });
-      };
+            ticket.classList.add('d-table-row')
+          })
+      }
 
       const showCodedTickets = () => {
-        let regex = new RegExp(`^${ticketCode}$`);
+        let regex = new RegExp(`^${ticketCode}$`)
 
         // Show tickets who's code matches the url parameter
         let ticketsToShow = [...document.querySelectorAll('.en__ticket')]
           .filter(ticket => regex.test(ticket.querySelector('.en__ticket__name')?.textContent.split(delimiter)[1]))
           .forEach(ticket => {
-            const ticketName = ticket.querySelector('.en__ticket__name').textContent.split(delimiter)[0];
-            ticket.querySelector('.en__ticket__name').textContent = ticketName;
-            ticket.classList.add('d-table-row');
-          });
-      };
-
-      showNonCodedTickets();
-      if (ticketCode) {
-        showCodedTickets();
+            const ticketName = ticket.querySelector('.en__ticket__name').textContent.split(delimiter)[0]
+            ticket.querySelector('.en__ticket__name').textContent = ticketName
+            ticket.classList.add('d-table-row')
+          })
       }
-    };
+
+      showNonCodedTickets()
+      if (ticketCode) {
+        showCodedTickets()
+      }
+    }
 
     const formatTicketNames = () => {
       document.querySelectorAll('.en__orderSummary__data--type, .en__registrants__ticketHead').forEach(el => {
         // Strip out ticket code so {ticket name}~{ticket code} appears as {ticket name}
-        el.textContent = el.textContent.replace(/\/[0-9A-Za-z]*[0-9A-Za-z]/, '');
-      });
-    };
+        el.textContent = el.textContent.replace(/\/[0-9A-Za-z]*[0-9A-Za-z]/, '')
+      })
+    }
 
     const formatAttendeeLabels = () => {
       document.querySelectorAll('.en__registrants__registrantHead').forEach(el => {
         // Convert strings like "Attendee 2 1" to "Attendee 2"
-        el.textContent = el.textContent.replace(/(\w+)(\s[0-9]*\s)([0-9]*$)/, '$1 $2');
-      });
-    };
+        el.textContent = el.textContent.replace(/(\w+)(\s[0-9]*\s)([0-9]*$)/, '$1 $2')
+      })
+    }
 
     const showAdditionalDonation = () => {
       // display non-zero additional donation in the summary
-      const additionalDonationSummary = document.querySelector('.en__orderSummary__additional');
+      const additionalDonationSummary = document.querySelector('.en__orderSummary__additional')
 
       if (additionalDonationSummary) {
         if (parseInt(additionalDonationSummary.querySelector('.en__orderSummary__data--cost').textContent) !== 0) {
-          additionalDonationSummary.classList.add('d-table-row');
+          additionalDonationSummary.classList.add('d-table-row')
         }
       }
-    };
-    summary();
-    tickets();
-  };
-
-})();
+    }
+    summary()
+    tickets()
+  }
+})()
