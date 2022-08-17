@@ -3060,7 +3060,7 @@
     * will be displayed
     */
     const showTickets = () => {
-      let ticketCode = new URLSearchParams(location.href).get('code')
+      let ticketCode = new URLSearchParams(location.search).get('code')
 
       const showNonCodedTickets = () => {
         // Show all tickets that donot have a code attached
