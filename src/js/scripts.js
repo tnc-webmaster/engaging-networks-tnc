@@ -880,6 +880,13 @@
       }
     }
 
+    const otherFieldClear = () => {
+      otherAmountInput.classList.remove('_checkAmtErr')
+      theForm.querySelector('.en__other__field__error').textContent = ''
+      otherAmountInput.value = ''
+      theForm.querySelector('.en__submit button').disabled = false
+    };
+
     const handleDonationAmountChange = (e) => {
       if (feeCoverCheckbox) {
         maybeUncheckFeeCover(getOriginalDonationAmount())
