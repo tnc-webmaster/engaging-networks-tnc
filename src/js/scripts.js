@@ -858,6 +858,10 @@
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector)
     const otherAmountInputMin = theForm.querySelector('.en__otherFieldMin input')
     const otherAmountContainer = theForm.querySelector(otherAmountSelector)
+    const formPremiumBlock = theForm.querySelector('.ff-donation-premium')
+    const monthlyPremiumMin = theForm.querySelector('.en__field--premium-monthly-min input')
+    const singlePremiumMin = theForm.querySelector('.en__field--premium-single-min input')
+    const premiumFreqCheckbox = theForm.querySelector('.en__field--premium-frequency input')
     const monthlyGive = document.getElementById('en__field_transaction_recurrpay')
     let otherAmountErrorContainer = document.createElement('div')
     otherAmountErrorContainer.classList.add('en__other__field__error')
@@ -906,7 +910,36 @@
             e.target.classList.remove('_checkAmtErr')
             theForm.querySelector('.en__other__field__error').textContent = ''
             theForm.querySelector('.en__submit button').disabled = false
+        }
+      }
+    }
 
+    const donationPremiumCalc = (e) => {
+      var _otherInputParsed = parseInt(e.target.value);
+      if (monthlyPremiumMin && singlePremiumMin != null ) {
+        var _monthlyParsed = parseInt(monthlyPremiumMin.value);
+        var _singleParsed = parseInt(singlePremiumMin.value);
+        switch (true) {
+          case !monthlyGive.checked && (_otherInputParsed >= _singleParsed):
+            // show premium
+            formPremiumBlock.classList.add('visible')
+            // uncheck premium frequency box
+            // if (premiumFreqCheckbox) {
+            //   premiumFreqCheckbox.checked = false;
+            // }
+            break;
+          case monthlyGive.checked && (_otherInputParsed >= _monthlyParsed):
+            // show premium
+            formPremiumBlock.classList.add('visible')
+            // check premium frequency box
+            // if (premiumFreqCheckbox) {
+            //   premiumFreqCheckbox.checked = false
+            //   premiumFreqCheckbox.click()
+            // }
+            break;
+          default:
+            formPremiumBlock.classList.remove('visible');
+            break;
         }
       }
     }
@@ -933,6 +966,11 @@
         otherAmountInput.addEventListener('input', handleDonationAmountChange)
         // add front end validation to 'other' field on focusout
         otherAmountInput.addEventListener('focusout', validateDonationAmountChangeMin)
+        // handle premium logic if block is present
+        if (typeof(formPremiumBlock) != 'undefined' && formPremiumBlock != null) {
+          otherAmountInput.addEventListener('focusout', donationPremiumCalc)
+        }
+
         // clear 'other' field front end validation logic if other amount buttons are click
         document.addEventListener('click', function(event) {
           if (event.target.matches('label.en__field__label[for*="transaction_donationAmt"]')) {
