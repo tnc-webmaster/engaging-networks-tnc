@@ -850,6 +850,7 @@
    */
   const donationForm = () => {
     const appealCode = theForm.querySelector('.en__field--appealCode')
+    const initAppealCodeVal = document.getElementById('en__field_supporter_appealCode').value
     const bequestIframe = theForm.querySelector('.iframe--bequest iframe')
     const bequestModal = theForm.querySelector('.modal--bequest')
     const donationAmt = theForm.querySelector('.en__field--donationAmt')
@@ -887,6 +888,13 @@
       theForm.querySelector('.en__submit button').disabled = false
     };
 
+    const premiumClear = () => {
+      formPremiumBlock.classList.remove('visible');
+      premiumVisibleCheckbox.checked ? premiumVisibleCheckbox.click() : ''
+      // premiumFreqCheckbox.checked ?  '' : premiumFreqCheckbox.click()
+      document.getElementById('en__field_supporter_appealCode').value = initAppealCodeVal
+    }
+
     const handleDonationAmountChange = (e) => {
       if (feeCoverCheckbox) {
         maybeUncheckFeeCover(getOriginalDonationAmount())
@@ -922,25 +930,26 @@
       }
     }
 
-    const donationPremiumCalc = (e) => {
-      var _otherInputParsed = parseInt(e.target.value);
+    const donationPremiumCalc = (val, e) => {
+      var inputParsed
+      val ? inputParsed = parseInt(val.replace(/,/g, '')) : inputParsed = parseInt(e.target.value)
       if (monthlyPremiumMin && singlePremiumMin != null ) {
         var _monthlyParsed = parseInt(monthlyPremiumMin.value);
         var _singleParsed = parseInt(singlePremiumMin.value);
         switch (true) {
-          case !monthlyGive.checked && (_otherInputParsed >= _singleParsed):
+          case !monthlyGive.checked && (inputParsed >= _singleParsed):
             // show premium
             formPremiumBlock.classList.add('visible')
-            premiumVisibleCheckbox.click()
+            premiumVisibleCheckbox.checked ? '' : premiumVisibleCheckbox.click()
             // uncheck premium frequency box
             if (premiumFreqCheckbox) {
               premiumFreqCheckbox.checked ? premiumFreqCheckbox.click() : ''
             }
             break;
-          case monthlyGive.checked && (_otherInputParsed >= _monthlyParsed):
+          case monthlyGive.checked && (inputParsed >= _monthlyParsed):
             // show premium
             formPremiumBlock.classList.add('visible')
-            premiumVisibleCheckbox.click()
+            premiumVisibleCheckbox.checked ? '' : premiumVisibleCheckbox.click()
             // check premium frequency box
             if (premiumFreqCheckbox) {
               premiumFreqCheckbox.click()
@@ -976,18 +985,27 @@
         // add front end validation to 'other' field on focusout
         otherAmountInput.addEventListener('focusout', validateDonationAmountChangeMin)
         // handle premium logic if block is present
-        if (typeof(formPremiumBlock) != 'undefined' && formPremiumBlock != null) {
-          otherAmountInput.addEventListener('focusout', donationPremiumCalc)
+        if ((typeof(formPremiumBlock) != 'undefined' && formPremiumBlock != null) && (typeof(singlePremiumMin) != 'undefined' && singlePremiumMin != null)) {
+          otherAmountInput.addEventListener('focusout',function (event) {
+            donationPremiumCalc(null, event)
+          });
         }
 
         // clear 'other' field front end validation logic if other amount buttons are click
         document.addEventListener('click', function(event) {
           if (event.target.matches('label.en__field__label[for*="transaction_donationAmt"]')) {
             otherFieldClear()
+            if ((typeof(formPremiumBlock) != 'undefined' && formPremiumBlock != null) && (typeof(singlePremiumMin) != 'undefined' && singlePremiumMin != null)) {
+              premiumClear()
+              if (event.target.previousElementSibling.value) {
+                donationPremiumCalc(event.target.previousElementSibling.value)
+              }
+            }
           }
         }, false)
       }
     }
+
 
     resetDonationAmount = () => {
       setTimeout(() => {
