@@ -863,6 +863,7 @@
     const monthlyPremiumMin = theForm.querySelector('.en__field--premium-monthly-min input')
     const singlePremiumMin = theForm.querySelector('.en__field--premium-single-min input')
     const premiumFreqCheckbox = theForm.querySelector('.en__field--premium-frequency input')
+    const premiumWaiver = theForm.querySelector('.en__field--waive-premium input')
     const premiumVisibleCheckbox = theForm.querySelector('.en__field--premium-visible input')
     const monthlyGive = document.getElementById('en__field_transaction_recurrpay')
     let otherAmountErrorContainer = document.createElement('div')
@@ -891,7 +892,7 @@
     const premiumClear = () => {
       formPremiumBlock.classList.remove('visible');
       premiumVisibleCheckbox.checked ? premiumVisibleCheckbox.click() : ''
-      // premiumFreqCheckbox.checked ?  '' : premiumFreqCheckbox.click()
+      premiumWaiver.checked ? premiumWaiver.click() : ''
       document.getElementById('en__field_supporter_appealCode').value = initAppealCodeVal
     }
 
@@ -952,7 +953,7 @@
             premiumVisibleCheckbox.checked ? '' : premiumVisibleCheckbox.click()
             // check premium frequency box
             if (premiumFreqCheckbox) {
-              premiumFreqCheckbox.click()
+              premiumFreqCheckbox.checked ? '' : premiumFreqCheckbox.click()
             }
             break;
           default:
