@@ -1,5 +1,4 @@
 (function() {
-  let test = null
   let root = document.documentElement
   let body = document.body
   const appealCodeRedirect = document.querySelector('a[data-campaign-id][href*="appealCode"]')
@@ -577,7 +576,7 @@
       })
     }
     // Add mask and inputmode attribute for currency fields. Also prevent autofill
-    getAll('[name*="Amt"]:not([name*="Amt1"]):not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt1"]):not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
+    getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
       setAttributes(el, {
         'autocomplete': 'photo',
         'inputmode': 'decimal',
@@ -857,11 +856,6 @@
     const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]')
     const giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn')
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector)
-    const otherAmountInputMin = theForm.querySelector('.en__otherFieldMin input')
-    const otherAmountContainer = theForm.querySelector(otherAmountSelector)
-    const monthlyGive = document.getElementById('en__field_transaction_recurrpay')
-    let otherAmountErrorContainer = document.createElement('div')
-    otherAmountErrorContainer.classList.add('en__other__field__error')
     const recurrenceCheckbox = theForm.querySelector('[name="transaction.recurrpay"][type="checkbox"]')
     const recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq')
     let donationAmtRadios = null
@@ -876,46 +870,9 @@
       }
     }
 
-    const otherFieldClear = () => {
-      otherAmountInput.classList.remove('_checkAmtErr')
-      theForm.querySelector('.en__other__field__error').textContent = ''
-      otherAmountInput.value = ''
-      theForm.querySelector('.en__submit button').disabled = false
-    };
-
     const handleDonationAmountChange = (e) => {
       if (feeCoverCheckbox) {
         maybeUncheckFeeCover(getOriginalDonationAmount())
-      }
-    }
-
-    const validateDonationAmountChangeMin = (e) => {
-      if (otherAmountInputMin && otherAmountInputMin != null) {
-        var _otherInputParsed = parseInt(e.target.value)
-        var _otherInputMinParsed = parseInt(otherAmountInputMin.value)
-        // if monthly box is checked, new min is 15
-        if (monthlyGive.checked) {
-           _otherInputMinParsed = 15
-        }
-        // other field can't be less than 'Other Field Minimum' code block val or greater than 50k
-        // if monthly box is checked, other field can't be lower than 15 or greater than 50k
-        switch (true) {
-          case ((_otherInputParsed < _otherInputMinParsed || _otherInputParsed > 50000) && monthlyGive.checked):
-            e.target.classList.add('_checkAmtErr')
-            theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00'
-            theForm.querySelector('.en__submit button').disabled = true
-            break;
-          case _otherInputParsed < _otherInputMinParsed || _otherInputParsed > 50000:
-            e.target.classList.add('_checkAmtErr')
-            theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00'
-            theForm.querySelector('.en__submit button').disabled = true
-            break
-          default:
-            e.target.classList.remove('_checkAmtErr')
-            theForm.querySelector('.en__other__field__error').textContent = ''
-            theForm.querySelector('.en__submit button').disabled = false
-
-        }
       }
     }
 
@@ -935,18 +892,7 @@
 
       // Listen for other amount change
       if (otherAmountInput) {
-        if (otherAmountContainer) {
-          otherAmountContainer.append(otherAmountErrorContainer)
-        }
         otherAmountInput.addEventListener('input', handleDonationAmountChange)
-        // add front end validation to 'other' field on focusout
-        otherAmountInput.addEventListener('focusout', validateDonationAmountChangeMin)
-        // clear 'other' field front end validation logic if other amount buttons are click
-        document.addEventListener('click', function(event) {
-          if (event.target.matches('label.en__field__label[for*="transaction_donationAmt"]')) {
-            otherFieldClear()
-          }
-        }, false)
       }
     }
 
@@ -1169,17 +1115,17 @@
         const itemQuantity = el.querySelector('.en__orderSummary__data--quantity').textContent
         const itemAmount = el.querySelector('.en__orderSummary__data--cost')
         // look for item in pageJson and get original per-ticket total
-        if(pageJson.tickets && pageJson.tickets.length) {
+        if (pageJson.tickets && pageJson.tickets.length) {
           let originalTicket = pageJson.tickets.filter(ticket => ticket.name === itemType.textContent)
-          if(originalTicket.length === 1) {
+          if (originalTicket.length === 1) {
             itemAmount.textContent = (originalTicket[0].quantity * originalTicket[0].price).toFixed(2)
           }
         }
         itemType.textContent = `${itemQuantity}x  ${itemType.textContent}`
         hasPromo = hasPromo || getPromo(el)
         const itemPromo = el.querySelector('.en__orderSummary__data--promo')
-        if(itemPromo) {
-          itemPromo.textContent = '';
+        if (itemPromo) {
+          itemPromo.textContent = ''
         }
       })
 
@@ -1198,7 +1144,7 @@
           removeClass(el, hiddenWebOnlyClass)
         }
         // Cleanup
-        if(pageJson.pageNumber === pageJson.pageCount) {
+        if (pageJson.pageNumber === pageJson.pageCount) {
           sessionStorage.removeItem('savedTotalAmount')
         }
       }
@@ -1879,35 +1825,6 @@
         }
       }
 
-      const enSustainerUpsell = () => {
-        setTimeout(() => {
-          var enUpsellLightbox = document.getElementById('en__upsellModal');
-          var enUpsellYesButton = document.getElementById('en__upsellModal__yes');
-
-          if (enUpsellYesButton) {
-            // Fire tracking if EN Upsell yes button is clicked
-            enUpsellYesButton.addEventListener('click', e => {
-              if (typeof utag !== 'undefined') {
-                utag.link({
-                  'event_name': 'lightbox_click',
-                  'lightbox_name': 'sustainer upsell'
-                });
-              }
-            });
-          }
-
-          if (enUpsellLightbox) {
-            // Fire tracking when EN lightbox opens
-            if (typeof utag !== 'undefined') {
-              utag.link({
-                'event_name': 'lightbox_impression',
-                'lightbox_name': 'sustainer upsell'
-              });
-            }
-          }
-        }, 1500);
-      };
-
       if (feeCoverCheckbox) {
         // Calculate extra fee cover amount for data layer
         if (feeCoverCheckbox.checked) {
@@ -1961,13 +1878,6 @@
       // if (trackSubmit) {
       //   trackFormSubmit();
       // }
-
-      // Check for EN lighbox
-      if (window.EngagingNetworks.upsell.length && window.EngagingNetworks.upsell[0].componentId && window.EngagingNetworks.upsell[0].componentId !== 'undefined') {
-        if (formIsValid()) {
-          enSustainerUpsell();
-        }
-      }
 
       // Maybe display upsell modal
       if (hasUpsell && donationAmount >= 5 && donationAmount <= 100 && !monthlyCheckbox.checked) {
@@ -2986,10 +2896,20 @@
         return new Promise((resolve, reject) => {
           const template = pageJson.pageNumber === 1 ? document.getElementById('event-summary-template-overlay').content : document.getElementById('event-summary-template-tabular').content
           const clone = template.cloneNode(true)
+          let eventStartDate
+          let eventEndDate
 
           document.querySelectorAll('event-summary').forEach(customSummary => {
             for (const detailItem in summary) {
-              clone.querySelector(`slot[name="${detailItem}"]`).textContent = summary[detailItem]
+              if (detailItem === 'event-start-date') {
+                eventStartDate = summary[detailItem]
+              } else if (detailItem === 'event-end-date') {
+                eventEndDate = summary[detailItem]
+                // Only display end date if needed
+                clone.querySelector(`slot[name="event-date"]`).textContent = (eventEndDate !== '' && eventEndDate !== eventStartDate) ? `${eventStartDate}-${eventEndDate}` : eventStartDate
+              } else {
+                clone.querySelector(`slot[name="${detailItem}"]`).textContent = summary[detailItem]
+              }
             }
             // Create link to google maps out of address
             const googleMapLink = `https://www.google.com/maps/place/?q=${encodeURI(clone.querySelector('slot[name="event-location"]')?.textContent)}`
@@ -3020,12 +2940,12 @@
 
     /**
     * @showTickets
-    *
+    * 
     * Tickets are hidden by default with CSS
-    *
+    * 
     * If a "&code" parameter is in the URL, tickets named as [ticket name]~[code]
     * pattern will be displayed if the url and ticket code match.
-    *
+    * 
     * If a "&code" parameter is not in the URL, tickets named normally
     * will be displayed
     */
@@ -3084,7 +3004,66 @@
         }
       }
     }
+
+    const recurringEvent = () => {
+      const checkForProcessingError = () => {
+        const processingError = document.querySelector('.en__errorList .en__error:not(:empty)')
+
+        if (processingError) {
+          processingError.textContent = processingError.textContent.replace(/Event Occurrence Identifier Not Found or Invalid/, ' No date was selected. Please adjust and resubmit.')
+        }
+      }
+
+      const handleSelectDateButtonClick = () => {
+        // Collapses the event date list when clicking on the Select Date button and the event date list is expanded.
+        // Need to listen for a mousedown or keydown event instead of a click since EN expands the list before the click is completed.
+        const selectDateButtons = document.querySelectorAll('.en__ticketRecurring__select, .en__occurrenceSummary__change')
+        const eventOccurrences = document.querySelector('.en__eventOccurrences ')
+        const ticketBlock = document.querySelector('.en__ticketBlock--recurring')
+
+        function throttle(callback, interval) {
+          let enableCall = true
+
+          return function(...args) {
+            if (!enableCall) return
+
+            enableCall = false
+            callback.apply(this, args)
+            setTimeout(() => enableCall = true, interval)
+          }
+        }
+
+        const toggleSelectDate = () => {
+          if (eventOccurrences.classList.contains('en__eventOccurrences--selecting')) {
+            setTimeout(() => {
+              eventOccurrences.classList.remove('en__eventOccurrences--selecting')
+              ticketBlock.classList.remove('en__ticketBlock--recurring--pending')
+            }, 300)
+          }
+        }
+
+        if (selectDateButtons.length > 0 && eventOccurrences && ticketBlock) {
+          selectDateButtons.forEach(el => {
+            // The change date button is an anchor element that is not focusing normally for some reason
+            if (el.nodeName === 'A') {
+              el.setAttribute('tabindex', '0')
+            }
+            el.addEventListener('mousedown', throttle(toggleSelectDate, 300))
+            el.addEventListener('keydown', e => {
+              if (e.key === 'Enter') {
+                toggleSelectDate()
+              }
+            })
+          })
+        }
+      }
+
+      checkForProcessingError()
+      handleSelectDateButtonClick()
+    }
+
     summary()
     tickets()
+    recurringEvent()
   }
 })()
