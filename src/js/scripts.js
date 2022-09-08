@@ -1,4 +1,5 @@
 (function() {
+  let test = null
   let root = document.documentElement
   let body = document.body
   const appealCodeRedirect = document.querySelector('a[data-campaign-id][href*="appealCode"]')
