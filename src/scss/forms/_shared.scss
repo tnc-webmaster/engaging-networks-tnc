@@ -9,7 +9,7 @@
   h2 {
     margin-bottom: 2rem;
   }
-  h5+p {
+  h5 + p {
     margin-bottom: 1.3333rem;
   }
   a {
@@ -23,10 +23,10 @@
   .en__component--copyblock:not(.hero):not(.form-heading) {
     margin-top: 2.25rem;
   }
-  .en__component--copyblock:not(.form-heading)+.en__component--formblock {
+  .en__component--copyblock:not(.form-heading) + .en__component--formblock {
     margin-top: 2rem;
   }
-  .en__component--formblock+.en__component--formblock {
+  .en__component--formblock + .en__component--formblock {
     margin-top: 1.3333rem;
   }
 }
@@ -35,7 +35,7 @@
   margin-left: auto;
   margin-right: auto;
   max-width: 35rem !important;
-  .en__component--copyblock+.en__component--formblock {
+  .en__component--copyblock + .en__component--formblock {
     margin-top: 1.5rem;
   }
 }
@@ -46,12 +46,12 @@
   h3 {
     @extend .h5;
     @extend %form-heading;
-    +p {
+    + p {
       @extend %sans-serif-normal;
     }
   }
-  p+h2,
-  p+h3 {
+  p + h2,
+  p + h3 {
     margin-top: 1.75rem;
   }
 }
@@ -67,6 +67,10 @@
   @include media-breakpoint-up(md) {
     font-size: $font-size-sm;
   }
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
 }
 
 input[type="date"]:not([name="ecard.schedule"])::-webkit-calendar-picker-indicator,
@@ -99,15 +103,15 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
     display: flex;
     justify-content: space-between;
   }
-  >.modal {
+  > .modal {
     flex: none;
   }
 }
 
 .en__mandatory {
-  >.en__field__label::before {
+  > .en__field__label::before {
     content: "* ";
-    margin-right: .25rem;
+    margin-right: 0.25rem;
   }
 }
 
@@ -179,12 +183,12 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
 
 .en__field__input--textarea {
   height: calc(6.875rem + 1px);
-  padding: .75rem 1.25rem;
+  padding: 0.75rem 1.25rem;
 }
 
 .en__field--checkbox:not(:last-child):not(.en__field--payment-method-paypal):not(.en__field--home-phone-opt-in) {
-  margin-bottom: .75rem;
-  .en__component--formblock>&:first-child {
+  margin-bottom: 0.75rem;
+  .en__component--formblock > &:first-child {
     margin-bottom: 2rem;
     margin-top: 1.75rem;
   }
@@ -196,7 +200,7 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
 
 .en__field__element--checkbox {
   .en__field__item:not(:last-child) {
-    margin-bottom: .75rem;
+    margin-bottom: 0.75rem;
   }
   .en__field__label {
     display: inline-flex;
@@ -206,20 +210,20 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
     }
   }
   .en__field__input--checkbox {
-    &:focus+.en__field__label {
+    &:focus + .en__field__label {
       &::before {
         @extend %styled-checkbox-focus;
       }
     }
-    &:checked+.en__field__label,
-    &:focus:checked+.en__field__label {
+    &:checked + .en__field__label,
+    &:focus:checked + .en__field__label {
       &::before {
         @extend %styled-checkbox-checked;
       }
     }
   }
-  >.en__field__label {
-    margin-bottom: .5rem;
+  > .en__field__label {
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -243,9 +247,9 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
     line-height: 1.5;
     margin: 0;
   }
-  >.en__field__label {
+  > .en__field__label {
     line-height: 1.375;
-    margin-bottom: .75rem;
+    margin-bottom: 0.75rem;
   }
 }
 
@@ -258,19 +262,19 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
 .en__field--radio[class*="en__field--payment-method"] {
   margin-bottom: 2rem;
   .en__field__element--radio {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
   }
 }
 
 .en__field--dirgift {
-  >.en__field__label {
+  > .en__field__label {
     @extend .visually-hidden;
   }
 }
 
 .en__field--home-phone-opt-in {
   &:not(:last-child) {
-    margin-bottom: 1.25rem
+    margin-bottom: 1.25rem;
   }
 }
 
@@ -293,7 +297,7 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
     @include media-breakpoint-down(sm) {
       width: 60.666667%;
       &:not(:last-child) {
-        margin-bottom: .5rem;
+        margin-bottom: 0.5rem;
       }
     }
     .en__field__label {
@@ -331,7 +335,7 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
     @include media-breakpoint-up(md) {
       left: calc(#{$font-size-sm} + 9%);
     }
-    &:checked+.en__field__label {
+    &:checked + .en__field__label {
       border-color: $primary;
       border-width: 2px;
     }
@@ -357,12 +361,12 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
     @extend .visually-hidden;
     &:checked,
     &:checked:focus {
-      +.en__field__label {
+      + .en__field__label {
         @include button-variant($primary, $primary, $white, $primary, $primary, $white, $primary, $primary, $white);
       }
     }
     &:focus {
-      +.en__field__label {
+      + .en__field__label {
         background-color: $dark;
         border-color: $dark;
         color: $white;
@@ -373,7 +377,7 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
 
 .en__field__input--radio[value="Paypal"],
 .en__field__input--radio[value="PayPal"] {
-  +.en__field__label {
+  + .en__field__label {
     font-size: 0;
     &:hover {
       color: transparent;
@@ -383,11 +387,11 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
     }
   }
   .en__field--payment-method-2-button- & {
-    +.en__field__label {
+    + .en__field__label {
       height: 3.75rem;
     }
     &:checked {
-      +.en__field__label {
+      + .en__field__label {
         &::after {
           content: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/PayPal_logo_white.svg?v=1613059310000);
         }
@@ -403,7 +407,7 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
     @extend .visually-hidden;
     &:checked,
     &:focus {
-      +.en__field__label--item {
+      + .en__field__label--item {
         border-color: $primary;
         border-width: 2px;
       }
@@ -415,7 +419,7 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
     background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/PayPal_logo.svg?v=1612990808000);
     background-repeat: no-repeat;
     background-position: center;
-    border-radius: .25rem;
+    border-radius: 0.25rem;
     font-size: 0;
     height: 3.4375rem;
     width: 100%;
@@ -438,15 +442,15 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
   #en__digitalWallet {
     display: none !important;
   }
-  +.en__component--copyblock {
+  + .en__component--copyblock {
     display: none !important;
-    +.en__component--formblock {
+    + .en__component--formblock {
       display: none !important;
     }
   }
-  ~.en__component--copyblock.p-0 {
+  ~ .en__component--copyblock.p-0 {
     display: none !important;
-    +.en__component--copyblock {
+    + .en__component--copyblock {
       display: none !important;
     }
   }
@@ -467,7 +471,7 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
   line-height: 1.4285;
-  margin-top: .667rem;
+  margin-top: 0.667rem;
 }
 
 .required-indicator {
@@ -477,8 +481,8 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
   &:not(:first-child) {
     margin-top: 3.125rem;
   }
-  +.form-heading,
-  +.en__component--copyblock {
+  + .form-heading,
+  + .en__component--copyblock {
     margin-top: 2.5rem !important;
   }
 }
@@ -500,3 +504,4 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
 .en__field--NOT_TAGGED_5 {
   display: none;
 }
+
