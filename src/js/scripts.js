@@ -576,7 +576,8 @@
       })
     }
     // Add mask and inputmode attribute for currency fields. Also prevent autofill
-    getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
+    // getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
+    getAll('[name*="Amt"]:not([name*="Amt1"]):not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt1"]):not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
       setAttributes(el, {
         'autocomplete': 'photo',
         'inputmode': 'decimal',
@@ -850,12 +851,26 @@
    */
   const donationForm = () => {
     const appealCode = theForm.querySelector('.en__field--appealCode')
+    const initAppealCode = document.getElementById('en__field_supporter_appealCode')
+    const initAppealCodeVal = '';
+    if (initAppealCode) {initAppealCodeVal = initAppealCode.value}
     const bequestIframe = theForm.querySelector('.iframe--bequest iframe')
     const bequestModal = theForm.querySelector('.modal--bequest')
     const donationAmt = theForm.querySelector('.en__field--donationAmt')
     const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]')
     const giftDesignationYN = theForm.querySelector('.en__field--gift-designation-yn')
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector)
+    const otherAmountInputMin = theForm.querySelector('.en__otherFieldMin input')
+    const otherAmountContainer = theForm.querySelector(otherAmountSelector)
+    const formPremiumBlock = theForm.querySelector('.ff-donation-premium')
+    const monthlyPremiumMin = theForm.querySelector('.en__field--premium-monthly-min input')
+    const singlePremiumMin = theForm.querySelector('.en__field--premium-single-min input')
+    const premiumFreqCheckbox = theForm.querySelector('.en__field--premium-frequency input')
+    const premiumWaiver = theForm.querySelector('.en__field--waive-premium input')
+    const premiumVisibleCheckbox = theForm.querySelector('.en__field--premium-visible input')
+    const monthlyGive = document.getElementById('en__field_transaction_recurrpay')
+    let otherAmountErrorContainer = document.createElement('div')
+    otherAmountErrorContainer.classList.add('en__other__field__error')
     const recurrenceCheckbox = theForm.querySelector('[name="transaction.recurrpay"][type="checkbox"]')
     const recurrenceFrequency = theForm.querySelector('.en__field--recurrfreq')
     let donationAmtRadios = null
@@ -870,9 +885,84 @@
       }
     }
 
+    const otherFieldClear = () => {
+      otherAmountInput.classList.remove('_checkAmtErr')
+      theForm.querySelector('.en__other__field__error').textContent = ''
+      otherAmountInput.value = ''
+      theForm.querySelector('.en__submit button').disabled = false
+    };
+
+    const premiumClear = () => {
+      formPremiumBlock.classList.remove('visible');
+      premiumVisibleCheckbox.checked ? premiumVisibleCheckbox.click() : ''
+      premiumWaiver.checked ? premiumWaiver.click() : ''
+      document.getElementById('en__field_supporter_appealCode').value = initAppealCodeVal
+    }
+
     const handleDonationAmountChange = (e) => {
       if (feeCoverCheckbox) {
         maybeUncheckFeeCover(getOriginalDonationAmount())
+      }
+    }
+
+    const validateDonationAmountChangeMin = (e) => {
+      if (otherAmountInputMin && otherAmountInputMin != null) {
+        var _otherInputParsed = parseInt(e.target.value)
+        var _otherInputMinParsed = parseInt(otherAmountInputMin.value)
+        // if monthly box is checked, new min is 15
+        if (monthlyGive.checked) {
+           _otherInputMinParsed = 15
+        }
+        // other field can't be less than 'Other Field Minimum' code block val or greater than 50k
+        // if monthly box is checked, other field can't be lower than 15 or greater than 50k
+        switch (true) {
+          case ((_otherInputParsed < _otherInputMinParsed || _otherInputParsed > 50000) && monthlyGive.checked):
+            e.target.classList.add('_checkAmtErr')
+            theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00'
+            theForm.querySelector('.en__submit button').disabled = true
+            break;
+          case _otherInputParsed < _otherInputMinParsed || _otherInputParsed > 50000:
+            e.target.classList.add('_checkAmtErr')
+            theForm.querySelector('.en__other__field__error').textContent = 'Your donation must be between $'+_otherInputMinParsed+'.00 and $50,000.00'
+            theForm.querySelector('.en__submit button').disabled = true
+            break
+          default:
+            e.target.classList.remove('_checkAmtErr')
+            theForm.querySelector('.en__other__field__error').textContent = ''
+            theForm.querySelector('.en__submit button').disabled = false
+        }
+      }
+    }
+
+    const donationPremiumCalc = (val, e) => {
+      var inputParsed
+      val ? inputParsed = parseInt(val.replace(/,/g, '')) : inputParsed = parseInt(e.target.value)
+      if (monthlyPremiumMin && singlePremiumMin != null ) {
+        var _monthlyParsed = parseInt(monthlyPremiumMin.value);
+        var _singleParsed = parseInt(singlePremiumMin.value);
+        switch (true) {
+          case !monthlyGive.checked && (inputParsed >= _singleParsed):
+            // show premium
+            formPremiumBlock.classList.add('visible')
+            premiumVisibleCheckbox.checked ? '' : premiumVisibleCheckbox.click()
+            // uncheck premium frequency box
+            if (premiumFreqCheckbox) {
+              premiumFreqCheckbox.checked ? premiumFreqCheckbox.click() : ''
+            }
+            break;
+          case monthlyGive.checked && (inputParsed >= _monthlyParsed):
+            // show premium
+            formPremiumBlock.classList.add('visible')
+            premiumVisibleCheckbox.checked ? '' : premiumVisibleCheckbox.click()
+            // check premium frequency box
+            if (premiumFreqCheckbox) {
+              premiumFreqCheckbox.checked ? '' : premiumFreqCheckbox.click()
+            }
+            break;
+          default:
+            formPremiumBlock.classList.remove('visible');
+            break;
+        }
       }
     }
 
@@ -893,8 +983,30 @@
       // Listen for other amount change
       if (otherAmountInput) {
         otherAmountInput.addEventListener('input', handleDonationAmountChange)
+        // add front end validation to 'other' field on focusout
+        otherAmountInput.addEventListener('focusout', validateDonationAmountChangeMin)
+        // handle premium logic if block is present
+        if ((typeof(formPremiumBlock) != 'undefined' && formPremiumBlock != null) && (typeof(singlePremiumMin) != 'undefined' && singlePremiumMin != null)) {
+          otherAmountInput.addEventListener('focusout',function (event) {
+            donationPremiumCalc(null, event)
+          });
+        }
+
+        // clear 'other' field front end validation logic if other amount buttons are click
+        document.addEventListener('click', function(event) {
+          if (event.target.matches('label.en__field__label[for*="transaction_donationAmt"]')) {
+            otherFieldClear()
+            if ((typeof(formPremiumBlock) != 'undefined' && formPremiumBlock != null) && (typeof(singlePremiumMin) != 'undefined' && singlePremiumMin != null)) {
+              premiumClear()
+              if (event.target.previousElementSibling.value) {
+                donationPremiumCalc(event.target.previousElementSibling.value)
+              }
+            }
+          }
+        }, false)
       }
     }
+
 
     resetDonationAmount = () => {
       setTimeout(() => {
@@ -1825,6 +1937,35 @@
         }
       }
 
+      const enSustainerUpsell = () => {
+        setTimeout(() => {
+          var enUpsellLightbox = document.getElementById('en__upsellModal')
+          var enUpsellYesButton = document.getElementById('en__upsellModal__yes')
+
+          if (enUpsellYesButton) {
+            // Fire tracking if EN Upsell yes button is clicked
+            enUpsellYesButton.addEventListener('click', e => {
+              if (typeof utag !== 'undefined') {
+                utag.link({
+                  'event_name': 'lightbox_click',
+                  'lightbox_name': 'sustainer upsell'
+                })
+              }
+            })
+          }
+
+          if (enUpsellLightbox) {
+            // Fire tracking when EN lightbox opens
+            if (typeof utag !== 'undefined') {
+              utag.link({
+                'event_name': 'lightbox_impression',
+                'lightbox_name': 'sustainer upsell'
+              });
+            }
+          }
+        }, 1500)
+      }
+
       if (feeCoverCheckbox) {
         // Calculate extra fee cover amount for data layer
         if (feeCoverCheckbox.checked) {
@@ -1878,6 +2019,13 @@
       // if (trackSubmit) {
       //   trackFormSubmit();
       // }
+
+      // Check for EN lighbox
+      if (window.EngagingNetworks.upsell.length && window.EngagingNetworks.upsell[0].componentId && window.EngagingNetworks.upsell[0].componentId !== 'undefined') {
+        if (formIsValid()) {
+          enSustainerUpsell();
+        }
+      }
 
       // Maybe display upsell modal
       if (hasUpsell && donationAmount >= 5 && donationAmount <= 100 && !monthlyCheckbox.checked) {
@@ -2940,12 +3088,12 @@
 
     /**
     * @showTickets
-    * 
+    *
     * Tickets are hidden by default with CSS
-    * 
+    *
     * If a "&code" parameter is in the URL, tickets named as [ticket name]~[code]
     * pattern will be displayed if the url and ticket code match.
-    * 
+    *
     * If a "&code" parameter is not in the URL, tickets named normally
     * will be displayed
     */
