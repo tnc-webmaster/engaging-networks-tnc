@@ -1,35 +1,42 @@
 $event-max-width: 850px !important;
 $event-gutter: var(--bs-gutter-x, 1.25rem);
+
 %event {
   font-size: 1rem;
   line-height: 1.5;
   margin-left: auto;
   margin-right: auto;
   max-width: $event-max-width;
+
   @include media-breakpoint-up(lg) {
     font-size: 1.125rem;
     line-height: 1.6666;
   }
+
   .hero-full-bleed .en__component--imageblock:after {
     display: none !important;
   }
+
   .en__component--copyblock {
     .en__ticketBlock {
       @include media-breakpoint-down(md) {
         display: none !important;
       }
     }
+
     .en__submit {
       margin-top: 2rem;
       @include media-breakpoint-down(md) {
         display: flex;
         flex-direction: column;
+
         button {
           &[type="reset"] {
             margin-left: auto;
             margin-right: auto;
             order: 1;
           }
+
           &:not([type="reset"]) {
             margin-bottom: 1.25rem;
             order: 0;
@@ -39,11 +46,13 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
       }
     }
   }
+
   h2 {
     @include media-breakpoint-down(lg) {
       font-size: 1.875rem;
     }
   }
+
   .en__component--advrow:last-child {
     @include media-breakpoint-down(lg) {
       display: flex;
@@ -238,6 +247,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
   time {
     @extend .col-md-auto;
   }
+
   a[href^="https://www.google.com/maps"]
   {
     display: block;
@@ -245,6 +255,7 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
     font-weight: inherit;
     line-height: inherit;
     text-transform: inherit;
+
     &:hover {
       address {
         color: $primary;
@@ -252,16 +263,19 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
       }
     }
   }
+
   address {
     font-size: 1rem;
     font-weight: $font-weight-medium;
     line-height: 1.5;
     margin: 0;
     transition: $transition-base;
+
     @include media-breakpoint-down(md) {
       margin-bottom: 1.25rem;
       margin-top: 0.875rem;
     }
+
     &::before {
       content: $icon-location;
       line-height: 1;
@@ -269,14 +283,17 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
       vertical-align: middle;
     }
   }
+
   time {
     font-size: $font-size-sm;
     font-weight: $font-weight-semibold;
     position: relative;
+
     @include media-breakpoint-down(md) {
       margin-bottom: 0.333rem;
       padding-top: 1rem;
     }
+
     &::before {
       background-color: $border-color;
       content: "";
@@ -286,9 +303,21 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
       top: 0;
       transform: translateX(-50%);
       width: calc(100% - var(--bs-gutter-x));
+
       @include media-breakpoint-up(md) {
         display: none;
       }
+    }
+  }
+
+  > time {
+    display: block;
+    font-size: $font-size-lg;
+    margin-bottom: $paragraph-margin-bottom;
+    padding-top: 0;
+
+    &::before {
+      display: none;
     }
   }
 }
@@ -525,6 +554,235 @@ $event-gutter: var(--bs-gutter-x, 1.25rem);
       padding-left: 0;
       padding-right: 0;
     }
+  }
+}
+
+.en__ticketBlock--recurring {
+  margin-bottom: 1rem;
+}
+
+.en__ticketBlock--recurring--pending {
+  margin-bottom: 2.75rem;
+
+  @include media-breakpoint-up(md) {
+    margin-bottom: 1.75rem;
+  }
+
+  .en__occurrenceSummary__change,
+  .en__ticketRecurring__select {
+    background-color: $body-color;
+    border-color: $body-color;
+    color: $white;
+
+    &:focus {
+      border-color: $primary;
+    }
+
+    &::after {
+      background-image: $form-select-indicator-open-white;
+    }
+  }
+}
+
+.en__occurrenceSummary__change,
+.en__ticketRecurring__select {
+  @extend .form-select;
+  align-items: center;
+  background: none;
+  color: $primary;
+  display: flex;
+  height: calc(3.4375rem + 1px);
+  justify-content: center;
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
+  transition: all 0.15s ease-in-out;
+  width: auto;
+
+  &:focus {
+    border-width: 2px;
+  }
+
+  @include media-breakpoint-down(md) {
+    font-size: $font-size-sm;
+    min-width: 100%;
+  }
+
+  &::after {
+    content: "";
+    background-image: $form-select-indicator;
+    background-size: 12px 7px;
+    display: inline-block;
+    height: 7px;
+    margin-left: 0.75rem;
+    width: 12px;
+  }
+}
+
+.en__occurrenceSummary__change {
+  margin-top: 1.5rem;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  @include media-breakpoint-up(md) {
+    margin-top: 1.25rem;
+  }
+}
+
+.en__ticketRecurring__select {
+  margin-top: 2rem;
+}
+
+.en__eventOccurrences__title {
+  display: none;
+}
+
+.en__eventOccurrences--selecting {
+  margin-bottom: -0.5rem;
+  margin-top: 1.75rem;
+  padding: 0;
+
+  @include media-breakpoint-up(md) {
+    margin-bottom: 1rem;
+    margin-top: -0.5rem;
+  }
+}
+
+.en__eventOccurrences__header {
+  @include media-breakpoint-down(md) {
+    flex-direction: column;
+  }
+}
+
+.en__eventOccurrences__columnHead {
+  @include media-breakpoint-down(md) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.en__eventOccurrences__list {
+  margin-top: 0.75rem;
+
+  @include media-breakpoint-up(md) {
+    margin-top: 0.25rem;
+  }
+}
+
+.en__eventOccurrencesDateSelector__label {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 16'><path d='M16.273 5.193h-14.645v-1.79c0.009-0.297 0.251-0.534 0.549-0.534 0.005 0 0.010 0 0.016 0l-0.001-0h2.651v0.329c0.023 0.432 0.378 0.774 0.814 0.774s0.791-0.342 0.814-0.772l0-0.002v-0.329h4.821v0.329c0.023 0.432 0.378 0.774 0.814 0.774s0.791-0.342 0.814-0.772l0-0.002v-0.329h2.79c0.004-0 0.010-0 0.015-0 0.298 0 0.541 0.237 0.549 0.533l0 0.001zM16.273 13.927c-0.010 0.297-0.254 0.534-0.553 0.534-0.004 0-0.008-0-0.013-0l0.001 0h-13.516c-0.004 0-0.008 0-0.012 0-0.299 0-0.542-0.237-0.552-0.533l-0-0.001v-7.194h14.645zM12.918 1.334v-0.564c-0.023-0.432-0.378-0.774-0.814-0.774s-0.791 0.342-0.814 0.772l-0 0.002v0.564h-4.821v-0.564c-0.023-0.432-0.378-0.774-0.814-0.774s-0.791 0.342-0.814 0.772l-0 0.002v0.564h-2.649c-0.017-0-0.037-0.001-0.057-0.001-1.158 0-2.101 0.921-2.135 2.071l-0 0.003v10.519c0.037 1.153 0.98 2.074 2.139 2.074 0.019 0 0.038-0 0.056-0.001l-0.003 0h13.516c0.016 0 0.035 0.001 0.054 0.001 1.159 0 2.102-0.921 2.139-2.071l0-0.003v-10.519c-0.035-1.153-0.978-2.074-2.136-2.074-0.020 0-0.040 0-0.060 0.001l0.003-0z'></path></svg>");
+  background-position-y: center;
+  background-size: 1rem;
+  color: $primary;
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  line-height: inherit;
+  margin-right: 0;
+  padding-left: 1.75rem;
+  text-transform: uppercase;
+}
+
+.en__eventOccurrencesDateSelector__input {
+  background-color: transparent;
+  border: 0;
+  color: transparent;
+  position: absolute;
+
+  &:focus {
+    border: 0;
+    outline: 0;
+  }
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    width: 100%;
+  }
+}
+
+.en__eventOccurrencesDateSelector__clear {
+  margin-left: 1.25rem;
+}
+
+.en__eventOccurrence {
+  border: 1px solid $border-color;
+  margin-bottom: 0.667rem;
+  padding: 0.75rem 1.25rem;
+
+  @include media-breakpoint-up(md) {
+    padding: 0.667rem 0.75rem 0.667rem 1.75rem;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.en__eventOccurrence__description {
+  font-size: $font-size-lg;
+  font-weight: 500;
+  color: inherit;
+}
+
+.en__eventOccurrence__select {
+  background-color: var(--bs-primary);
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  margin-left: 1.5rem;
+  padding: 0.5rem 0.75rem;
+
+  @media (min-width: 375px) {
+    white-space: nowrap;
+  }
+
+  @include media-breakpoint-up(md) {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  > label {
+    font-weight: $font-weight-bold;
+    padding: 0;
+  }
+}
+
+.en__occurrenceSummary__selected {
+  margin-top: 1.25rem;
+  min-width: 100%;
+
+  @include media-breakpoint-up(md) {
+    margin-top: 2rem;
+  }
+}
+
+.en__occurrenceSummary {
+  padding: 0;
+
+  @include media-breakpoint-down(md) {
+    min-width: 100%;
+  }
+}
+
+.en__occurrenceSummary__description {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+
+  @include media-breakpoint-down(md) {
+    text-align: center;
+  }
+}
+
+.en__eventOccurrences__empty {
+  background-color: #f6f6f6;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-lg;
+  font-family: $font-family-serif;
+  font-size: $h4-font-size;
+  padding: 2rem 1rem;
+  transition: $transition-base;
+
+  @include media-breakpoint-up(md) {
+    font-size: $h3-font-size;
+    padding-bottom: 4rem;
+    padding-top: 4rem;
   }
 }
 
@@ -839,3 +1097,4 @@ body:not(.page--confirmation) .en__orderSummary__data--totalAmount {
 .waitlist-confirmation:not(.d-none--web) + .event-overview-details--text {
   margin-top: 4rem;
 }
+
