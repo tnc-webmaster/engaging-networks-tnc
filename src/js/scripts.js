@@ -576,8 +576,9 @@
       })
     }
     // Add mask and inputmode attribute for currency fields. Also prevent autofill
-    // getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
-    getAll('[name*="Amt"]:not([name*="Amt1"]):not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt1"]):not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
+    //new - updated in release 5
+     getAll('[name*="Amt"]:not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
+    // getAll('[name*="Amt"]:not([name*="Amt1"]):not([name*="Amt2"]):not([name*="Amt3"]):not([name*="Amt4"]), [name*="amt"]:not([name*="amt1"]):not([name*="amt2"]):not([name*="amt3"]):not([name*="amt4"]), input[type="text"].en__additional__input').forEach(el => {
       setAttributes(el, {
         'autocomplete': 'photo',
         'inputmode': 'decimal',
@@ -852,7 +853,7 @@
   const donationForm = () => {
     const appealCode = theForm.querySelector('.en__field--appealCode')
     const initAppealCode = document.getElementById('en__field_supporter_appealCode')
-    const initAppealCodeVal = '';
+    let initAppealCodeVal = ''
     if (initAppealCode) {initAppealCodeVal = initAppealCode.value}
     const bequestIframe = theForm.querySelector('.iframe--bequest iframe')
     const bequestModal = theForm.querySelector('.modal--bequest')
