@@ -1,16 +1,17 @@
 .accordion-header {
-  @extend .h4;    
+  @extend .h4;
   font-family: $font-family-sans-serif;
   font-weight: $font-weight-semibold;
   margin-bottom: 0 !important;
 
   @include media-breakpoint-down(lg) {
-    font-size: 1.25rem;  
+    font-size: 1.25rem;
   }
 }
 
 .accordion-item {
   border-bottom: $border-default;
+  color: #1a1a1a !important;
 }
 
 .accordion-button {
@@ -19,26 +20,26 @@
 
   &.collapsed:focus {
     &:after {
-      outline: 2px solid $primary;      
-    }        
+      outline: 2px solid $primary;
+    }
   }
 }
 
 .accordion-body {
-  @extend %serif-normal;  
-  margin-bottom: 1.25rem;  
+  @extend %serif-normal;
+  margin-bottom: 1.25rem;
   padding-top: .625rem;
-  
+
   @include media-breakpoint-down(lg) {
     margin-top: -1rem;
   }
-  
+
   @include media-breakpoint-up(lg) {
-    margin-bottom: 2rem;        
+    margin-bottom: 2rem;
   }
-  
+
   ol, ul {
-    padding-left: calc(1rem + 2px);    
+    padding-left: calc(1rem + 2px);
   }
 
   li {
