@@ -894,8 +894,14 @@
 
     const premiumClear = () => {
       formPremiumBlock.classList.remove('visible');
-      premiumVisibleCheckbox.checked ? premiumVisibleCheckbox.click() : ''
-      premiumWaiver.checked ? premiumWaiver.click() : ''
+      if (premiumVisibleCheckbox && premiumVisibleCheckbox.checked) {
+        premiumVisibleCheckbox.click()
+      }
+      // premiumVisibleCheckbox.checked ? premiumVisibleCheckbox.click() : ''
+      if (premiumWaiver && premiumWaiver.checked) {
+        premiumWaiver.click()
+      }
+      // premiumWaiver.checked ? premiumWaiver.click() : ''
       document.getElementById('en__field_supporter_appealCode').value = initAppealCodeVal
     }
 
@@ -936,7 +942,12 @@
 
     const donationPremiumCalc = (val, e) => {
       var inputParsed
-      val ? inputParsed = parseInt(val.replace(/,/g, '')) : inputParsed = parseInt(e.target.value)
+      if (val) {
+        inputParsed = parseInt(val.replace(/,/g, ''))
+      } else {
+        inputParsed = parseInt(e.target.value)
+      }
+      // val ? inputParsed = parseInt(val.replace(/,/g, '')) : inputParsed = parseInt(e.target.value)
       if (monthlyPremiumMin && singlePremiumMin != null ) {
         var _monthlyParsed = parseInt(monthlyPremiumMin.value);
         var _singleParsed = parseInt(singlePremiumMin.value);
@@ -944,19 +955,25 @@
           case !monthlyGive.checked && (inputParsed >= _singleParsed):
             // show premium
             formPremiumBlock.classList.add('visible')
-            premiumVisibleCheckbox.checked ? '' : premiumVisibleCheckbox.click()
+            if (premiumVisibleCheckbox && !premiumVisibleCheckbox.checked) {
+              premiumVisibleCheckbox.click()
+            }
+            // premiumVisibleCheckbox.checked ? '' : premiumVisibleCheckbox.click()
             // uncheck premium frequency box
-            if (premiumFreqCheckbox) {
-              premiumFreqCheckbox.checked ? premiumFreqCheckbox.click() : ''
+            if (premiumFreqCheckbox && premiumFreqCheckbox.checked) {
+              premiumFreqCheckbox.click()
             }
             break;
           case monthlyGive.checked && (inputParsed >= _monthlyParsed):
             // show premium
             formPremiumBlock.classList.add('visible')
-            premiumVisibleCheckbox.checked ? '' : premiumVisibleCheckbox.click()
+            if (premiumVisibleCheckbox && !premiumVisibleCheckbox.checked) {
+              premiumVisibleCheckbox.click()
+            }
+            // premiumVisibleCheckbox.checked ? '' : premiumVisibleCheckbox.click()
             // check premium frequency box
-            if (premiumFreqCheckbox) {
-              premiumFreqCheckbox.checked ? '' : premiumFreqCheckbox.click()
+            if (premiumFreqCheckbox && !premiumFreqCheckbox.checked) {
+              premiumFreqCheckbox.click()
             }
             break;
           default:
