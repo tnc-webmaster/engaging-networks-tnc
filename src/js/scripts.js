@@ -1885,6 +1885,17 @@
       }
     }, true)
 
+    //Mobile Wallets donation data creation
+    const dataListener = addEventListener('blur', function () {
+        const iframeContainer = document.getElementById('en__digitalWallet')
+        const iframe = iframeContainer.getElementsByTagName('iframe')
+
+        if (document.activeElement === iframe[0]) {
+          window.enOnValidate()
+        }
+        removeEventListener('blur', dataListener);
+    })
+
     window.enOnError = () => {
       setTimeout(() => {
         // Scroll to first invalid field
