@@ -1874,6 +1874,7 @@
     const otherAmountInput = theForm.querySelector(otherAmountInputSelector)
     let otherAmountOriginal = null
     let isInvalid = false
+    const mobileWalletContainer = document.getElementById('en__digitalWallet')
 
     // Don't submit form on ENTER if focused on an input
     window.addEventListener('keydown', e => {
@@ -1886,15 +1887,16 @@
     }, true)
 
     //Mobile Wallets donation data creation
-    const dataListener = addEventListener('blur', function () {
-        const iframeContainer = document.getElementById('en__digitalWallet')
-        const iframe = iframeContainer.getElementsByTagName('iframe')
+    if (mobileWalletContainer) {
+      const dataListener = addEventListener('blur', function () {
+        const iframe = mobileWalletContainer.getElementsByTagName('iframe')
 
         if (document.activeElement === iframe[0]) {
           window.enOnValidate()
         }
         removeEventListener('blur', dataListener);
-    })
+      })
+    }
 
     window.enOnError = () => {
       setTimeout(() => {
