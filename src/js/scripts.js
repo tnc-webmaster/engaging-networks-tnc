@@ -2654,7 +2654,8 @@
    * Returns a unique ID
    */
   const generateId = () => {
-    return Math.round(new Date().getTime() + (Math.random() * 100))
+    // return Math.round(new Date().getTime() + (Math.random() * 100))
+    return self.crypto.randomUUID()
   }
 
   /**
