@@ -902,7 +902,7 @@
         premiumWaiver.click()
       }
       // premiumWaiver.checked ? premiumWaiver.click() : ''
-      document.getElementById('en__field_supporter_appealCode').value = initAppealCodeVal
+      initAppealCode.value = initAppealCodeVal
     }
 
     const handleDonationAmountChange = (e) => {
@@ -977,7 +977,8 @@
             }
             break;
           default:
-            formPremiumBlock.classList.remove('visible');
+            formPremiumBlock.classList.remove('visible')
+            initAppealCode.value = initAppealCodeVal
             break;
         }
       }
