@@ -1036,6 +1036,113 @@
       }, 500)
     }
 
+    /**   * Gets a cookie by name   *   * @param {string} name The name of the cookie   */
+    const getCookie = (name) => {
+      function escape(s) {
+          return s.replace(/([.*+?\^$(){}|\[\]\/\\])/g, '\\$1')
+      }
+      var match = document.cookie.match(RegExp('(?:^|;\\s*)' + escape(name) + '=([^;]*)'))
+
+      return match ? match[1] : null
+    }
+
+    const shouldShowBequestModal = () => {
+      /*
+      * Opens bequest lightbox if conditions are met
+      *
+      * Conditions for opening lightbox:
+      * US AND
+      *  (
+      *    (Have visited the Gift Planning site section OR Gift Planning Email)
+      * *
+      *    OR Have made 3 or more gifts
+      *    OR Has the BBCRM attribute “Planned Giving Tag, Include in PG Solicitations”
+      *    OR Has the BBCRM attribute “Planned Giving Tag, Planned Gift Prospect”
+      *  )
+      *  AND >= $100
+      *  AND NOT a Legacy Club constituent
+      *  AND The two Cookie bequest_lb_select time based criteria
+      *  AND Has the BBCRM communications preference “Do Not Send Solicitations – Planned Giving”
+      */
+
+      // Uncomment to see the lightbox
+      // return true
+
+      const userProfile = typeof bequestUserProfile !== 'undefined' ? bequestUserProfile : null // bequestUserProfile is defined in EN code block
+
+      const totalNumberOfGifts = function() {
+        if (userProfile.hasOwnProperty('totalNumberOfGifts')) {
+          if (userProfile.totalNumberOfGifts !== '' && parseInt(userProfile.totalNumberOfGifts) !== NaN) {
+            return parseInt(userProfile.totalNumberOfGifts)
+          }
+          return 0
+        }
+      }
+
+      const includeInPlannedGivingSolicitations = function() {
+        if (userProfile.hasOwnProperty('includeInPlannedGivingSolicitations')) {
+          return userProfile.includeInPlannedGivingSolicitations === 'Y'
+        }
+        return false
+      }
+
+      const isPlannedGiftProspect = function() {
+        if (userProfile.hasOwnProperty('plannedGiftProspect')) {
+          return userProfile.plannedGiftProspect === 'Y'
+        }
+        return false
+      }
+
+      const inLegacyClub = function() {
+        if (userProfile.hasOwnProperty('crmConstituency')) {
+          return userProfile.crmConstituency.indexOf('Legacy Club') > -1
+        }
+        return false
+      }
+
+      const doNotSendSolicitations = function() {
+        if (userProfile.hasOwnProperty('doNotSendSolicitations')) {
+          return userProfile.doNotSendSolicitations === 'Y'
+        }
+        return false
+      }
+
+
+      // Opens modal if modal--always-open class is found
+      if (bequestModal && bequestModal.classList.contains('modal--always-open')) {
+        console.log(`bequestModal class: ${bequestModal.classList}`)
+        return true
+      }
+
+      // Checks other conditions for opening modal
+      if (userProfile && pageJson.country === 'US' && !doNotSendSolicitations() && !inLegacyClub() && pageJson.amount >= 100 && !getCookie('bequest_lb_select') && !getCookie('gp_form_submitted')) {
+        console.log(`pageJson.country ${pageJson.country}`)
+        console.log(`getCookie('per_gp'): ${getCookie('per_gp')}`)
+        console.log(`getCookie('per_email'): ${getCookie('per_email')}`)
+
+        console.log(`totalNumberOfGifts() >= 3: ${totalNumberOfGifts() >= 3}`)
+        console.log(`includeInPlannedGivingSolicitations(): ${includeInPlannedGivingSolicitations()}`)
+        console.log(`isPlannedGiftProspect(): ${isPlannedGiftProspect()}`)
+
+        console.log(`pageJson.amount ${pageJson.amount}`)
+        console.log(`inLegacyClub(): ${inLegacyClub()}`)
+        console.log(`getCookie('bequest_lb_select'): ${getCookie('bequest_lb_select')}`)
+        console.log(`doNotSendSolicitations(): ${doNotSendSolicitations()}`)
+        console.log(`getCookie('gp_form_submitted'): ${getCookie('gp_form_submitted')}`)
+
+        console.log('shouldShowBequestModal: passed first condition')
+
+        if (getCookie('per_gp') === 'true' || getCookie('gp_email') === 'true' || totalNumberOfGifts() >= 3 || includeInPlannedGivingSolicitations() || isPlannedGiftProspect()) {
+          console.log('shouldShowBequestModal: passed second condition')
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
+    }
+
     if (theForm.action.indexOf('donate') > -1 && pageJson.pageNumber === 1) {
       if (donationAmt) {
         initDonationAmount()
@@ -1089,15 +1196,19 @@
         backdrop: 'static',
         keyboard: false
       })
+
+      bequestModal.addEventListener('shown.bs.modal', () => {
+        resizeIframe(bequestIframe)
+      })
+
       // Open modal
       window.addEventListener('iframeReady', e => {
-        modal.show()
-        bequestIframe.contentWindow.enOnError = function() {
-          // Fit iframe to parent
-          resizeIframe(bequestIframe)
+        if (shouldShowBequestModal()) {
+          modal.show()
+          bequestIframe.contentWindow.enOnError = function() {
+            resizeIframe(bequestIframe)
+          }
         }
-        // Fit iframe to parent
-        resizeIframe(bequestIframe)
       })
 
       // Fire tracking
