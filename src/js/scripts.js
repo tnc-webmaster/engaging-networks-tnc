@@ -1036,6 +1036,72 @@
       }, 500)
     }
 
+    // JS Dollar Sign Fix - START
+    // Amount Label rewrite func
+    const formLabelAdd = (labels,s,t) => {
+      /* jshint ignore:start */
+      labels != null ? labels = labels : labels = document.querySelectorAll(".en__field--donationAmt .en__field__element .en__field__item label")
+      /* jshint ignore:end */
+      if (labels.length) {
+        labels.forEach(label => {
+          var labelForAttr = label.getAttribute('for');
+          if (labelForAttr.match('^transaction_donationAmt[0-5]')) {
+            if (s != null) {
+              label.prepend(s);
+            }
+            if (t != null) {
+              label.append(t);
+            }
+          }
+        })
+      }
+    }
+
+    const nsgInit = () => {
+        // init label rewrite
+        formLabelAdd(null, '$', null);
+        // persist js label rewrites when recurring/monthly is toggled
+        monthlyGive.addEventListener('click', e => {
+          if (e.target.checked) {
+            setTimeout(function(){
+              // because of how EN updates the labels, need to catch labels at moment of click in order to append/prepend strings
+              var amtLabels = document.querySelectorAll(".en__field--donationAmt .en__field__element .en__field__item label")
+              formLabelAdd(amtLabels,null,'/MONTH')
+            },100)
+          } else {
+            setTimeout(function(){
+              // because of how EN updates the labels, need to catch labels at moment of click in order to append/prepend strings
+              var amtLabels = document.querySelectorAll(".en__field--donationAmt .en__field__element .en__field__item label")
+              formLabelAdd(amtLabels,'$',null)
+            },100)
+
+          }
+        })
+    }
+
+
+    // if on 2.0 form w/ nsg param/if not on 2.0 form
+
+    if (document.getElementById('_ff-container') && window.location.href.indexOf("ea.campaigner.email") > -1 && document.querySelector('.en__field--donationAmt')) {
+        //init on page load when nsg param is present
+        nsgInit()
+
+      } else if (!document.getElementById('_ff-container') && document.querySelector('.en__field--donationAmt')) {
+       formLabelAdd(null, '$', null);
+       // 1.0 form - repeat js dollar sign rewrite when monthly is toggled
+       monthlyGive.addEventListener('click', e => {
+         if (!e.target.checked) {
+           setTimeout(function(){
+             var amtLabels = document.querySelectorAll(".en__field--donationAmt .en__field__element .en__field__item label")
+             formLabelAdd(amtLabels,'$',null)
+           },100)
+         }
+       })
+     }
+     //
+     // JS Dollar Sign Fix - END
+     //
+
     /**   * Gets a cookie by name   *   * @param {string} name The name of the cookie   */
     const getCookie = (name) => {
       function escape(s) {
@@ -1072,9 +1138,11 @@
 
       const totalNumberOfGifts = function() {
         if (userProfile.hasOwnProperty('totalNumberOfGifts')) {
+          /* jshint ignore:start */
           if (userProfile.totalNumberOfGifts !== '' && parseInt(userProfile.totalNumberOfGifts) !== NaN) {
             return parseInt(userProfile.totalNumberOfGifts)
           }
+          /* jshint ignore:end */
           return 0
         }
       }
@@ -1110,30 +1178,30 @@
 
       // Opens modal if modal--always-open class is found
       if (bequestModal && bequestModal.classList.contains('modal--always-open')) {
-        console.log(`bequestModal class: ${bequestModal.classList}`)
+        // console.log(`bequestModal class: ${bequestModal.classList}`)
         return true
       }
 
       // Checks other conditions for opening modal
       if (userProfile && pageJson.country === 'US' && !doNotSendSolicitations() && !inLegacyClub() && pageJson.amount >= 100 && !getCookie('bequest_lb_select') && !getCookie('gp_form_submitted')) {
-        console.log(`pageJson.country ${pageJson.country}`)
-        console.log(`getCookie('per_gp'): ${getCookie('per_gp')}`)
-        console.log(`getCookie('per_email'): ${getCookie('per_email')}`)
-
-        console.log(`totalNumberOfGifts() >= 3: ${totalNumberOfGifts() >= 3}`)
-        console.log(`includeInPlannedGivingSolicitations(): ${includeInPlannedGivingSolicitations()}`)
-        console.log(`isPlannedGiftProspect(): ${isPlannedGiftProspect()}`)
-
-        console.log(`pageJson.amount ${pageJson.amount}`)
-        console.log(`inLegacyClub(): ${inLegacyClub()}`)
-        console.log(`getCookie('bequest_lb_select'): ${getCookie('bequest_lb_select')}`)
-        console.log(`doNotSendSolicitations(): ${doNotSendSolicitations()}`)
-        console.log(`getCookie('gp_form_submitted'): ${getCookie('gp_form_submitted')}`)
-
-        console.log('shouldShowBequestModal: passed first condition')
+        // console.log(`pageJson.country ${pageJson.country}`)
+        // console.log(`getCookie('per_gp'): ${getCookie('per_gp')}`)
+        // console.log(`getCookie('per_email'): ${getCookie('per_email')}`)
+        //
+        // console.log(`totalNumberOfGifts() >= 3: ${totalNumberOfGifts() >= 3}`)
+        // console.log(`includeInPlannedGivingSolicitations(): ${includeInPlannedGivingSolicitations()}`)
+        // console.log(`isPlannedGiftProspect(): ${isPlannedGiftProspect()}`)
+        //
+        // console.log(`pageJson.amount ${pageJson.amount}`)
+        // console.log(`inLegacyClub(): ${inLegacyClub()}`)
+        // console.log(`getCookie('bequest_lb_select'): ${getCookie('bequest_lb_select')}`)
+        // console.log(`doNotSendSolicitations(): ${doNotSendSolicitations()}`)
+        // console.log(`getCookie('gp_form_submitted'): ${getCookie('gp_form_submitted')}`)
+        //
+        // console.log('shouldShowBequestModal: passed first condition')
 
         if (getCookie('per_gp') === 'true' || getCookie('gp_email') === 'true' || totalNumberOfGifts() >= 3 || includeInPlannedGivingSolicitations() || isPlannedGiftProspect()) {
-          console.log('shouldShowBequestModal: passed second condition')
+          // console.log('shouldShowBequestModal: passed second condition')
           return true
         } else {
           return false
