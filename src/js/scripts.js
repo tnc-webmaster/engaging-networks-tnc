@@ -1086,8 +1086,8 @@
         //init on page load when nsg param is present
         nsgInit()
 
-      } else if (!document.getElementById('_ff-container') && document.querySelector('.en__field--donationAmt')) {
-       formLabelAdd(null, '$', null);
+      } else if (!document.getElementById('_ff-container') && window.location.href.indexOf("ea.campaigner.email") > -1 && document.querySelector('.en__field--donationAmt')) {
+       setTimeout(formLabelAdd(null, '$', null),500);
        // 1.0 form - repeat js dollar sign rewrite when monthly is toggled
        monthlyGive.addEventListener('click', e => {
          if (!e.target.checked) {
