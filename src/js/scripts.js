@@ -940,42 +940,66 @@
       }
     }
 
-    const donationPremiumCalc = (val, e) => {
+    const donationPremiumCalc = (val,e) => {
       var inputParsed
       if (val) {
         inputParsed = parseInt(val.replace(/,/g, ''))
       } else {
         inputParsed = parseInt(e.target.value)
       }
-      // val ? inputParsed = parseInt(val.replace(/,/g, '')) : inputParsed = parseInt(e.target.value)
+      // monthly premium mins set in EN form
       if (monthlyPremiumMin && singlePremiumMin != null ) {
         var _monthlyParsed = parseInt(monthlyPremiumMin.value);
         var _singleParsed = parseInt(singlePremiumMin.value);
         switch (true) {
-          case !monthlyGive.checked && (inputParsed >= _singleParsed):
-            // show premium
-            formPremiumBlock.classList.add('visible')
-            if (premiumVisibleCheckbox && !premiumVisibleCheckbox.checked) {
-              premiumVisibleCheckbox.click()
-            }
-            // premiumVisibleCheckbox.checked ? '' : premiumVisibleCheckbox.click()
-            // uncheck premium frequency box
-            if (premiumFreqCheckbox && premiumFreqCheckbox.checked) {
+          // IF one-time premium gift
+          case !monthlyGive.checked:
+            // default uncheck 'Monthly Premium' box
+            if (premiumFreqCheckbox.checked) {
               premiumFreqCheckbox.click()
             }
-            break;
-          case monthlyGive.checked && (inputParsed >= _monthlyParsed):
-            // show premium
-            formPremiumBlock.classList.add('visible')
-            if (premiumVisibleCheckbox && !premiumVisibleCheckbox.checked) {
-              premiumVisibleCheckbox.click()
+            // default uncheck 'Premium Visible' box
+            if (premiumVisibleCheckbox.checked) {
+              premiumVisibleCheckbox.click();
             }
-            // premiumVisibleCheckbox.checked ? '' : premiumVisibleCheckbox.click()
-            // check premium frequency box
-            if (premiumFreqCheckbox && !premiumFreqCheckbox.checked) {
+            if (inputParsed >= _singleParsed) {
+              // show premium content if qualifying
+              formPremiumBlock.classList.add('visible')
+              if (!premiumVisibleCheckbox.checked) {
+                premiumVisibleCheckbox.click()
+              }
+            } else {
+              formPremiumBlock.classList.remove('visible');
+              initAppealCode.value = initAppealCodeVal;
+            }
+          break;
+          // IF monthly premium gift
+          case monthlyGive.checked:
+            // default uncheck 'Monthly Premium' box
+            if (premiumFreqCheckbox.checked) {
               premiumFreqCheckbox.click()
             }
-            break;
+            if (inputParsed >= _monthlyParsed) {
+              // show premium content if qualifying
+              formPremiumBlock.classList.add('visible')
+              if (!premiumVisibleCheckbox.checked) {
+                premiumVisibleCheckbox.click()
+              }
+              // check 'Monthly Premium' box if qualifying
+              if (!premiumFreqCheckbox.checked) {
+                premiumFreqCheckbox.click()
+              }
+              // if monthly gift more than monthly gift min BUT less than single gift min
+              if (inputParsed >= _singleParsed) {
+                if (premiumFreqCheckbox.checked) {
+                premiumFreqCheckbox.click();
+              }
+            }
+          } else {
+              formPremiumBlock.classList.remove('visible');
+              initAppealCode.value = initAppealCodeVal;
+            }
+          break;
           default:
             formPremiumBlock.classList.remove('visible')
             initAppealCode.value = initAppealCodeVal
@@ -1009,7 +1033,7 @@
         // handle premium logic if block is present
         if ((typeof(formPremiumBlock) != 'undefined' && formPremiumBlock != null) && (typeof(singlePremiumMin) != 'undefined' && singlePremiumMin != null)) {
           otherAmountInput.addEventListener('focusout',function (event) {
-            donationPremiumCalc(null, event)
+            donationPremiumCalc(null,event)
           });
         }
 
