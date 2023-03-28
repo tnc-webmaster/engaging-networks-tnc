@@ -117,13 +117,17 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
 
 .en__field__label {
   font-size: 1rem;
+  font-family: $font-family-sans-serif;
   font-weight: $font-weight-medium;
   line-height: 1.375;
-  &:not([for]) {
-    display: none;
-  }
   &[for] {
     cursor: pointer;
+  }
+}
+
+label.en__field__label {
+  &:not([for]) {
+    display: none;
   }
 }
 
@@ -233,7 +237,7 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
   }
 }
 
-.en__field--radio:not(.en__field--donationAmt):not([class*="en__field--payment-method"]) {
+.en__field--radio:not(.en__field--donationAmt):not([class*="en__field--payment-method"]):not([class*="en__field--trbopts"]):not([class*="en__field--select-notification-option"]) {
   .en__field__item {
     @extend .form-check;
     &:last-child {
@@ -342,6 +346,7 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
   }
 }
 
+.en__field--trbopts,
 .en__field--payment-method-2-button-,
 .en__field--payment-method-cc-and-ach- {
   .en__field__element--radio {
@@ -504,4 +509,3 @@ input[type="date"]:not([name="ecard.schedule"])[value=""]::-webkit-datetime-edit
 .en__field--NOT_TAGGED_5 {
   display: none;
 }
-
