@@ -348,6 +348,26 @@
   display: none;
 }
 
+.collapse.do-not-notify-collapse:not(.show),.collapse.ecard-collapse:not(.show),.collapse.one-time-collapse:not(.show),.collapse.recurrence-collapse:not(.show),.collapse.tribute-collapse:not(.show) {
+display: none!important;
+}
+
+.honor .d-block-honor {
+display: block!important;
+}
+
+.honor .d-inline-honor {
+display: inline!important;
+}
+
+.memory .d-block-memory {
+display: block!important;
+}
+
+.memory .d-inline-memory {
+display: inline!important;
+}
+
 .ecard {
   .d-block-ecard {
     display: block !important;
