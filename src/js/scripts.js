@@ -940,6 +940,10 @@
       }
     }
 
+    // messy!
+    // TL;DR - value manipulation and click triggers in donationPremiumCalc function are done to
+    // align with specific source code conditions set up the EN code block for the premiums based on the dollar amount
+
     const donationPremiumCalc = (val,e) => {
       var inputParsed
       if (val) {
@@ -3710,13 +3714,13 @@
       }
 
       // Collapse elements that are controlled by the Monthly recurring gift button
-      document.querySelector('.giveBlock.mnthly label')?.addEventListener('click', e => {
+      document.querySelector('.giveBlock.mnthly')?.addEventListener('click', e => {
         hideCollapsibles('.one-time-collapse')
         showCollapsibles('.recurrence-collapse')
       })
 
       // Collapse elements that are controlled by the One-time gift button
-      document.querySelector('.giveBlock.oneTime label')?.addEventListener('click', e => {
+      document.querySelector('.giveBlock.oneTime')?.addEventListener('click', e => {
         hideCollapsibles('.recurrence-collapse')
         showCollapsibles('.one-time-collapse')
       })

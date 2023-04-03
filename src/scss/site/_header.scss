@@ -14,9 +14,10 @@
 .header {
   border-bottom: $hr;
   padding: 1.5% 1.25rem;
-  margin-bottom: 50px;
+  margin-bottom: 25px;
   @include media-breakpoint-up(md) {
     padding: 1.25rem;
+    margin-bottom: 50px;
   }
   img {
     height: auto;
