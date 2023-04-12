@@ -195,10 +195,6 @@ body._ff .header{
 			label {
 				cursor: pointer;
 				position: relative;
-				top: 50%;
-				-webkit-transform: translateY(-50%);
-				-ms-transform: translateY(-50%);
-				transform: translateY(-50%);
 			}
 		}
 		.giveBlock._active {
@@ -278,6 +274,9 @@ body._ff .header{
 			}
 			h1 {
 				font-size: 30px;
+			}
+			p {
+				font-weight: 500;
 			}
 		}
 	}
@@ -755,6 +754,7 @@ body._ff .header{
 			h4 {
 				font-size: 40px;
 				text-align: center;
+				font-weight: 700;
 			}
 		}
 		.en__field--feeCover {
@@ -820,6 +820,7 @@ body._ff .header{
 				transform: translateY(-50%);
 				-webkit-transform: translateY(-50%);
 				-ms-transform: translateY(-50%);
+				padding: 40px 0;
 				h1 {
 					font-size: 40px;
 				}
@@ -832,6 +833,7 @@ body._ff .header{
 			}
 			img {
 				max-height: 300px;
+				min-height: 100%;
 			}
 			img._big {
 				max-height: none;
@@ -877,7 +879,9 @@ body._ff .header{
 	#_ff-container {
 		.hero-lft {
 			.heroCopy {
-				margin-left: 142px;
+				// margin-left: 142px;
+				margin: 0 auto;
+				max-width: 700px;
 			}
 		}
 	}
