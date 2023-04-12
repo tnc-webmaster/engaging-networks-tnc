@@ -689,7 +689,7 @@
       const hasPaymentMethod = theForm.querySelector(paymentMethodRadioSelector)
       let selectedPaymentMethod = null
 
-      if (hasPaymentMethod) {
+      if (hasPaymentMethod && hasPaymentMethod.querySelector('.en__field__input--radio')) {
         selectedPaymentMethod = hasPaymentMethod.querySelector('.en__field__input--radio:checked').value
         if (selectedPaymentMethod === 'CC') {
           updatePaymentType(cleave.properties.creditCardType)
