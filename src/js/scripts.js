@@ -3235,13 +3235,13 @@
     memberCare()
   })
 
-  window.addEventListener('load', e => {
+  window.addEventListener('DOMContentLoaded', e => {
     let checkThermometer = setInterval(function() {
       if (theForm.querySelector('.enWidget--progressBar')) {
         clearInterval(checkThermometer)
         thermometers()
       }
-    }, 100)
+    }, 250)
   })
 
   const eventFormNew = () => {
