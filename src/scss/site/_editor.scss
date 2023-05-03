@@ -11,4 +11,8 @@
   .fade:not(.show) {
     opacity: 1;
   }
+
+  .collapse:not(.show) {
+    display: block !important;
+  }
 }

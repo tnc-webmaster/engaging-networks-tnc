@@ -3241,7 +3241,7 @@
         clearInterval(checkThermometer)
         thermometers()
       }
-    }, 250)
+    }, 500)
   })
 
   const eventFormNew = () => {
