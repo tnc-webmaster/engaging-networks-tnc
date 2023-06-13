@@ -4,19 +4,19 @@ body#en__pagebuilder {
   }
 }
 
-.collapse:not(.accordion-collapse) {
+.collapse:not(.accordion-collapse):not(.recurrence-collapse):not(.one-time-collapse):not(.tribute-collapse):not(.ecard-collapse):not(.do-not-notify-collapse) {
   @include media-breakpoint-down(lg) {
     padding-bottom: 2rem;
-    position: relative;    
+    position: relative;
   }
 
   &:not(.show) {
     display: block;
-    
+
     @include media-breakpoint-down(lg) {
       height: 40vw;
       overflow: hidden;
-      
+
       &::after {
         background: linear-gradient(180deg, rgba(255,255,255,0) 0%, $white 66.6666%, $white 100%);
         bottom: 0;
@@ -25,8 +25,17 @@ body#en__pagebuilder {
         height: 20%;
         position: absolute;
         width: 100%;
-      }      
+      }
     }
   }
 }
 
+.collapse.recurrence-collapse,
+.collapse.one-time-collapse,
+.collapse.tribute-collapse,
+.collapse.ecard-collapse,
+.collapse.do-not-notify-collapse {
+  &:not(.show) {
+    display: none !important;
+  }
+}

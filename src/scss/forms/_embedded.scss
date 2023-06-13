@@ -1,0 +1,33 @@
+.embedded {
+  .form {
+    max-width: 53.125rem;
+
+    .en__component--row.en__component--advrow {
+      > * {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    .en__component--formblock {
+      margin-top: 1.75rem;
+    }
+
+    @include media-breakpoint-up(sm) {
+      .en__component--formblock {
+        @include make-row();
+      }
+
+      .en__field {
+        @include make-col-ready();
+        @include make-col(6);
+      }
+
+      .en__submit {
+        @include make-col-ready();
+        @include make-col(12);
+        --bs-gutter-y: 2.75rem;
+      }
+    }
+  }
+}

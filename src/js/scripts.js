@@ -77,6 +77,8 @@
 
   // Widgets
   let cleave = null
+  let choicesArray = []
+  let appealCodeChoices
 
   // Constants
   const thermThresholdPct = 80
@@ -191,6 +193,8 @@
           resetSelect(_choices, null)
         },
       })
+      choicesArray.push(choicesObject)
+      return choicesObject.choices
     }
 
     /**
@@ -344,6 +348,23 @@
             destroyChoices(giftDesignationChoices)
             setTimeout(function() {
               giftDesignationChoices = createChoices(theForm.querySelector(giftDesignationSelect))
+            }, 100)
+          })
+        }
+      })
+    }
+
+    el = theForm.querySelector('#en__field_supporter_appealCode')
+    if (el) {
+      appealCodeChoices = createChoices(el)
+
+      getAll('.en__field--trbopts .en__field__input--radio, .en__field--gift-designation-yn .en__field__input--radio').forEach(el => {
+        if (appealCodeChoices) {
+          el.addEventListener('click', e => {
+            // Rebuild gift designation choices
+            destroyChoices(appealCodeChoices)
+            setTimeout(function() {
+              appealCodeChoices = createChoices(theForm.querySelector('#en__field_supporter_appealCode'))
             }, 100)
           })
         }
@@ -3199,16 +3220,16 @@
     if (typeof pageJson !== 'undefined') {
       if (pageJson.pageType === 'donation') {
         donationForm()
-        // ihmoTribute()
+        ihmoTribute()
       } else if (pageJson.pageType === 'event') {
         eventForm()
         eventFormNew()
       } else if (pageJson.pageType === 'emailtotarget' && pageJson.pageNumber === 1) {
         emailToTarget()
       }
-      // else if (pageJson.pageType === 'e-card') {
-      //   ihmoEcard()
-      // }
+      else if (pageJson.pageType === 'e-card') {
+        ihmoEcard()
+      }
       if (hasClass(body, 'page--hub')) {
         hub()
       }
@@ -3461,917 +3482,959 @@
     recurringEvent()
   }
 
-  // const ihmoTribute = () => {
-  //   const addDefaultSourceCode = () => {
-  //     // Adds page level default source code to the source code select
-  //     const inMemCheckbox = document.getElementById('en__field_transaction_inmem')
-  //     const sourceCode = document.getElementById('en__field_supporter_appealCode')
-  //     const defaultSourceCode = document.querySelector('[name="supporter.NOT_TAGGED_72"]')?.value
-  //
-  //     const addDefaultOption = () => {
-  //       // Adds a new option to the source code select
-  //       const defaultSourceCodeOption = document.createElement('option')
-  //
-  //       defaultSourceCodeOption.text = 'Form Default Source Code'
-  //       defaultSourceCodeOption.text = defaultSourceCode
-  //       sourceCode.add(defaultSourceCodeOption)
-  //     }
-  //
-  //     const setDefaultSourceCode = () => {
-  //       // Sets source code value to the added default option
-  //       /* jshint ignore:start */
-  //       !sourceCode.querySelector(`option[value="${defaultSourceCode}"]`) && addDefaultOption()
-  //       sourceCode.value = defaultSourceCode
-  //       /* jshint ignore:end */
-  //     }
-  //
-  //     if (inMemCheckbox && sourceCode && defaultSourceCode) {
-  //       inMemCheckbox.addEventListener('click', (e) => {
-  //         // Toggles source code value when the tribute checkbox is clicked
-  //         if (e.target.checked) {
-  //           sourceCode.value = sourceCode.querySelector('option').value
-  //         } else {
-  //           setDefaultSourceCode()
-  //         }
-  //       })
-  //       window.addEventListener('load', () => setDefaultSourceCode())
-  //     }
-  //   }
-  //
-  //   const insertEcard = () => {
-  //     // Moves ecard iframe under delivery options
-  //     const ecardContainer = document.getElementById('ecardIframe')?.closest('.ecard-collapse')
-  //     const referenceNode = document.querySelector('.en__field--infname')
-  //     /* jshint ignore:start */
-  //     ecardContainer && referenceNode && referenceNode.parentElement.insertBefore(ecardContainer, referenceNode)
-  //     /* jshint ignore:end */
-  //   }
-  //
-  //   const insertHeadings = () => {
-  //     // Moves headings (H3 tags) contained in copy block into the form block (in order)
-  //     const headingsContainer = document.querySelector('.tribute-collapse')?.querySelector('.form-heading')
-  //     const referenceNodes = [
-  //       '.en__field--honname',
-  //       '.en__field--gift-designation-yn',
-  //       '.en__field--select-notification-option',
-  //       '.en__field--infname'
-  //     ]
-  //     let headingsMoved = 0
-  //
-  //     // Assumes there are only form headings in the headingsContainer
-  //     /* jshint ignore:start */
-  //     headingsContainer && headingsContainer.querySelectorAll('h3, p').forEach((heading) => {
-  //       const referenceNode = document.querySelector(referenceNodes[headingsMoved])
-  //       referenceNode && referenceNode.parentElement.insertBefore(heading, referenceNode) && headingsMoved++
-  //     })
-  //     headingsMoved > 0 && headingsContainer.remove()
-  //     /* jshint ignore:end */
-  //   }
-  //
-  //   const createTributeBlock = () => {
-  //     const inMemContainer = document.querySelector('.en__field--inmem')?.closest('.en__component--row ')
-  //     const ihmoTribute = document.querySelector('.ihmo-tribute')
-  //
-  //     if (inMemContainer && ihmoTribute) {
-  //       inMemContainer.classList.add('ihmo-donation')
-  //       inMemContainer.appendChild(ihmoTribute)
-  //     }
-  //   }
-  //
-  //   const toggleHonoreeAddressHeading = () => {
-  //     const honoreeAddressHeading = document.querySelector('.en__field--infname')?.previousElementSibling
-  //
-  //     const toggleClass = (e) => {
-  //       if (!e) return
-  //
-  //       const target = e.target ? e.target : e
-  //
-  //       honoreeAddressHeading.removeAttribute('class')
-  //       switch (target.value) {
-  //         case 'Send an ecard':
-  //           honoreeAddressHeading.classList.add('ecard')
-  //           break
-  //         case 'Notify by mail':
-  //           honoreeAddressHeading.classList.add('mail')
-  //           break
-  //         case 'Do not notify':
-  //           honoreeAddressHeading.classList.add('d-none')
-  //           break
-  //       }
-  //     }
-  //     /* jshint ignore:start */
-  //     honoreeAddressHeading && honoreeAddressHeading.nodeName === 'H3' && document.querySelectorAll('.en__field--select-notification-option .en__field__input--radio').forEach(el => {
-  //       el.addEventListener('click', toggleClass)
-  //     })
-  //     /* jshint ignore:end */
-  //
-  //     toggleClass(document.querySelector('.en__field--select-notification-option .en__field__input--radio:checked'))
-  //   }
-  //
-  //   const toggleHonoreeLabelText = () => {
-  //     const toggleClass = (e) => {
-  //       if (!e) return
-  //
-  //       const target = e.target ? e.target : e
-  //       const classToAdd = target.value === 'In Honor' ? 'honor' : 'memory'
-  //       const classToRemove = target.value === 'In Honor' ? 'memory' : 'honor'
-  //
-  //       document.querySelector('.tribute-collapse').classList.remove(classToRemove)
-  //       document.querySelector('.tribute-collapse').classList.add(classToAdd)
-  //     }
-  //
-  //     document.querySelectorAll('.en__field--trbopts .en__field__input').forEach(el => {
-  //       el.addEventListener('click', toggleClass)
-  //     })
-  //
-  //     toggleClass(document.querySelector('.en__field--trbopts .en__field__input:checked'))
-  //   }
-  //
-  //   const toggleHonoreeFieldPlacement = () => {
-  //     const honoreeCity = document.querySelector('.en__field--NOT_TAGGED_36')
-  //     const honoreeState = document.querySelector('.en__field--NOT_TAGGED_35')
-  //     // Honoree address 2 OR address 1
-  //     const inHonorReferenceNode = document.querySelector('.en__field--NOT_TAGGED_34') || document.querySelector('.en__field--NOT_TAGGED_33')
-  //     // Honoree last name
-  //     const inMemoryReferenceNode = document.querySelector('.en__field--othamt2')
-  //
-  //     const moveHonoreeFields = (e) => {
-  //       if (!e) return
-  //       const target = e.target ? e.target : e
-  //       const referenceNode = target.value === 'In Honor' ? inHonorReferenceNode : inMemoryReferenceNode
-  //
-  //       referenceNode.after(honoreeCity, honoreeState)
-  //     }
-  //
-  //     if (honoreeCity && honoreeState && inHonorReferenceNode && inMemoryReferenceNode) {
-  //       document.querySelectorAll('.en__field--trbopts .en__field__input--radio').forEach(el => el.addEventListener('click', moveHonoreeFields))
-  //       moveHonoreeFields(document.querySelector('.en__field--trbopts .en__field__input--radio:checked'))
-  //     }
-  //   }
-  //
-  //   const toggleHonoreeFieldVisibility = () => {
-  //     const tributeCheckbox = document.getElementById('en__field_transaction_inmem')
-  //     const mailLetterButton = document.querySelector('.en__field--select-notification-option .en__field__input--radio[value="Notify by mail"]')
-  //     // Honoree city, state
-  //     const fields = document.querySelectorAll('.en__field--NOT_TAGGED_36, .en__field--NOT_TAGGED_35')
-  //
-  //     const disableField = (field) => {
-  //       field.classList.add('en__hidden')
-  //       field.querySelector('.en__field__input').disabled = true
-  //     }
-  //
-  //     const enableField = (field) => {
-  //       field.classList.remove('en__hidden')
-  //       field.querySelector('.en__field__input').disabled = false
-  //     }
-  //
-  //     const toggleVisibility = (e) => {
-  //       if (e.target.checked && mailLetterButton.checked) {
-  //         fields.forEach(field => enableField(field))
-  //       } else {
-  //         fields.forEach(field => disableField(field))
-  //       }
-  //     }
-  //     /* jshint ignore:start */
-  //     tributeCheckbox && mailLetterButton && tributeCheckbox.addEventListener('click', toggleVisibility)
-  //     /* jshint ignore:end */
-  //   }
-  //
-  //   const handleTributeCheckboxClick = () => {
-  //     const tributeCheckbox = document.getElementById('en__field_transaction_inmem')
-  //     /* jshint ignore:start */
-  //     tributeCheckbox && tributeCheckbox.addEventListener('click', () => sessionStorage.setItem('en__field_transaction_inmem', tributeCheckbox.checked))
-  //     /* jshint ignore:end */
-  //   }
-  //
-  //   const handleNotificationOptionsClick = () => {
-  //     // Saves the selected notification option for use on thank you page
-  //     const notificationOptions = document.querySelector('.en__field--select-notification-option')
-  //     const inMem = document.getElementById('en__field_transaction_inmem')
-  //
-  //     const saveNotificationOption = (option) => {
-  //       if (option) {
-  //         switch (option) {
-  //           case 'Send an ecard':
-  //             option = 'ecard'
-  //             break
-  //           case 'Notify by mail':
-  //             option = 'mail'
-  //             break
-  //           case 'Do not notify':
-  //             option = 'do-not-notify'
-  //             break
-  //         }
-  //         sessionStorage.setItem('en__field--select-notification-option', option)
-  //       }
-  //     }
-  //
-  //     if (notificationOptions && inMem) {
-  //       if (inMem.checked) {
-  //         saveNotificationOption(notificationOptions.querySelector('.en__field__input--radio:checked')?.value)
-  //       } else {
-  //         sessionStorage.removeItem('en__field--select-notification-option')
-  //       }
-  //
-  //       notificationOptions.querySelectorAll('.en__field__input--radio').forEach(el => {
-  //         el.addEventListener('click', e => e.target.checked && saveNotificationOption(notificationOptions.querySelector('.en__field__input--radio:checked')?.value))
-  //       })
-  //
-  //       inMem.addEventListener('click', e => {
-  //         if (e.target.checked) {
-  //           saveNotificationOption(notificationOptions.querySelector('.en__field__input--radio:checked')?.value)
-  //         } else {
-  //           sessionStorage.removeItem('en__field--select-notification-option')
-  //         }
-  //       })
-  //     }
-  //   }
-  //
-  //   const initCollapsibles = () => {
-  //     const makeCollapseTrigger = (el, target) => {
-  //       el.dataset.bsToggle = 'collapse'
-  //       el.dataset.bsTarget = target
-  //
-  //       document.querySelectorAll(target).forEach(el => {
-  //         el.classList.add('collapse')
-  //         new bootstrap.Collapse(el, {
-  //           toggle: false
-  //         })
-  //       })
-  //     }
-  //
-  //     const hideCollapsibles = (selector) => {
-  //       // Collapses collapse elements matching the selector
-  //       document.querySelectorAll(selector).forEach(el => {
-  //         bootstrap.Collapse.getOrCreateInstance(el).hide()
-  //       })
-  //     }
-  //
-  //     const showCollapsibles = (selector) => {
-  //       // Expands collapse elements matching the selector
-  //       document.querySelectorAll(selector).forEach(el => {
-  //         bootstrap.Collapse.getOrCreateInstance(el).show()
-  //       })
-  //     }
-  //
-  //     // Collapse elements that are controlled by the Monthly recurring gift button
-  //     document.querySelector('.giveBlock.mnthly')?.addEventListener('click', e => {
-  //       hideCollapsibles('.one-time-collapse')
-  //       showCollapsibles('.recurrence-collapse')
-  //     })
-  //
-  //     // Collapse elements that are controlled by the One-time gift button
-  //     document.querySelector('.giveBlock.oneTime')?.addEventListener('click', e => {
-  //       hideCollapsibles('.recurrence-collapse')
-  //       showCollapsibles('.one-time-collapse')
-  //     })
-  //
-  //     // Collapse elements that are controlled by the In Honor or Memory checkbox
-  //     /* jshint ignore:start */
-  //     document.getElementById('en__field_transaction_inmem') && makeCollapseTrigger(document.getElementById('en__field_transaction_inmem'), '.tribute-collapse')
-  //     /* jshint ignore:end */
-  //     // Collapse elements that are controlled by the Notification Options buttons
-  //     const notificationOptions = document.querySelector('.en__field--select-notification-option')
-  //     if (notificationOptions) {
-  //       // Collapses the ecard elements
-  //       notificationOptions.querySelectorAll('.en__field__input--radio:not([value*="ecard"])').forEach(el => {
-  //         el.addEventListener('click', () => hideCollapsibles('.ecard-collapse'))
-  //       })
-  //       // Expands the ecard elements
-  //       notificationOptions.querySelector('.en__field__input--radio[value*="ecard"]').addEventListener('click', () => showCollapsibles('.ecard-collapse'))
-  //       // Expands the inform[property] elements
-  //       notificationOptions.querySelectorAll('.en__field__input--radio[value*="ecard"], .en__field__input--radio[value*="mail"]').forEach(el => {
-  //         el.addEventListener('click', () => showCollapsibles('.do-not-notify-collapse'))
-  //       })
-  //       // Collapses the inform[property] elements
-  //       /* jshint ignore:start */
-  //       notificationOptions.querySelector('.en__field__input--radio:not([value*="ecard"]):not([value*="mail"])').addEventListener('click', () => hideCollapsibles('.do-not-notify-collapse'))
-  //       /* jshint ignore:end */
-  //     }
-  //
-  //     // Expands some collapse elements by default
-  //     /* jshint ignore:start */
-  //     document.querySelector('.one-time-collapse') && bootstrap.Collapse.getOrCreateInstance(document.querySelector('.one-time-collapse')).show()
-  //     /* jshint ignore:end */
-  //     showCollapsibles('.ecard-collapse')
-  //     showCollapsibles('.do-not-notify-collapse')
-  //   }
-  //
-  //   const ecardMessaging = () => {
-  //     const ecardIframe = document.getElementById('ecardIframe')
-  //
-  //     const sendMessage = (messageType, targetSelector, value) => {
-  //       ecardIframe.contentWindow.postMessage({
-  //         messageType: messageType,
-  //         targetSelector: targetSelector,
-  //         value: value
-  //       }, location.origin)
-  //     }
-  //
-  //     const handleEcardFieldInput = () => {
-  //       // Inform name maps to en__ecardrecipients__name on the ecard form
-  //       document.querySelectorAll('#en__field_transaction_infname, #en__field_transaction_othamt3, #en__field_transaction_infemail').forEach(el => {
-  //         el.addEventListener('change', e => sendMessage('add recipient'))
-  //       })
-  //     }
-  //
-  //     if (ecardIframe) {
-  //       handleEcardFieldInput()
-  //     }
-  //   }
-  //
-  //   const showTribute = () => {
-  //     const ecardIframe = document.getElementById('ecardIframe')
-  //
-  //     const initEcardIframe = new Promise((resolve, reject) => {
-  //       iFrameResize({
-  //         log: false,
-  //         checkOrigin: false,
-  //         onMessage: ({ iframe, message }) => {
-  //           switch (message.type || message) {
-  //             case 'ready':
-  //               ecardIframe.iFrameResizer.resize()
-  //               resolve()
-  //               break
-  //             case 'submitted':
-  //               showThankyou()
-  //               break
-  //           }
-  //         },
-  //       }, '#ecardIframe')
-  //     })
-  //
-  //     window.addEventListener('resize', () => {
-  //       ecardIframe.iFrameResizer.resize()
-  //       // mailLetterIframe.iFrameResizer.resize()
-  //     })
-  //
-  //     if (sessionStorage.getItem('en__field_transaction_inmem') === 'true' && ecardIframe) {
-  //       initEcardIframe.then(() => {
-  //         document.body.classList.add('tribute')
-  //       })
-  //     }
-  //   }
-  //
-  //   const setTimestamp = () => {
-  //     // Adds a timestamp to ecard form URL in the timestamp field.
-  //     // Timestamp field is used to determine if donor is eligible to send a standalone ecard.
-  //     const timestampInput = document.getElementById('en__field_supporter_NOT_TAGGED_70')
-  //
-  //     if (timestampInput) {
-  //       const url = new URL(timestampInput.value)
-  //       const params = new URLSearchParams(url.search)
-  //       const timestamp = new Date(new Date().toLocaleString('en-US', {
-  //         timeZone: 'America/Los_Angeles',
-  //       })).getTime()
-  //
-  //       params.append('ts', timestamp)
-  //       timestampInput.value = url.origin + url.pathname + '?' + params.toString()
-  //
-  //       // For testing expiration in minutes
-  //       const useDays = document.getElementById('useDays')
-  //       const numberOfDays = document.getElementById('numberOfDays')
-  //       const useMinutes = document.getElementById('useMinutes')
-  //       const numberOfMinutes = document.getElementById('numberOfMinutes')
-  //
-  //       if (useDays && numberOfDays) {
-  //         useDays.addEventListener('click', e => {
-  //           params.delete('ts_minutes')
-  //           if (e.target.checked) {
-  //             params.append('ts_days', numberOfMinutes.value)
-  //           } else {
-  //             params.delete('ts_days')
-  //           }
-  //           timestampInput.value = url.origin + url.pathname + '?' + params.toString()
-  //         })
-  //         numberOfDays.addEventListener('change', () => {
-  //           if (useDays.checked) {
-  //             params.set('ts_days', numberOfDays.value)
-  //             timestampInput.value = url.origin + url.pathname + '?' + params.toString()
-  //           }
-  //         })
-  //       }
-  //
-  //       if (useMinutes && numberOfMinutes) {
-  //         useMinutes.addEventListener('click', e => {
-  //           params.delete('ts_days')
-  //           if (e.target.checked) {
-  //             params.append('ts_minutes', numberOfMinutes.value)
-  //           } else {
-  //             params.delete('ts_minutes')
-  //           }
-  //           timestampInput.value = url.origin + url.pathname + '?' + params.toString()
-  //         })
-  //         numberOfMinutes.addEventListener('change', () => {
-  //           if (useMinutes.checked) {
-  //             params.set('ts_minutes', numberOfMinutes.value)
-  //             timestampInput.value = url.origin + url.pathname + '?' + params.toString()
-  //           }
-  //         })
-  //       }
-  //     }
-  //   }
-  //
-  //   const showThankyou = () => {
-  //     const isTributeGift = sessionStorage.getItem('en__field_transaction_inmem')
-  //     const notificationOption = sessionStorage.getItem('en__field--select-notification-option')
-  //
-  //     // Adds classes to the to control conditional content display
-  //     /* jshint ignore:start */
-  //     isTributeGift && isTributeGift === 'true' && document.body.classList.add('tribute')
-  //     notificationOption && document.body.classList.add(notificationOption)
-  //     /* jshint ignore:end */
-  //     // Clear storage
-  //     sessionStorage.removeItem('en__field_transaction_inmem')
-  //     sessionStorage.removeItem('en__field--select-notification-option')
-  //   }
-  //
-  //   if (pageJson.pageNumber === 1 && document.querySelector('.ihmo-tribute') && document.getElementById('ecardIframe')) {
-  //     addDefaultSourceCode()
-  //     insertEcard()
-  //     insertHeadings()
-  //     createTributeBlock()
-  //     toggleHonoreeAddressHeading()
-  //     toggleHonoreeLabelText()
-  //     toggleHonoreeFieldPlacement()
-  //     toggleHonoreeFieldVisibility()
-  //     handleTributeCheckboxClick()
-  //     handleNotificationOptionsClick()
-  //     initCollapsibles()
-  //     ecardMessaging()
-  //     showTribute()
-  //     setTimestamp()
-  //   } else if (sessionStorage.getItem('en__field_transaction_inmem') === 'true' && pageJson.pageNumber < pageJson.pageCount && document.getElementById('ecardIframe')) {
-  //     const isTributeGift = document.getElementById('en__field_supporter_NOT_TAGGED_71')
-  //
-  //     if (isTributeGift) {
-  //       isTributeGift.closest('.en__field').classList.add('visually-hidden')
-  //       isTributeGift.click()
-  //     }
-  //     handleNotificationOptionsClick()
-  //     initCollapsibles()
-  //     ecardMessaging()
-  //     showTribute()
-  //     setTimestamp()
-  //   } else if (pageJson.pageNumber === pageJson.pageCount && document.getElementById('ecardIframe')) {
-  //     showThankyou()
-  //   }
-  // }
+  const ihmoTribute = () => {
+    const appealCodeSelect = document.getElementById('en__field_supporter_appealCode')
 
-  // const ihmoEcard = () => {
-  //   const parentPageNumberOfPages = window.parent.pageJson.pageCount
-  //   const parentPageNumber = window.parent.pageJson.pageNumber
-  //   const form = document.querySelector('.en__component--page[action$="/action/2"]')
-  //   form.id = 'form'
-  //
-  //   const isExcluded = (el) => {
-  //     // Excludes fields from formPersistence
-  //     const blacklist = [
-  //       'hidden',
-  //       'sessionId',
-  //       'supporter.firstName',
-  //       'supporter.lastName',
-  //       'supporter.emailAddress',
-  //     ]
-  //
-  //     return blacklist.includes(el.name)
-  //   }
-  //
-  //   const displayEcard = () => {
-  //     const makeAccessible = () => {
-  //       // Makes the ecard images accessible by transforming them to behave like radio buttons
-  //       class RadioGroup {
-  //         constructor(groupNode) {
-  //           this.groupNode = groupNode
-  //
-  //           this.radioButtons = []
-  //
-  //           this.firstRadioButton = null
-  //           this.lastRadioButton = null
-  //
-  //           var rbs = this.groupNode.querySelectorAll('[role=radio]')
-  //
-  //           for (var i = 0; i < rbs.length; i++) {
-  //             var rb = rbs[i]
-  //
-  //             rb.tabIndex = -1
-  //             rb.setAttribute('aria-checked', 'false')
-  //
-  //             rb.addEventListener('keydown', this.handleKeydown.bind(this))
-  //             rb.addEventListener('click', this.handleClick.bind(this))
-  //             rb.addEventListener('focus', this.handleFocus.bind(this))
-  //             rb.addEventListener('blur', this.handleBlur.bind(this))
-  //
-  //             this.radioButtons.push(rb)
-  //
-  //             if (!this.firstRadioButton) {
-  //               this.firstRadioButton = rb
-  //             }
-  //             this.lastRadioButton = rb
-  //           }
-  //           this.firstRadioButton.tabIndex = 0
-  //         }
-  //
-  //         setChecked(currentItem) {
-  //           for (var i = 0; i < this.radioButtons.length; i++) {
-  //             var rb = this.radioButtons[i]
-  //             rb.setAttribute('aria-checked', 'false')
-  //             rb.tabIndex = -1
-  //           }
-  //           currentItem.setAttribute('aria-checked', 'true')
-  //           currentItem.tabIndex = 0
-  //           currentItem.focus()
-  //         }
-  //
-  //         setCheckedToPreviousItem(currentItem) {
-  //           var index
-  //
-  //           if (currentItem === this.firstRadioButton) {
-  //             this.setChecked(this.lastRadioButton)
-  //           } else {
-  //             index = this.radioButtons.indexOf(currentItem)
-  //             this.setChecked(this.radioButtons[index - 1])
-  //           }
-  //         }
-  //
-  //         setCheckedToNextItem(currentItem) {
-  //           var index
-  //
-  //           if (currentItem === this.lastRadioButton) {
-  //             this.setChecked(this.firstRadioButton)
-  //           } else {
-  //             index = this.radioButtons.indexOf(currentItem)
-  //             this.setChecked(this.radioButtons[index + 1])
-  //           }
-  //         }
-  //
-  //         /* EVENT HANDLERS */
-  //         handleKeydown(event) {
-  //           var tgt = event.currentTarget,
-  //             flag = false
-  //
-  //           switch (event.key) {
-  //             case ' ':
-  //             case 'Enter':
-  //               this.setChecked(tgt)
-  //               flag = true
-  //               break
-  //
-  //             case 'Up':
-  //             case 'ArrowUp':
-  //             case 'Left':
-  //             case 'ArrowLeft':
-  //               this.setCheckedToPreviousItem(tgt)
-  //               flag = true
-  //               break
-  //
-  //             case 'Down':
-  //             case 'ArrowDown':
-  //             case 'Right':
-  //             case 'ArrowRight':
-  //               this.setCheckedToNextItem(tgt)
-  //               flag = true
-  //               break
-  //
-  //             default:
-  //               break
-  //           }
-  //
-  //           if (flag) {
-  //             event.stopPropagation()
-  //             event.preventDefault()
-  //           }
-  //         }
-  //
-  //         handleClick(event) {
-  //           this.setChecked(event.currentTarget)
-  //         }
-  //
-  //         handleFocus(event) {
-  //           event.currentTarget.classList.add('focus')
-  //         }
-  //
-  //         handleBlur(event) {
-  //           event.currentTarget.classList.remove('focus')
-  //         }
-  //       }
-  //
-  //       const ecardItems = document.querySelector('.en__ecarditems')
-  //       if (ecardItems) {
-  //         const ecardItemsList = ecardItems.querySelector('.en__ecarditems__list')
-  //
-  //         ecardItems.querySelector('h2').id = 'ecardItemsHeading'
-  //         ecardItemsList.setAttribute('role', 'radiogroup')
-  //         ecardItemsList.setAttribute('aria-labelledby', 'ecardItemsHeading')
-  //         ecardItemsList.querySelectorAll('.en__ecarditems__thumb').forEach(el => {
-  //           el.setAttribute('role', 'radio')
-  //           el.setAttribute('tabindex', '-1')
-  //         })
-  //         new RadioGroup(ecardItemsList)
-  //         ecardItemsList.querySelector('.thumb--active').ariaChecked = true
-  //       }
-  //
-  //       // Ecard message is labelled by an h2
-  //       const ecardMessage = document.querySelector('.en__ecardmessage')
-  //       if (ecardMessage) {
-  //         const ecardMessageLabel = document.createElement('label')
-  //         ecardMessageLabel.setAttribute('for', 'ecardMessage')
-  //         ecardMessageLabel.classList.add('en__field_label')
-  //         ecardMessageLabel.textContent = ecardMessage.querySelector('h2').textContent
-  //         ecardMessage.querySelector('h2').replaceWith(ecardMessageLabel)
-  //         ecardMessage.querySelector('textarea').id = 'ecardMessage'
-  //       }
-  //
-  //       // Future Delivery label and input are not connected
-  //       const futureDelivery = document.querySelector('.en__ecardrecipients__futureDelivery')
-  //       if (futureDelivery) {
-  //         futureDelivery.querySelector('input').id = 'futureDelivery'
-  //         futureDelivery.querySelector('label').setAttribute('for', 'futureDelivery')
-  //       }
-  //
-  //       // Recipient name label and input are not connected
-  //       const recipientName = document.querySelector('.en__ecardrecipients__name input[type=text]')
-  //       if (recipientName) {
-  //         recipientName.id = 'recipientName'
-  //         recipientName.previousElementSibling?.setAttribute('for', 'recipientName')
-  //       }
-  //
-  //       // Recipient email label and input are not connected
-  //       const recipientEmail = document.querySelector('.en__ecardrecipients__email input[type=text]')
-  //       if (recipientEmail) {
-  //         recipientEmail.id = 'recipientEmail'
-  //         recipientEmail.previousElementSibling?.setAttribute('for', 'recipientEmail')
-  //         // Exposes mobile email keyboard
-  //         recipientEmail.setAttribute('inputmode', 'email')
-  //       }
-  //     }
-  //
-  //     const initDatePicker = () => {
-  //       // Attaches the Datepicker library for the Send Ecard on Date field
-  //       // Restricts date selection range from current date to 30 days out
-  //       const sendDate = document.querySelector('input[name="ecard.schedule"]')
-  //       const today = new Date()
-  //       const maxDate = new Date(today)
-  //
-  //       // Restrict date selection to 30 days out
-  //       maxDate.setDate(maxDate.getDate() + 30)
-  //       // sendDate.readOnly = true
-  //       sendDate.setAttribute('inputmode', 'none')
-  //
-  //       new Datepicker(sendDate, {
-  //         autohide: true,
-  //         buttonClass: 'btn btn-link',
-  //         format: 'yyyy-mm-dd',
-  //         maxDate: maxDate,
-  //         minDate: today,
-  //         nextArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="7.121" height="11.414" viewBox="0 0 7.121 11.414"><path id="Stroke_1_Copy_2" data-name="Stroke 1 Copy 2" d="M10,0,5,5,0,0" transform="translate(0.707 10.707) rotate(-90)" fill="none" stroke-miterlimit="10" stroke-width="2"/></svg>',
-  //         prevArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="7.121" height="11.414" viewBox="0 0 7.121 11.414"><path id="Stroke_1_Copy_2" data-name="Stroke 1 Copy 2" d="M10,0,5,5,0,0" transform="translate(6.414 0.707) rotate(90)" fill="none" stroke-miterlimit="10" stroke-width="2"/></svg>',
-  //       })
-  //     }
-  //
-  //     const addClasses = () => {
-  //       document.querySelector('.en__ecardrecipients')?.classList.add('form-heading')
-  //       document.querySelector('.en__ecardrecipients h2')?.classList.add('h3')
-  //       document.querySelectorAll('.en__ecardrecipients__email input, .en__ecardrecipients__name input').forEach(el => {
-  //         el.classList.add('form-control')
-  //       })
-  //       document.querySelectorAll('#ecardItemsHeading, label').forEach(el => {
-  //         el.classList.add('en__field__label')
-  //       })
-  //     }
-  //
-  //     const saveForm = () => {
-  //       // Saves form data to sessionStorage for use on the thank you page
-  //       const recipient = {
-  //         name: document.querySelector('.en__ecardrecipients__name input').value,
-  //         email: document.querySelector('.en__ecardrecipients__email input').value
-  //       }
-  //       localStorage.setItem('recipient', JSON.stringify(recipient))
-  //
-  //       FormPersistence.save(form, {
-  //         excludeFilter: element => isExcluded(element)
-  //       })
-  //     }
-  //
-  //     const handleMessages = () => {
-  //       // Handles messages sent from the host page
-  //       const maybeAddRecipient = () => {
-  //         // Adds a recipient to the recipients list. Any current recipient is replaced by the new recipient
-  //         const recipientName = document.querySelector('.en__ecardrecipients__name input')
-  //         const recipientEmail = document.querySelector('.en__ecardrecipients__email input')
-  //         const currentRecipientName = recipientName?.value
-  //         const currentRecipientEmail = recipientEmail?.value
-  //         const newRecipientName = `${window.parent.document.getElementById('en__field_transaction_infname').value} ${window.parent.document.getElementById('en__field_transaction_othamt3').value}`
-  //         const newRecipientEmail = window.parent.document.getElementById('en__field_transaction_infemail').value
-  //
-  //         const clearRecipient = () => {
-  //           // Clears any existing recipients since there is only one
-  //           document.querySelectorAll('.ecardrecipient__remove button').forEach(el => {
-  //             el.click()
-  //           })
-  //         }
-  //
-  //         const addRecipient = () => {
-  //           if (newRecipientName !== '' && newRecipientEmail !== '') {
-  //             recipientName.value = newRecipientName
-  //             recipientEmail.value = newRecipientEmail
-  //             document.querySelector('.en__ecarditems__addrecipient').click()
-  //             setTimeout(() => {
-  //               saveForm()
-  //             }, 100)
-  //           }
-  //         }
-  //
-  //         // Only add recipient if needed
-  //         if ((newRecipientName.value !== currentRecipientName || newRecipientEmail.value !== currentRecipientEmail)) {
-  //           clearRecipient()
-  //           setTimeout(() => {
-  //             addRecipient()
-  //           }, 100)
-  //         }
-  //       }
-  //
-  //       const updateField = (selector, value) => {
-  //         // Updates a field value
-  //         document.querySelector(selector)?.setAttribute('value', value)
-  //         saveForm()
-  //       }
-  //
-  //       window.addEventListener('message', message => {
-  //         const messageData = message.data
-  //
-  //         if (message.origin !== location.origin && typeof messageData !== 'undefined') {
-  //           return
-  //         }
-  //
-  //         switch (messageData.messageType) {
-  //           case 'add recipient':
-  //             maybeAddRecipient()
-  //             break
-  //           case 'field update':
-  //             updateField(messageData.targetSelector, messageData.value)
-  //             break
-  //         }
-  //       }, false)
-  //     }
-  //
-  //     const initFormPersistence = () => {
-  //       let savedRecipient = localStorage.getItem('recipient')
-  //
-  //       // Initializes formPersistence
-  //       FormPersistence.persist(form, {
-  //         excludeFilter: element => isExcluded(element)
-  //       })
-  //
-  //       // Adds saved recipient if it exists
-  //       if (savedRecipient) {
-  //         savedRecipient = JSON.parse(savedRecipient)
-  //         document.querySelector('.en__ecardrecipients__name input').value = savedRecipient.name
-  //         document.querySelector('.en__ecardrecipients__email input').value = savedRecipient.email
-  //         document.querySelector('.en__ecarditems__addrecipient').click()
-  //       }
-  //
-  //       // Loads any saved form data
-  //       FormPersistence.load(form, {
-  //         excludeFilter: element => isExcluded(element)
-  //       })
-  //     }
-  //
-  //     const checkEcardLinkExpiration = () => {
-  //       // Displays ecard form if link is less than or equal to expiration
-  //       const expirationInDays = 30
-  //       const params = new URLSearchParams(location.search)
-  //       const timeStamp = params.get('ts')
-  //       const today = new Date(new Date().toLocaleString('en-US', {
-  //         timeZone: 'America/Los_Angeles',
-  //       })).getTime()
-  //       let differenceInDays
-  //
-  //       if (timeStamp) {
-  //         differenceInDays = (today - timeStamp) / (1000 * 3600 * 24)
-  //
-  //         // Checks for a testing parameter in the URL
-  //         if (params.get('ts_days')) {
-  //           if (differenceInDays <= parseInt(params.get('ts_days'))) {
-  //             differenceInDays = 0
-  //           } else {
-  //             differenceInDays = expirationInDays + 1
-  //           }
-  //         } else if (params.get('ts_minutes')) {
-  //           if ((today - timeStamp) / 60000 <= parseInt(params.get('ts_minutes'))) {
-  //             differenceInDays = 0
-  //           } else {
-  //             differenceInDays = expirationInDays + 1
-  //           }
-  //         }
-  //
-  //         if (differenceInDays <= expirationInDays) {
-  //           document.body.classList.add('not-expired')
-  //         } else {
-  //           document.body.classList.add('expired')
-  //         }
-  //       }
-  //     }
-  //
-  //     const initStandaloneEcard = () => {
-  //       const addRecipientButton = document.querySelector('.en__ecarditems__addrecipient')
-  //       const recipientName = document.querySelector('.en__ecardrecipients__name input[type=text]')
-  //       const recipientEmail = document.querySelector('.en__ecardrecipients__email input[type=text]')
-  //       const recipientNameUntagged = document.getElementById('en__field_supporter_NOT_TAGGED_85')
-  //       const recipientEmailUntagged = document.getElementById('en__field_supporter_NOT_TAGGED_3')
-  //
-  //       const updateRecipientList = () => {
-  //         const removeRecipientButton = document.querySelector('.ecardrecipient__remove button')
-  //
-  //         if (recipientName.value !== '' && recipientEmail.value !== '') {
-  //           /* jshint ignore:start */
-  //           removeRecipientButton && removeRecipientButton.click()
-  //           /* jshint ignore:end */
-  //           setTimeout(() => {
-  //             addRecipientButton.click()
-  //             addRecipientButton.disabled = false
-  //             recipientName.disabled = false
-  //             recipientEmail.disabled = false
-  //           }, 100)
-  //         }
-  //       }
-  //
-  //       const copyRecipientValues = () => {
-  //         recipientName.value = recipientNameUntagged.value
-  //         recipientEmail.value = recipientEmailUntagged.value
-  //         updateRecipientList()
-  //       }
-  //
-  //       if (addRecipientButton && recipientName && recipientEmail && recipientNameUntagged && recipientEmailUntagged) {
-  //         recipientNameUntagged.addEventListener('input', copyRecipientValues)
-  //         recipientEmailUntagged.addEventListener('input', copyRecipientValues)
-  //       }
-  //     }
-  //
-  //     document.body.classList.add('ihmo-ecard')
-  //     makeAccessible()
-  //     initDatePicker()
-  //     addClasses()
-  //     if (window.self !== window.top) {
-  //       document.body.classList.add('ihmo-ecard-embedded')
-  //       handleMessages()
-  //       if (FormPersistence) {
-  //         initFormPersistence()
-  //       } else {
-  //         console.error('FormPersistence not available')
-  //       }
-  //     } else {
-  //       checkEcardLinkExpiration()
-  //       initStandaloneEcard()
-  //     }
-  //   }
-  //
-  //   const submitEcard = () => {
-  //     let savedRecipient = localStorage.getItem('recipient')
-  //     // Adds saved recipient if it exists
-  //     if (savedRecipient) {
-  //       savedRecipient = JSON.parse(savedRecipient)
-  //       document.querySelector('.en__ecardrecipients__name input').value = savedRecipient.name
-  //       document.querySelector('.en__ecardrecipients__email input').value = savedRecipient.email
-  //       document.querySelector('.en__ecarditems__addrecipient').click()
-  //
-  //       // Sets active ecard using data from formPersistence
-  //       document.querySelector(`[data-id="${JSON.parse(localStorage.getItem('form#form'))['friend.ecard'][0]}"]`).click()
-  //
-  //       // Loads other form data from formPersistence
-  //       FormPersistence.load(form, {
-  //         excludeFilter: element => isExcluded(element)
-  //       })
-  //
-  //       // Removes saved data
-  //       FormPersistence.clearStorage(form)
-  //       localStorage.removeItem('form#form')
-  //       localStorage.removeItem('category')
-  //       localStorage.removeItem('recipient')
-  //       sessionStorage.removeItem('en__field_transaction_inmem')
-  //
-  //       // Adds the ecard recipient. Wait a second to insure addRecipient field is interactive
-  //       setTimeout(() => {
-  //         document.querySelector('.en__ecarditems__button.en__ecarditems__addrecipient').click()
-  //       }, 1000)
-  //
-  //       // Submits the ecard. Wait a bit more to submit after setting recipient. Safari does not like a submit() in a setTimeout() so use setInterval()
-  //       let timeLeft = 2
-  //       let sendTimer = setInterval(function() {
-  //         if (timeLeft <= 0) {
-  //           clearInterval(sendTimer)
-  //           document.querySelector('.en__component--page').submit()
-  //         }
-  //         timeLeft -= 1
-  //       }, 1000)
-  //
-  //     }
-  //   }
-  //
-  //   if (parentPageNumber < parentPageNumberOfPages) {
-  //     displayEcard()
-  //   } else if (parentPageNumber === parentPageNumberOfPages) {
-  //     submitEcard()
-  //   }
-  // }
+    const addDefaultAppealCode = () => {
+      // Adds page level default source code to the source code select
+      const inMemCheckbox = document.getElementById('en__field_transaction_inmem')
+      const defaultAppealCode = document.querySelector('[name="supporter.NOT_TAGGED_72"]')?.value
+
+      const addDefaultOption = () => {
+        // Adds a new option to the source code select
+        const defaultAppealCodeOption = document.createElement('option')
+
+        defaultAppealCodeOption.text = 'Form Default Source Code'
+        defaultAppealCodeOption.text = defaultAppealCode
+        appealCodeSelect.add(defaultAppealCodeOption)
+      }
+
+      const setDefaultAppealCode = () => {
+        // Sets source code value to the added default option
+        /* jshint ignore:start */
+        !appealCodeSelect.querySelector(`option[value="${defaultAppealCode}"]`) && addDefaultOption()
+        appealCodeSelect.value = defaultAppealCode
+        /* jshint ignore:end */
+      }
+
+      if (inMemCheckbox && appealCodeSelect && defaultAppealCode) {
+        inMemCheckbox.addEventListener('click', (e) => {
+          // Toggles source code value when the tribute checkbox is clicked
+          if (e.target.checked) {
+            appealCodeSelect.value = appealCodeSelect.querySelector('option').value
+          } else {
+            setDefaultAppealCode()
+          }
+        })
+        window.addEventListener('load', () => setDefaultAppealCode())
+      }
+    }
+
+    const maintainAppealCode = () => {
+      function contains(selector, text) {
+        const elements = document.querySelectorAll(selector)
+        return Array.from(elements).filter(element => element.textContent.includes(text))
+      }
+
+      const updateAppealCode = () => {
+        const currentDesignation = appealCodeSelect.dataset.currentChoice
+        let optionToSelect
+
+        optionToSelect = contains('#en__field_supporter_appealCode option', currentDesignation)
+
+        if (optionToSelect.length === 1 && appealCodeSelect.querySelector(`option[value="${optionToSelect[0].value}"]`)) {
+          appealCodeSelect.value = optionToSelect[0].value
+          appealCodeChoices.setChoiceByValue(appealCodeSelect.value)
+        }
+      }
+
+      document.querySelectorAll('.en__field--trbopts .en__field__input--radio').forEach(radio => {
+        radio.addEventListener('click', () => setTimeout(() => {
+          updateAppealCode()
+        }, 1000))
+      })
+
+      document.querySelectorAll('.en__field--gift-designation-yn .en__field__input--radio').forEach(radio => {
+        radio.addEventListener('click', (e) => setTimeout(() => {
+          if (e.target.value === 'Y') {
+            updateAppealCode()
+          } else {
+            appealCodeSelect.dataset.currentChoice = appealCodeSelect.querySelector('option:first-child').textContent
+          }
+        }, 1000))
+      })
+
+      appealCodeSelect.addEventListener('change', () => {
+        appealCodeSelect.dataset.currentChoice = appealCodeSelect.querySelector('option:checked').textContent
+      })
+    }
+
+    const insertEcard = () => {
+      // Moves ecard iframe under delivery options
+      const ecardContainer = document.getElementById('ecardIframe')?.closest('.ecard-collapse')
+      const referenceNode = document.querySelector('.en__field--infname')
+      /* jshint ignore:start */
+      ecardContainer && referenceNode && referenceNode.parentElement.insertBefore(ecardContainer, referenceNode)
+      /* jshint ignore:end */
+    }
+
+    const insertHeadings = () => {
+      // Moves headings (H3 tags) contained in copy block into the form block (in order)
+      const headingsContainer = document.querySelector('.tribute-collapse')?.querySelector('.form-heading')
+      const referenceNodes = [
+        '.en__field--honname',
+        '.en__field--gift-designation-yn',
+        '.en__field--select-notification-option',
+        '.en__field--infname'
+      ]
+      let headingsMoved = 0
+
+      // Assumes there are only form headings in the headingsContainer
+      /* jshint ignore:start */
+      headingsContainer && headingsContainer.querySelectorAll('h3, p').forEach((heading) => {
+        const referenceNode = document.querySelector(referenceNodes[headingsMoved])
+
+        referenceNode && referenceNode.parentElement.insertBefore(heading, referenceNode) && headingsMoved++
+      })
+      headingsMoved > 0 && headingsContainer.remove()
+      /* jshint ignore:end */
+    }
+
+    const createTributeBlock = () => {
+      const inMemContainer = document.querySelector('.en__field--inmem')?.closest('.en__component--row ')
+      const ihmoTribute = document.querySelector('.ihmo-tribute')
+
+      if (inMemContainer && ihmoTribute) {
+        inMemContainer.classList.add('ihmo-donation')
+        inMemContainer.appendChild(ihmoTribute)
+      }
+    }
+
+    const toggleHonoreeAddressHeading = () => {
+      const honoreeAddressHeading = document.querySelector('.en__field--infname')?.previousElementSibling
+
+      const toggleClass = (e) => {
+        if (!e) return
+
+        const target = e.target ? e.target : e
+
+        honoreeAddressHeading.removeAttribute('class')
+        switch (target.value) {
+          case 'Send an ecard':
+            honoreeAddressHeading.classList.add('ecard')
+            break
+          case 'Notify by mail':
+            honoreeAddressHeading.classList.add('mail')
+            break
+          case 'Do not notify':
+            honoreeAddressHeading.classList.add('d-none')
+            break
+        }
+      }
+      /* jshint ignore:start */
+      honoreeAddressHeading && honoreeAddressHeading.nodeName === 'H3' && document.querySelectorAll('.en__field--select-notification-option .en__field__input--radio').forEach(el => {
+        el.addEventListener('click', toggleClass)
+      })
+      /* jshint ignore:end */
+      toggleClass(document.querySelector('.en__field--select-notification-option .en__field__input--radio:checked'))
+    }
+
+    const toggleHonoreeLabelText = () => {
+      const toggleClass = (e) => {
+        if (!e) return
+
+        const target = e.target ? e.target : e
+        const classToAdd = target.value === 'In Honor' ? 'honor' : 'memory'
+        const classToRemove = target.value === 'In Honor' ? 'memory' : 'honor'
+
+        document.querySelector('.tribute-collapse').classList.remove(classToRemove)
+        document.querySelector('.tribute-collapse').classList.add(classToAdd)
+      }
+
+      document.querySelectorAll('.en__field--trbopts .en__field__input').forEach(el => {
+        el.addEventListener('click', toggleClass)
+      })
+
+      toggleClass(document.querySelector('.en__field--trbopts .en__field__input:checked'))
+    }
+
+    const toggleHonoreeFieldPlacement = () => {
+      const honoreeCity = document.querySelector('.en__field--NOT_TAGGED_36')
+      const honoreeState = document.querySelector('.en__field--NOT_TAGGED_35')
+      // Honoree address 2 OR address 1
+      const inHonorReferenceNode = document.querySelector('.en__field--NOT_TAGGED_34') || document.querySelector('.en__field--NOT_TAGGED_33')
+      // Honoree last name
+      const inMemoryReferenceNode = document.querySelector('.en__field--othamt2')
+
+      const moveHonoreeFields = (e) => {
+        if (!e) return
+        const target = e.target ? e.target : e
+        const referenceNode = target.value === 'In Honor' ? inHonorReferenceNode : inMemoryReferenceNode
+
+        referenceNode.after(honoreeCity, honoreeState)
+      }
+
+      if (honoreeCity && honoreeState && inHonorReferenceNode && inMemoryReferenceNode) {
+        document.querySelectorAll('.en__field--trbopts .en__field__input--radio').forEach(el => el.addEventListener('click', moveHonoreeFields))
+        moveHonoreeFields(document.querySelector('.en__field--trbopts .en__field__input--radio:checked'))
+      }
+    }
+
+    const toggleHonoreeFieldVisibility = () => {
+      const tributeCheckbox = document.getElementById('en__field_transaction_inmem')
+      const mailLetterButton = document.querySelector('.en__field--select-notification-option .en__field__input--radio[value="Notify by mail"]')
+      // Honoree city, state
+      const fields = document.querySelectorAll('.en__field--NOT_TAGGED_36, .en__field--NOT_TAGGED_35')
+
+      const disableField = (field) => {
+        field.classList.add('en__hidden')
+        field.querySelector('.en__field__input').disabled = true
+      }
+
+      const enableField = (field) => {
+        field.classList.remove('en__hidden')
+        field.querySelector('.en__field__input').disabled = false
+      }
+
+      const toggleVisibility = (e) => {
+        if (e.target.checked && mailLetterButton.checked) {
+          fields.forEach(field => enableField(field))
+        } else {
+          fields.forEach(field => disableField(field))
+        }
+      }
+      /* jshint ignore:start */
+      tributeCheckbox && mailLetterButton && tributeCheckbox.addEventListener('click', toggleVisibility)
+      /* jshint ignore:end */
+    }
+
+    const handleTributeCheckboxClick = () => {
+      const tributeCheckbox = document.getElementById('en__field_transaction_inmem')
+      /* jshint ignore:start */
+      tributeCheckbox && tributeCheckbox.addEventListener('click', () => sessionStorage.setItem('en__field_transaction_inmem', tributeCheckbox.checked))
+      /* jshint ignore:end */
+    }
+
+    const handleNotificationOptionsClick = () => {
+      // Saves the selected notification option for use on thank you page
+      const notificationOptions = document.querySelector('.en__field--select-notification-option')
+      const inMem = document.getElementById('en__field_transaction_inmem')
+
+      const saveNotificationOption = (option) => {
+        if (option) {
+          switch (option) {
+            case 'Send an ecard':
+              option = 'ecard'
+              break
+            case 'Notify by mail':
+              option = 'mail'
+              break
+            case 'Do not notify':
+              option = 'do-not-notify'
+              break
+          }
+          sessionStorage.setItem('en__field--select-notification-option', option)
+        }
+      }
+
+      if (notificationOptions && inMem) {
+        if (inMem.checked) {
+          saveNotificationOption(notificationOptions.querySelector('.en__field__input--radio:checked')?.value)
+        } else {
+          sessionStorage.removeItem('en__field--select-notification-option')
+        }
+
+        notificationOptions.querySelectorAll('.en__field__input--radio').forEach(el => {
+          el.addEventListener('click', e => e.target.checked && saveNotificationOption(notificationOptions.querySelector('.en__field__input--radio:checked')?.value))
+        })
+
+        inMem.addEventListener('click', e => {
+          if (e.target.checked) {
+            saveNotificationOption(notificationOptions.querySelector('.en__field__input--radio:checked')?.value)
+          } else {
+            sessionStorage.removeItem('en__field--select-notification-option')
+          }
+        })
+      }
+    }
+
+    const initCollapsibles = () => {
+      const makeCollapseTrigger = (el, target) => {
+        el.dataset.bsToggle = 'collapse'
+        el.dataset.bsTarget = target
+
+        document.querySelectorAll(target).forEach(el => {
+          el.classList.add('collapse')
+          new bootstrap.Collapse(el, {
+            toggle: false
+          })
+        })
+      }
+
+      const hideCollapsibles = (selector) => {
+        // Collapses collapse elements matching the selector
+        document.querySelectorAll(selector).forEach(el => {
+          bootstrap.Collapse.getOrCreateInstance(el).hide()
+        })
+      }
+
+      const showCollapsibles = (selector) => {
+        // Expands collapse elements matching the selector
+        document.querySelectorAll(selector).forEach(el => {
+          bootstrap.Collapse.getOrCreateInstance(el).show()
+        })
+      }
+
+      // Collapse elements that are controlled by the Monthly recurring gift button
+      document.querySelector('.giveBlock.mnthly label')?.addEventListener('click', e => {
+        hideCollapsibles('.one-time-collapse')
+        showCollapsibles('.recurrence-collapse')
+      })
+
+      // Collapse elements that are controlled by the One-time gift button
+      document.querySelector('.giveBlock.oneTime label')?.addEventListener('click', e => {
+        hideCollapsibles('.recurrence-collapse')
+        showCollapsibles('.one-time-collapse')
+      })
+
+      // Collapse elements that are controlled by the In Honor or Memory checkbox
+      /* jshint ignore:start */
+      document.getElementById('en__field_transaction_inmem') && makeCollapseTrigger(document.getElementById('en__field_transaction_inmem'), '.tribute-collapse')
+      /* jshint ignore:end */
+
+      // Collapse elements that are controlled by the Notification Options buttons
+      const notificationOptions = document.querySelector('.en__field--select-notification-option')
+      if (notificationOptions) {
+        // Collapses the ecard elements
+        notificationOptions.querySelectorAll('.en__field__input--radio:not([value*="ecard"])').forEach(el => {
+          el.addEventListener('click', () => hideCollapsibles('.ecard-collapse'))
+        })
+        // Expands the ecard elements
+        notificationOptions.querySelector('.en__field__input--radio[value*="ecard"]').addEventListener('click', () => showCollapsibles('.ecard-collapse'))
+        // Expands the inform[property] elements
+        notificationOptions.querySelectorAll('.en__field__input--radio[value*="ecard"], .en__field__input--radio[value*="mail"]').forEach(el => {
+          el.addEventListener('click', () => showCollapsibles('.do-not-notify-collapse'))
+        })
+        // Collapses the inform[property] elements
+        /* jshint ignore:start */
+        notificationOptions.querySelector('.en__field__input--radio:not([value*="ecard"]):not([value*="mail"])').addEventListener('click', () => hideCollapsibles('.do-not-notify-collapse'))
+        /* jshint ignore:end */
+      }
+
+      // Expands some collapse elements by default
+      /* jshint ignore:start */
+      document.querySelector('.one-time-collapse') && bootstrap.Collapse.getOrCreateInstance(document.querySelector('.one-time-collapse')).show()
+      /* jshint ignore:end */
+      showCollapsibles('.ecard-collapse')
+      showCollapsibles('.do-not-notify-collapse')
+    }
+
+    const ecardMessaging = () => {
+      const ecardIframe = document.getElementById('ecardIframe')
+
+      const sendMessage = (messageType, targetSelector, value) => {
+        ecardIframe.contentWindow.postMessage({
+          messageType: messageType,
+          targetSelector: targetSelector,
+          value: value
+        }, location.origin)
+      }
+
+      const handleEcardFieldInput = () => {
+        // Inform name maps to en__ecardrecipients__name on the ecard form
+        document.querySelectorAll('#en__field_transaction_infname, #en__field_transaction_othamt3, #en__field_transaction_infemail').forEach(el => {
+          el.addEventListener('change', e => sendMessage('add recipient'))
+        })
+      }
+
+      if (ecardIframe) {
+        handleEcardFieldInput()
+      }
+    }
+
+    const showTribute = () => {
+      const ecardIframe = document.getElementById('ecardIframe')
+
+      const initEcardIframe = new Promise((resolve, reject) => {
+        iFrameResize({
+          log: false,
+          checkOrigin: false,
+          onMessage: ({ iframe, message }) => {
+            switch (message.type || message) {
+              case 'ready':
+                ecardIframe.iFrameResizer.resize()
+                resolve()
+                break
+              case 'submitted':
+                showThankyou()
+                break
+            }
+          },
+        }, '#ecardIframe')
+      })
+
+      window.addEventListener('resize', () => {
+        ecardIframe.iFrameResizer.resize()
+        // mailLetterIframe.iFrameResizer.resize()
+      })
+
+      if (sessionStorage.getItem('en__field_transaction_inmem') === 'true' && ecardIframe) {
+        initEcardIframe.then(() => {
+          document.body.classList.add('tribute')
+        })
+      }
+    }
+
+    const setTimestamp = () => {
+      // Adds a timestamp to ecard form URL in the timestamp field.
+      // Timestamp field is used to determine if donor is eligible to send a standalone ecard.
+      const timestampInput = document.getElementById('en__field_supporter_NOT_TAGGED_70')
+
+      if (timestampInput) {
+        const url = new URL(timestampInput.value)
+        const params = new URLSearchParams(url.search)
+        const timestamp = new Date(new Date().toLocaleString('en-US', {
+          timeZone: 'America/Los_Angeles',
+        })).getTime()
+
+        params.append('ts', timestamp)
+        timestampInput.value = url.origin + url.pathname + '?' + params.toString()
+
+        // For testing expiration in minutes
+        const useDays = document.getElementById('useDays')
+        const numberOfDays = document.getElementById('numberOfDays')
+        const useMinutes = document.getElementById('useMinutes')
+        const numberOfMinutes = document.getElementById('numberOfMinutes')
+
+        if (useDays && numberOfDays) {
+          useDays.addEventListener('click', e => {
+            params.delete('ts_minutes')
+            if (e.target.checked) {
+              params.append('ts_days', numberOfMinutes.value)
+            } else {
+              params.delete('ts_days')
+            }
+            timestampInput.value = url.origin + url.pathname + '?' + params.toString()
+          })
+          numberOfDays.addEventListener('change', () => {
+            if (useDays.checked) {
+              params.set('ts_days', numberOfDays.value)
+              timestampInput.value = url.origin + url.pathname + '?' + params.toString()
+            }
+          })
+        }
+
+        if (useMinutes && numberOfMinutes) {
+          useMinutes.addEventListener('click', e => {
+            params.delete('ts_days')
+            if (e.target.checked) {
+              params.append('ts_minutes', numberOfMinutes.value)
+            } else {
+              params.delete('ts_minutes')
+            }
+            timestampInput.value = url.origin + url.pathname + '?' + params.toString()
+          })
+          numberOfMinutes.addEventListener('change', () => {
+            if (useMinutes.checked) {
+              params.set('ts_minutes', numberOfMinutes.value)
+              timestampInput.value = url.origin + url.pathname + '?' + params.toString()
+            }
+          })
+        }
+      }
+    }
+
+    const showThankyou = () => {
+      const isTributeGift = sessionStorage.getItem('en__field_transaction_inmem')
+      const notificationOption = sessionStorage.getItem('en__field--select-notification-option')
+
+      // Adds classes to the to control conditional content display
+      /* jshint ignore:start */
+      isTributeGift && isTributeGift === 'true' && document.body.classList.add('tribute')
+      notificationOption && document.body.classList.add(notificationOption)
+      /* jshint ignore:end */
+      // Clear storage
+      sessionStorage.removeItem('en__field_transaction_inmem')
+      sessionStorage.removeItem('en__field--select-notification-option')
+    }
+
+    if (pageJson.pageNumber === 1 && document.querySelector('.ihmo-tribute') && document.getElementById('ecardIframe')) {
+      addDefaultAppealCode()
+      maintainAppealCode()
+      insertEcard()
+      insertHeadings()
+      createTributeBlock()
+      toggleHonoreeAddressHeading()
+      toggleHonoreeLabelText()
+      toggleHonoreeFieldPlacement()
+      toggleHonoreeFieldVisibility()
+      handleTributeCheckboxClick()
+      handleNotificationOptionsClick()
+      initCollapsibles()
+      ecardMessaging()
+      showTribute()
+      setTimestamp()
+    } else if (sessionStorage.getItem('en__field_transaction_inmem') === 'true' && pageJson.pageNumber < pageJson.pageCount && document.getElementById('ecardIframe')) {
+      const isTributeGift = document.getElementById('en__field_supporter_NOT_TAGGED_71')
+
+      if (isTributeGift) {
+        isTributeGift.closest('.en__field').classList.add('visually-hidden')
+        isTributeGift.click()
+      }
+      handleNotificationOptionsClick()
+      initCollapsibles()
+      ecardMessaging()
+      showTribute()
+      setTimestamp()
+    } else if (pageJson.pageNumber === pageJson.pageCount && document.getElementById('ecardIframe')) {
+      showThankyou()
+    }
+  }
+
+  const ihmoEcard = () => {
+    const parentPageNumberOfPages = window.parent.pageJson.pageCount
+    const parentPageNumber = window.parent.pageJson.pageNumber
+    const form = document.querySelector('.en__component--page[action$="/action/2"]')
+    form.id = 'form'
+
+    const isExcluded = (el) => {
+      // Excludes fields from formPersistence
+      const blacklist = [
+        'hidden',
+        'sessionId',
+        'supporter.firstName',
+        'supporter.lastName',
+        'supporter.emailAddress',
+      ]
+
+      return blacklist.includes(el.name)
+    }
+
+    const displayEcard = () => {
+      const makeAccessible = () => {
+        // Makes the ecard images accessible by transforming them to behave like radio buttons
+        class RadioGroup {
+          constructor(groupNode) {
+            this.groupNode = groupNode
+
+            this.radioButtons = []
+
+            this.firstRadioButton = null
+            this.lastRadioButton = null
+
+            var rbs = this.groupNode.querySelectorAll('[role=radio]')
+
+            for (var i = 0; i < rbs.length; i++) {
+              var rb = rbs[i]
+
+              rb.tabIndex = -1
+              rb.setAttribute('aria-checked', 'false')
+
+              rb.addEventListener('keydown', this.handleKeydown.bind(this))
+              rb.addEventListener('click', this.handleClick.bind(this))
+              rb.addEventListener('focus', this.handleFocus.bind(this))
+              rb.addEventListener('blur', this.handleBlur.bind(this))
+
+              this.radioButtons.push(rb)
+
+              if (!this.firstRadioButton) {
+                this.firstRadioButton = rb
+              }
+              this.lastRadioButton = rb
+            }
+            this.firstRadioButton.tabIndex = 0
+          }
+
+          setChecked(currentItem) {
+            for (var i = 0; i < this.radioButtons.length; i++) {
+              var rb = this.radioButtons[i]
+              rb.setAttribute('aria-checked', 'false')
+              rb.tabIndex = -1
+            }
+            currentItem.setAttribute('aria-checked', 'true')
+            currentItem.tabIndex = 0
+            currentItem.focus()
+          }
+
+          setCheckedToPreviousItem(currentItem) {
+            var index
+
+            if (currentItem === this.firstRadioButton) {
+              this.setChecked(this.lastRadioButton)
+            } else {
+              index = this.radioButtons.indexOf(currentItem)
+              this.setChecked(this.radioButtons[index - 1])
+            }
+          }
+
+          setCheckedToNextItem(currentItem) {
+            var index
+
+            if (currentItem === this.lastRadioButton) {
+              this.setChecked(this.firstRadioButton)
+            } else {
+              index = this.radioButtons.indexOf(currentItem)
+              this.setChecked(this.radioButtons[index + 1])
+            }
+          }
+
+          /* EVENT HANDLERS */
+          handleKeydown(event) {
+            var tgt = event.currentTarget,
+              flag = false
+
+            switch (event.key) {
+              case ' ':
+              case 'Enter':
+                this.setChecked(tgt)
+                flag = true
+                break
+
+              case 'Up':
+              case 'ArrowUp':
+              case 'Left':
+              case 'ArrowLeft':
+                this.setCheckedToPreviousItem(tgt)
+                flag = true
+                break
+
+              case 'Down':
+              case 'ArrowDown':
+              case 'Right':
+              case 'ArrowRight':
+                this.setCheckedToNextItem(tgt)
+                flag = true
+                break
+
+              default:
+                break
+            }
+
+            if (flag) {
+              event.stopPropagation()
+              event.preventDefault()
+            }
+          }
+
+          handleClick(event) {
+            this.setChecked(event.currentTarget)
+          }
+
+          handleFocus(event) {
+            event.currentTarget.classList.add('focus')
+          }
+
+          handleBlur(event) {
+            event.currentTarget.classList.remove('focus')
+          }
+        }
+
+        const ecardItems = document.querySelector('.en__ecarditems')
+        if (ecardItems) {
+          const ecardItemsList = ecardItems.querySelector('.en__ecarditems__list')
+
+          ecardItems.querySelector('h2').id = 'ecardItemsHeading'
+          ecardItemsList.setAttribute('role', 'radiogroup')
+          ecardItemsList.setAttribute('aria-labelledby', 'ecardItemsHeading')
+          ecardItemsList.querySelectorAll('.en__ecarditems__thumb').forEach(el => {
+            el.setAttribute('role', 'radio')
+            el.setAttribute('tabindex', '-1')
+          })
+          new RadioGroup(ecardItemsList)
+          ecardItemsList.querySelector('.thumb--active').ariaChecked = true
+        }
+
+        // Ecard message is labelled by an h2
+        const ecardMessage = document.querySelector('.en__ecardmessage')
+        if (ecardMessage) {
+          const ecardMessageLabel = document.createElement('label')
+          ecardMessageLabel.setAttribute('for', 'ecardMessage')
+          ecardMessageLabel.classList.add('en__field_label')
+          ecardMessageLabel.textContent = ecardMessage.querySelector('h2').textContent
+          ecardMessage.querySelector('h2').replaceWith(ecardMessageLabel)
+          ecardMessage.querySelector('textarea').id = 'ecardMessage'
+        }
+
+        // Future Delivery label and input are not connected
+        const futureDelivery = document.querySelector('.en__ecardrecipients__futureDelivery')
+        if (futureDelivery) {
+          futureDelivery.querySelector('input').id = 'futureDelivery'
+          futureDelivery.querySelector('label').setAttribute('for', 'futureDelivery')
+        }
+
+        // Recipient name label and input are not connected
+        const recipientName = document.querySelector('.en__ecardrecipients__name input[type=text]')
+        if (recipientName) {
+          recipientName.id = 'recipientName'
+          recipientName.previousElementSibling?.setAttribute('for', 'recipientName')
+        }
+
+        // Recipient email label and input are not connected
+        const recipientEmail = document.querySelector('.en__ecardrecipients__email input[type=text]')
+        if (recipientEmail) {
+          recipientEmail.id = 'recipientEmail'
+          recipientEmail.previousElementSibling?.setAttribute('for', 'recipientEmail')
+          // Exposes mobile email keyboard
+          recipientEmail.setAttribute('inputmode', 'email')
+        }
+      }
+
+      const initDatePicker = () => {
+        // Attaches the Datepicker library for the Send Ecard on Date field
+        // Restricts date selection range from current date to 30 days out
+        const sendDate = document.querySelector('input[name="ecard.schedule"]')
+        const today = new Date()
+        const maxDate = new Date(today)
+
+        // Restrict date selection to 30 days out
+        maxDate.setDate(maxDate.getDate() + 30)
+        // sendDate.readOnly = true
+        sendDate.setAttribute('inputmode', 'none')
+
+        new Datepicker(sendDate, {
+          autohide: true,
+          buttonClass: 'btn btn-link',
+          format: 'yyyy-mm-dd',
+          maxDate: maxDate,
+          minDate: today,
+          nextArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="7.121" height="11.414" viewBox="0 0 7.121 11.414"><path id="Stroke_1_Copy_2" data-name="Stroke 1 Copy 2" d="M10,0,5,5,0,0" transform="translate(0.707 10.707) rotate(-90)" fill="none" stroke-miterlimit="10" stroke-width="2"/></svg>',
+          prevArrow: '<svg xmlns="http://www.w3.org/2000/svg" width="7.121" height="11.414" viewBox="0 0 7.121 11.414"><path id="Stroke_1_Copy_2" data-name="Stroke 1 Copy 2" d="M10,0,5,5,0,0" transform="translate(6.414 0.707) rotate(90)" fill="none" stroke-miterlimit="10" stroke-width="2"/></svg>',
+        })
+      }
+
+      const addClasses = () => {
+        document.querySelector('.en__ecardrecipients')?.classList.add('form-heading')
+        document.querySelector('.en__ecardrecipients h2')?.classList.add('h3')
+        document.querySelectorAll('.en__ecardrecipients__email input, .en__ecardrecipients__name input').forEach(el => {
+          el.classList.add('form-control')
+        })
+        document.querySelectorAll('#ecardItemsHeading, label').forEach(el => {
+          el.classList.add('en__field__label')
+        })
+      }
+
+      const saveForm = () => {
+        // Saves form data to sessionStorage for use on the thank you page
+        const recipient = {
+          name: document.querySelector('.en__ecardrecipients__name input').value,
+          email: document.querySelector('.en__ecardrecipients__email input').value
+        }
+        localStorage.setItem('recipient', JSON.stringify(recipient))
+
+        FormPersistence.save(form, {
+          excludeFilter: element => isExcluded(element)
+        })
+      }
+
+      const handleMessages = () => {
+        // Handles messages sent from the host page
+        const maybeAddRecipient = () => {
+          // Adds a recipient to the recipients list. Any current recipient is replaced by the new recipient
+          const recipientName = document.querySelector('.en__ecardrecipients__name input')
+          const recipientEmail = document.querySelector('.en__ecardrecipients__email input')
+          const currentRecipientName = recipientName?.value
+          const currentRecipientEmail = recipientEmail?.value
+          const newRecipientName = `${window.parent.document.getElementById('en__field_transaction_infname').value} ${window.parent.document.getElementById('en__field_transaction_othamt3').value}`
+          const newRecipientEmail = window.parent.document.getElementById('en__field_transaction_infemail').value
+
+          const clearRecipient = () => {
+            // Clears any existing recipients since there is only one
+            document.querySelectorAll('.ecardrecipient__remove button').forEach(el => {
+              el.click()
+            })
+          }
+
+          const addRecipient = () => {
+            if (newRecipientName !== '' && newRecipientEmail !== '') {
+              recipientName.value = newRecipientName
+              recipientEmail.value = newRecipientEmail
+              document.querySelector('.en__ecarditems__addrecipient').click()
+              setTimeout(() => {
+                saveForm()
+              }, 100)
+            }
+          }
+
+          // Only add recipient if needed
+          if ((newRecipientName.value !== currentRecipientName || newRecipientEmail.value !== currentRecipientEmail)) {
+            clearRecipient()
+            setTimeout(() => {
+              addRecipient()
+            }, 100)
+          }
+        }
+
+        const updateField = (selector, value) => {
+          // Updates a field value
+          document.querySelector(selector)?.setAttribute('value', value)
+          saveForm()
+        }
+
+        window.addEventListener('message', message => {
+          const messageData = message.data
+
+          if (message.origin !== location.origin && typeof messageData !== 'undefined') {
+            return
+          }
+
+          switch (messageData.messageType) {
+            case 'add recipient':
+              maybeAddRecipient()
+              break
+            case 'field update':
+              updateField(messageData.targetSelector, messageData.value)
+              break
+          }
+        }, false)
+      }
+
+      const initFormPersistence = () => {
+        let savedRecipient = localStorage.getItem('recipient')
+
+        // Initializes formPersistence
+        FormPersistence.persist(form, {
+          excludeFilter: element => isExcluded(element)
+        })
+
+        // Adds saved recipient if it exists
+        if (savedRecipient) {
+          savedRecipient = JSON.parse(savedRecipient)
+          document.querySelector('.en__ecardrecipients__name input').value = savedRecipient.name
+          document.querySelector('.en__ecardrecipients__email input').value = savedRecipient.email
+          document.querySelector('.en__ecarditems__addrecipient').click()
+        }
+
+        // Loads any saved form data
+        FormPersistence.load(form, {
+          excludeFilter: element => isExcluded(element)
+        })
+      }
+
+      const checkEcardLinkExpiration = () => {
+        // Displays ecard form if link is less than or equal to expiration
+        const expirationInDays = 30
+        const params = new URLSearchParams(location.search)
+        const timeStamp = params.get('ts')
+        const today = new Date(new Date().toLocaleString('en-US', {
+          timeZone: 'America/Los_Angeles',
+        })).getTime()
+        let differenceInDays
+
+        if (timeStamp) {
+          differenceInDays = (today - timeStamp) / (1000 * 3600 * 24)
+
+          // Checks for a testing parameter in the URL
+          if (params.get('ts_days')) {
+            if (differenceInDays <= parseInt(params.get('ts_days'))) {
+              differenceInDays = 0
+            } else {
+              differenceInDays = expirationInDays + 1
+            }
+          } else if (params.get('ts_minutes')) {
+            if ((today - timeStamp) / 60000 <= parseInt(params.get('ts_minutes'))) {
+              differenceInDays = 0
+            } else {
+              differenceInDays = expirationInDays + 1
+            }
+          }
+
+          if (differenceInDays <= expirationInDays) {
+            document.body.classList.add('not-expired')
+          } else {
+            document.body.classList.add('expired')
+          }
+        }
+      }
+
+      const initStandaloneEcard = () => {
+        const addRecipientButton = document.querySelector('.en__ecarditems__addrecipient')
+        const recipientName = document.querySelector('.en__ecardrecipients__name input[type=text]')
+        const recipientEmail = document.querySelector('.en__ecardrecipients__email input[type=text]')
+        const recipientNameUntagged = document.getElementById('en__field_supporter_NOT_TAGGED_85')
+        const recipientEmailUntagged = document.getElementById('en__field_supporter_NOT_TAGGED_3')
+
+        const updateRecipientList = () => {
+          const removeRecipientButton = document.querySelector('.ecardrecipient__remove button')
+
+          if (recipientName.value !== '' && recipientEmail.value !== '') {
+            /* jshint ignore:start */
+            removeRecipientButton && removeRecipientButton.click()
+            /* jshint ignore:end */
+            setTimeout(() => {
+              addRecipientButton.click()
+              addRecipientButton.disabled = false
+              recipientName.disabled = false
+              recipientEmail.disabled = false
+            }, 100)
+          }
+        }
+
+        const copyRecipientValues = () => {
+          recipientName.value = recipientNameUntagged.value
+          recipientEmail.value = recipientEmailUntagged.value
+          updateRecipientList()
+        }
+
+        if (addRecipientButton && recipientName && recipientEmail && recipientNameUntagged && recipientEmailUntagged) {
+          recipientNameUntagged.addEventListener('input', copyRecipientValues)
+          recipientEmailUntagged.addEventListener('input', copyRecipientValues)
+        }
+      }
+
+      document.body.classList.add('ihmo-ecard')
+      makeAccessible()
+      initDatePicker()
+      addClasses()
+      if (window.self !== window.top) {
+        document.body.classList.add('ihmo-ecard-embedded')
+        handleMessages()
+        if (FormPersistence) {
+          initFormPersistence()
+        } else {
+          console.error('FormPersistence not available')
+        }
+      } else {
+        checkEcardLinkExpiration()
+        initStandaloneEcard()
+      }
+    }
+
+    const submitEcard = () => {
+      let savedRecipient = localStorage.getItem('recipient')
+      // Adds saved recipient if it exists
+      if (savedRecipient) {
+        savedRecipient = JSON.parse(savedRecipient)
+        document.querySelector('.en__ecardrecipients__name input').value = savedRecipient.name
+        document.querySelector('.en__ecardrecipients__email input').value = savedRecipient.email
+        document.querySelector('.en__ecarditems__addrecipient').click()
+
+        // Sets active ecard using data from formPersistence
+        document.querySelector(`[data-id="${JSON.parse(localStorage.getItem('form#form'))['friend.ecard'][0]}"]`).click()
+
+        // Loads other form data from formPersistence
+        FormPersistence.load(form, {
+          excludeFilter: element => isExcluded(element)
+        })
+
+        // Removes saved data
+        FormPersistence.clearStorage(form)
+        localStorage.removeItem('form#form')
+        localStorage.removeItem('category')
+        localStorage.removeItem('recipient')
+        sessionStorage.removeItem('en__field_transaction_inmem')
+
+        // Adds the ecard recipient. Wait a second to insure addRecipient field is interactive
+        setTimeout(() => {
+          document.querySelector('.en__ecarditems__button.en__ecarditems__addrecipient').click()
+        }, 1000)
+
+        // Submits the ecard. Wait a bit more to submit after setting recipient. Safari does not like a submit() in a setTimeout() so use setInterval()
+        let timeLeft = 2
+        let sendTimer = setInterval(function() {
+          if (timeLeft <= 0) {
+            clearInterval(sendTimer)
+            document.querySelector('.en__component--page').submit()
+          }
+          timeLeft -= 1
+        }, 1000)
+
+      }
+    }
+
+    if (parentPageNumber < parentPageNumberOfPages) {
+      displayEcard()
+    } else if (parentPageNumber === parentPageNumberOfPages) {
+      submitEcard()
+    }
+  }
 })()
