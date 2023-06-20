@@ -1293,13 +1293,15 @@
         keyboard: false
       })
 
+      var showBequestModal = shouldShowBequestModal();
+
       bequestModal.addEventListener('shown.bs.modal', () => {
         resizeIframe(bequestIframe)
       })
 
       // Open modal
       window.addEventListener('iframeReady', e => {
-        if (shouldShowBequestModal()) {
+        if (showBequestModal) {
           modal.show()
           bequestIframe.contentWindow.enOnError = function() {
             resizeIframe(bequestIframe)
@@ -1309,7 +1311,7 @@
 
       // Fire tracking
       setTimeout(function() {
-        if (typeof utag !== 'undefined') {
+        if (typeof utag !== 'undefined' && showBequestModal) {
           utag.link({
             'event_name': 'lightbox_impression',
             'lightbox_name': 'bequest'
