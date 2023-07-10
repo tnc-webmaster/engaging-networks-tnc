@@ -236,7 +236,7 @@
     root.style.setProperty('--scrollbarWidth', `${scrollbarWidth}px`)
 
     // Initiate choices.js
-    getAll(`select:not(${stateProvinceSelect}):not(${informStateProvinceSelect}):not(${giftDesignationSelect})`).forEach(el => {
+    getAll(`select:not(${stateProvinceSelect}):not(${informStateProvinceSelect}):not(${giftDesignationSelect}):not(#en__field_supporter_appealCode)`).forEach(el => {
       createChoices(el)
     })
 
