@@ -146,7 +146,7 @@
       selectOne.choices = _choices
       // Listen for an autofill (change event)
       selectOne.removeEventListener('change', handleChoicesChange)
-      selectOne.addEventListener('change', handleChoicesChange)
+      // selectOne.addEventListener('change', handleChoicesChange)
     }
 
     /**
