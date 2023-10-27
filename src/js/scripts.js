@@ -1231,6 +1231,19 @@
         return true
       }
 
+      // Checks for modal--bequest-less-restrictive class
+      if (bequestModal && bequestModal.classList.contains('modal--bequest-less-restrictive')) {
+	      // Checks other conditions for opening modal
+	      if (userProfile && pageJson.country === 'US' && !doNotSendSolicitations() && !inLegacyClub() && !getCookie('bequest_lb_select') && !getCookie('gp_form_submitted')) {
+	      	// console.log(`Passed less restrictive conditions`)
+	        // console.log(`bequestModal class: ${bequestModal.classList}`)
+          return true
+	      } else {
+	        // console.log(`Failed less restrictive conditions`)
+	        return false
+	      }
+      }       
+
       // Checks other conditions for opening modal
       if (userProfile && pageJson.country === 'US' && !doNotSendSolicitations() && !inLegacyClub() && pageJson.amount >= 100 && !getCookie('bequest_lb_select') && !getCookie('gp_form_submitted')) {
         // console.log(`pageJson.country ${pageJson.country}`)
