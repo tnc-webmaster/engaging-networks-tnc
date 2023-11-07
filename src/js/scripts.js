@@ -104,14 +104,16 @@
      */
     const handleChoicesChange = e => {
       const _target = e.target
-
-      // Don't reset drop downs in event attendee details block
-      if (e.composedPath().indexOf(document.querySelector('.en__registrants__registrantDetails')) === -1) {
-        _target.choices.setValue([{
-          value: _target.value,
-          label: _target.querySelector(`option[value="${_target.value}"]`).textContent,
-        }])
-        resetSelect(_target.choices, e)
+      // exclude bank acct type field from drop down reset
+      if (e.target.id != "en__field_supporter_bankAccountType") {
+        // Don't reset drop downs in event attendee details block
+        if (e.composedPath().indexOf(document.querySelector('.en__registrants__registrantDetails')) === -1) {
+          _target.choices.setValue([{
+            value: _target.value,
+            label: _target.querySelector(`option[value="${_target.value}"]`).textContent,
+          }])
+          resetSelect(_target.choices, e)
+        }
       }
     }
 
@@ -146,7 +148,7 @@
       selectOne.choices = _choices
       // Listen for an autofill (change event)
       selectOne.removeEventListener('change', handleChoicesChange)
-      // selectOne.addEventListener('change', handleChoicesChange)
+      selectOne.addEventListener('change', handleChoicesChange)
     }
 
     /**
@@ -236,7 +238,7 @@
     root.style.setProperty('--scrollbarWidth', `${scrollbarWidth}px`)
 
     // Initiate choices.js
-    getAll(`select:not(${stateProvinceSelect}):not(${informStateProvinceSelect}):not(${giftDesignationSelect}):not(#en__field_supporter_appealCode)`).forEach(el => {
+    getAll(`select:not(${stateProvinceSelect}):not(${informStateProvinceSelect}):not(${giftDesignationSelect}):not(#en__field_supporter_appealCode):not(#en__field_supporter_bankAccountType)`).forEach(el => {
       createChoices(el)
     })
 
@@ -696,6 +698,13 @@
           if (paymentMethod === 'CC') {
             updatePaymentType(cleave.properties.creditCardType)
           } else if (paymentMethod === 'Check') {
+            // create Bank Acct Type Choices
+            var bankAcctType = theForm.querySelector('#en__field_supporter_bankAccountType')
+            if (bankAcctType) {
+              setTimeout(function() {
+               createChoices(bankAcctType)
+             }, 50);
+            }
             const paymentType = theForm.querySelector(paymentTypeSelector)
 
             if (paymentType) {
