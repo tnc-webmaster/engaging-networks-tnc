@@ -1251,7 +1251,7 @@
 	        // console.log(`Failed less restrictive conditions`)
 	        return false
 	      }
-      }       
+      }
 
       // Checks other conditions for opening modal
       if (userProfile && pageJson.country === 'US' && !doNotSendSolicitations() && !inLegacyClub() && pageJson.amount >= 100 && !getCookie('bequest_lb_select') && !getCookie('gp_form_submitted')) {
@@ -3286,7 +3286,7 @@
         clearInterval(checkThermometer)
         thermometers()
       }
-    }, 500)
+    }, 1000)
   })
 
   const eventFormNew = () => {
