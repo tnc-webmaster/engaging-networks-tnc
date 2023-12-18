@@ -3281,12 +3281,12 @@
   })
 
   window.addEventListener('DOMContentLoaded', e => {
-    let checkThermometer = setInterval(function() {
+    setTimeout(function() {
       if (theForm.querySelector('.enWidget--progressBar')) {
-        clearInterval(checkThermometer)
+        // clearInterval(checkThermometer)
         thermometers()
       }
-    }, 1000)
+    }, 2000)
   })
 
   const eventFormNew = () => {
