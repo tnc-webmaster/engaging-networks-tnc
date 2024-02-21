@@ -142,6 +142,7 @@ label.en__field__label {
 .en__field__element--select,
 .en__field__element--telephone,
 .en__field__element--text,
+.en__field__element--vgs,
 .en__field__element--textarea,
 .en__field__item {
   position: relative;
@@ -159,11 +160,26 @@ label.en__field__label {
 .en__field__input--textarea,
 .en__field__input--tripletext,
 .en__additional__input,
+.en__field__input--vgs,
 .en__additional__code,
 .en__ecardrecipients__futureDelivery input[type="date"] {
   @extend %input;
 }
 
+.vgs-collect-container__focused {
+  border: 2px solid #007931;
+  color: #1a1a1a;
+  background-color: #fff;
+  outline: 0;
+  box-shadow: 0 0 0 0 #007931;
+}
+
+.en__field__element--vgs {
+  width: 100%;
+  .en__field__input {
+    width: 100%;
+  }
+}
 .en__field__element--splittext,
 .en__field__element--splitselect {
   @extend .row;
