@@ -123,14 +123,14 @@
 }
 
 .en__field--ccnumber {
-  &::after {
-    background: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_CCs.png?v=1612719763000) no-repeat;
-    content: "";
-    display: block;
-    height: 30px;
-    margin-top: 1rem;
-    transition: $transition-base;
-  }
+  // &::after {
+  //   background: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_CCs.png?v=1612719763000) no-repeat;
+  //   content: "";
+  //   display: block;
+  //   height: 30px;
+  //   margin-top: 1rem;
+  //   transition: $transition-base;
+  // }
   &.amex::after {
     background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_CC-AmericanExpress.png?v=1613243081000);
   }

@@ -2064,12 +2064,6 @@
           if (el.getAttribute('inputmode') === 'decimal') {
             // Check for US currency
             el.setAttribute('pattern', '^\\$?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(\\.[0-9]{1,2})?$')
-          } else if (el.name.indexOf('ccnumber') > -1) {
-            // Check for valid credit card (https://www.w3resource.com/javascript-exercises/javascript-regexp-exercise-2.php)
-            el.setAttribute('pattern', '^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$')
-          } else if (el.name.indexOf('ccvv') > -1) {
-            // Check for 3 or 4 digits
-            el.setAttribute('pattern', '^([0-9]{3,4})$')
           } else if (hasClass(el, 'datepicker-input')) {
             // Check for date as mm/dd/yyyy
             el.setAttribute('pattern', '(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\\d\\d')
