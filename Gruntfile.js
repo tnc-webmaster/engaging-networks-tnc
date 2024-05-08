@@ -36,7 +36,7 @@ module.exports = function(grunt) {
     'dart-sass': {
       target: {
         options: {
-          outputStyle: 'expanded',
+          outputStyle: 'compressed',
           sourceMap: true,
         },
         files: [{
@@ -49,8 +49,7 @@ module.exports = function(grunt) {
       options: {
         map: true,
         processors: [
-          require('autoprefixer')(),
-          require('cssnano')(),
+          require('autoprefixer')()
         ]
       },
       dist: {
