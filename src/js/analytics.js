@@ -145,7 +145,7 @@ if (pageJson.pageType == 'otherdatacapture' || pageJson.pageType == 'event') {
       eventData = JSON.parse(eventData);
       sessionStorage.removeItem('eventData');
 
-      udat_data.customer_country = eventData.country || '';
+      utag_data.customer_country = eventData.country || '';
       utag_data.customer_state = eventData.state || '';
       utag_data.customer_postal_code = eventData.zipCode || '';
       utag_data.const_address = eventData.address1 || '';
