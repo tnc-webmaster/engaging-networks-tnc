@@ -49,7 +49,11 @@
   const paymentTypeSelector = '[name="transaction.paymenttype"]'
   const paypalInputSelector = '.en__field--payment-method-paypal .en__field__input--checkbox'
   const stateProvinceSelect = '#en__field_supporter_region'
+  const supporterAddress1Selector = '#en__field_supporter_address1'
+  const supporterCitySelector = '#en__field_supporter_city'
   const supporterEmailAddressSelector = '#en__field_supporter_emailAddress'
+  const supporterFirstNameSelector = '#en__field_supporter_firstName'
+  const supporterLastNameSelector = '#en__field_supporter_lastName'
   const supporterStateSelector = '#en__field_supporter_region'
   const supporterZipCodeSelector = '#en__field_supporter_postcode'
   const totalAmountSelector = '.js-total-gift'
@@ -2255,6 +2259,21 @@
           extraAmount = (totalDonationAmount - originalDonationAmount).toFixed(2)
           donationData.originalDonationAmount = originalDonationAmount
         }
+      }
+
+      // Save event data for data layer on event confirmation page
+      if (pageJson.pageType === 'event' && pageJson.pageNumber === 2) {
+        const eventData = {};
+        // First Name, lastName, address1, city, state, zip, country, phonenumber
+        eventData.address1 = theForm.querySelector(supporterAddress1Selector) ? theForm.querySelector(supporterAddress1Selector).value : '';
+        eventData.city = theForm.querySelector(supporterCitySelector) ? theForm.querySelector(supporterCitySelector).value : '';
+        eventData.country = theForm.querySelector(countrySelect) ? theForm.querySelector(countrySelect).value : '';
+        eventData.firstName = theForm.querySelector(supporterFirstNameSelector) ? theForm.querySelector(supporterFirstNameSelector).value : '';
+        eventData.lastName = theForm.querySelector(supporterLastNameSelector) ? theForm.querySelector(supporterLastNameSelector).value : '';
+        eventData.phoneNumber = theForm.querySelector(mobilePhoneInputSelector) ? theForm.querySelector(mobilePhoneInputSelector).value : '';
+        eventData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : '';
+        eventData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : '';
+        sessionStorage.setItem('eventData', JSON.stringify(eventData));
       }
 
       if (pageJson.pageType === 'donation' && pageJson.pageNumber === 1) {
