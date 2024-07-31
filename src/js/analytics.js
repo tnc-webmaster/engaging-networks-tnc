@@ -8,9 +8,9 @@ const utag_data = {
   'channel': 'preserve.nature.org',
   'constituent_id': pageJson.supporterId ? pageJson.supporterId : '',
   'en_campaignId': pageJson.campaignId,
+  'en_code': '2022-12-01',
   'en_page_count': pageJson.pageCount,
   'en_page_number': pageJson.pageNumber,
-  'en_code': '2022-12-01',
   'en_txn6': pageJson.externalReference6,
   'hier1': 'preserve.nature.org|' + pageJson.pageType,
   'locale': pageJson.locale,
@@ -145,14 +145,14 @@ if (pageJson.pageType == 'otherdatacapture' || pageJson.pageType == 'event') {
       eventData = JSON.parse(eventData);
       sessionStorage.removeItem('eventData');
 
-      utag_data.customer_country = eventData.country || '';
-      utag_data.customer_state = eventData.state || '';
-      utag_data.customer_postal_code = eventData.zipCode || '';
       utag_data.const_address = eventData.address1 || '';
       utag_data.const_city = eventData.city || '';
       utag_data.const_first = eventData.firstName || '';
       utag_data.const_last = eventData.lastName || '';
       utag_data.const_phone = eventData.phoneNumber || '';
+      utag_data.customer_country = eventData.country || '';
+      utag_data.customer_postal_code = eventData.zipCode || '';
+      utag_data.customer_state = eventData.state || '';
     }
 	  utag_data.email_signup_location = 'event';
 	  utag_data.page_category = 'frm_evt_emt_submit';
