@@ -121,7 +121,7 @@ if ((pageJson.pageType == 'emailtotarget' || pageJson.pageType == 'advocacypetit
 if (pageJson.pageType == 'e-card') {
   utag_data.ecard_name = pageName_noNum;
   if ((pageJson.pageNumber == pageJson.pageCount) && (!donationData)) {
-	  utag_data.email_signup_location = 'ecard';
+    utag_data.email_signup_location = 'ecard';
     utag_data.page_category = 'ecrd_emt_submit';
     utag_data.page_name = pageName_Num + '-complete';
   }
@@ -150,9 +150,9 @@ if (pageJson.pageType == 'otherdatacapture' || pageJson.pageType == 'event') {
       utag_data.customer_postal_code = eventData.zipCode || '';
       utag_data.customer_state = eventData.state || '';
     }
-	  utag_data.email_signup_location = 'event';
-	  utag_data.page_category = 'frm_evt_emt_submit';
-    utag_data.page_name = pageName_Num + '-complete';
+     utag_data.email_signup_location = 'event';
+     utag_data.page_category = 'frm_evt_emt_submit';
+     utag_data.page_name = pageName_Num + '-complete';
   }
 }
 
