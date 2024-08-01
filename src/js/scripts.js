@@ -4488,8 +4488,10 @@
 * @param selector - Valid HTML selector string
 *********/
 const getChildValue = (parentEle, selector) => {
-    if (!parentEle || !selector || typeof selector !== 'string') {
+    if (!parentEle || !isHTMLElement(parentEle) || !selector || typeof selector !== 'string') {
         return '';
     }
     return (parentEle.querySelector && parentEle.querySelector(selector)) ? parentEle.querySelector(selector).value : '';
 }
+
+const isHTMLElement = (element) => element instanceof HTMLElement;
