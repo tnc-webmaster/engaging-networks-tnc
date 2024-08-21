@@ -49,7 +49,11 @@
   const paymentTypeSelector = '[name="transaction.paymenttype"]'
   const paypalInputSelector = '.en__field--payment-method-paypal .en__field__input--checkbox'
   const stateProvinceSelect = '#en__field_supporter_region'
+  const supporterAddress1Selector = '#en__field_supporter_address1'
+  const supporterCitySelector = '#en__field_supporter_city'
   const supporterEmailAddressSelector = '#en__field_supporter_emailAddress'
+  const supporterFirstNameSelector = '#en__field_supporter_firstName'
+  const supporterLastNameSelector = '#en__field_supporter_lastName'
   const supporterStateSelector = '#en__field_supporter_region'
   const supporterZipCodeSelector = '#en__field_supporter_postcode'
   const totalAmountSelector = '.js-total-gift'
@@ -2257,32 +2261,53 @@
         }
       }
 
+      // Save event data for data layer on event confirmation page
+      if (pageJson.pageType === 'event' && pageJson.pageNumber === 2) {
+        const eventData = {};
+        // First Name, lastName, address1, city, state, zip, country, phonenumber
+        eventData.address1 = getChildValue(theForm, supporterAddress1Selector); 
+        eventData.city = getChildValue(theForm, supporterCitySelector); 
+        eventData.country = getChildValue(theForm, countrySelect);
+        eventData.firstName = getChildValue(theForm, supporterFirstNameSelector);
+        eventData.lastName = getChildValue(theForm, supporterLastNameSelector);
+        eventData.phoneNumber = getChildValue(theForm, mobilePhoneInputSelector);
+        eventData.state = getChildValue(theForm, supporterStateSelector);
+        eventData.zipCode = getChildValue(theForm, supporterZipCodeSelector);
+        sessionStorage.setItem('eventData', JSON.stringify(eventData));
+      }
+
       if (pageJson.pageType === 'donation' && pageJson.pageNumber === 1) {
         // Maybe save ecard fields for use on seamless ecard page
         if (ecardSelect && ecardFields) {
           if (ecardSelect.querySelector('.en__field__input--checkbox').checked) {
             // Set ecardSelected before saving donationData
-            donationData.ecardSelected = 'true'
-            ecardData = {}
-            ecardData.selectEcard = ecardSelect.querySelector('.en__field__input--radio:checked').value
-            ecardData.recipients = ecardFields.querySelector('.en__field__input--email').value
-            ecardData.message = ecardFields.querySelector('.en__field--ecard-message .en__field__input--textarea').value
-            ecardData.sendDate = ecardFields.querySelector('.datepicker-input').value
-            sessionStorage.setItem('ecardData', JSON.stringify(ecardData))
+            donationData.ecardSelected = 'true';
+            ecardData = {};
+            ecardData.message = ecardFields.querySelector('.en__field--ecard-message .en__field__input--textarea').value;
+            ecardData.recipients = ecardFields.querySelector('.en__field__input--email').value;
+            ecardData.selectEcard = ecardSelect.querySelector('.en__field__input--radio:checked').value;
+            ecardData.sendDate = ecardFields.querySelector('.datepicker-input').value;
+            sessionStorage.setItem('ecardData', JSON.stringify(ecardData));
           } else {
-            delete donationData.ecardSelected
-            sessionStorage.removeItem('ecardData')
+            delete donationData.ecardSelected;
+            sessionStorage.removeItem('ecardData');
           }
         }
         // Save donation data for data layer on confirmation page
-        donationData.productId = utag_data.page_name.slice(0, -2)
-        donationData.campaignId = (typeof pageJson !== 'undefined') ? pageJson.campaignId : ''
-        donationData.campaignPageId = (typeof pageJson !== 'undefined') ? pageJson.campaignPageId : ''
-        donationData.extraAmount = extraAmount
-        donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : ''
-        donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : ''
-        donationData.emailAddress = theForm.querySelector(supporterEmailAddressSelector) ? theForm.querySelector(supporterEmailAddressSelector).value : ''
-        sessionStorage.setItem('donationData', JSON.stringify(donationData))
+        donationData.address1 = getChildValue(theForm, supporterAddress1Selector);
+        donationData.city = getChildValue(theForm, supporterCitySelector);
+        donationData.campaignId = (typeof pageJson !== 'undefined') ? pageJson.campaignId : '';
+        donationData.campaignPageId = (typeof pageJson !== 'undefined') ? pageJson.campaignPageId : '';
+        donationData.emailAddress = getChildValue(theForm, supporterEmailAddressSelector);
+        donationData.extraAmount = extraAmount;
+        donationData.firstName = getChildValue(theForm, supporterFirstNameSelector);
+        donationData.lastName = getChildValue(theForm, supporterLastNameSelector);
+        donationData.phoneNumber = getChildValue(theForm, mobilePhoneInputSelector);
+        donationData.productId = utag_data.page_name.slice(0, -2);
+        donationData.state = getChildValue(theForm, supporterStateSelector);
+        donationData.zipCode = getChildValue(theForm, supporterZipCodeSelector);
+
+        sessionStorage.setItem('donationData', JSON.stringify(donationData));
       }
 
       // Looking for non-hidden, non-blank mobile phone field and mobile text opt-in to save and pass to SMS platform
@@ -4456,3 +4481,17 @@
     }
   }
 })()
+
+/********
+* Description - Get Child element value from a given element
+* @param parentEle - Valid HTML element 
+* @param selector - Valid HTML selector string
+*********/
+const getChildValue = (parentEle, selector) => {
+    if (!parentEle || !isHTMLElement(parentEle) || !selector || typeof selector !== 'string') {
+        return '';
+    }
+    return (parentEle.querySelector && parentEle.querySelector(selector)) ? parentEle.querySelector(selector).value : '';
+}
+
+const isHTMLElement = (element) => element instanceof HTMLElement;
