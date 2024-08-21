@@ -2265,14 +2265,14 @@
       if (pageJson.pageType === 'event' && pageJson.pageNumber === 2) {
         const eventData = {};
         // First Name, lastName, address1, city, state, zip, country, phonenumber
-        eventData.address1 = theForm.querySelector(supporterAddress1Selector) ? theForm.querySelector(supporterAddress1Selector).value : '';
-        eventData.city = theForm.querySelector(supporterCitySelector) ? theForm.querySelector(supporterCitySelector).value : '';
-        eventData.country = theForm.querySelector(countrySelect) ? theForm.querySelector(countrySelect).value : '';
-        eventData.firstName = theForm.querySelector(supporterFirstNameSelector) ? theForm.querySelector(supporterFirstNameSelector).value : '';
-        eventData.lastName = theForm.querySelector(supporterLastNameSelector) ? theForm.querySelector(supporterLastNameSelector).value : '';
-        eventData.phoneNumber = theForm.querySelector(mobilePhoneInputSelector) ? theForm.querySelector(mobilePhoneInputSelector).value : '';
-        eventData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : '';
-        eventData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : '';
+        eventData.address1 = getChildValue(theForm, supporterAddress1Selector); 
+        eventData.city = getChildValue(theForm, supporterCitySelector); 
+        eventData.country = getChildValue(theForm, countrySelect);
+        eventData.firstName = getChildValue(theForm, supporterFirstNameSelector);
+        eventData.lastName = getChildValue(theForm, supporterLastNameSelector);
+        eventData.phoneNumber = getChildValue(theForm, mobilePhoneInputSelector);
+        eventData.state = getChildValue(theForm, supporterStateSelector);
+        eventData.zipCode = getChildValue(theForm, supporterZipCodeSelector);
         sessionStorage.setItem('eventData', JSON.stringify(eventData));
       }
 
@@ -2281,27 +2281,33 @@
         if (ecardSelect && ecardFields) {
           if (ecardSelect.querySelector('.en__field__input--checkbox').checked) {
             // Set ecardSelected before saving donationData
-            donationData.ecardSelected = 'true'
-            ecardData = {}
-            ecardData.selectEcard = ecardSelect.querySelector('.en__field__input--radio:checked').value
-            ecardData.recipients = ecardFields.querySelector('.en__field__input--email').value
-            ecardData.message = ecardFields.querySelector('.en__field--ecard-message .en__field__input--textarea').value
-            ecardData.sendDate = ecardFields.querySelector('.datepicker-input').value
-            sessionStorage.setItem('ecardData', JSON.stringify(ecardData))
+            donationData.ecardSelected = 'true';
+            ecardData = {};
+            ecardData.message = ecardFields.querySelector('.en__field--ecard-message .en__field__input--textarea').value;
+            ecardData.recipients = ecardFields.querySelector('.en__field__input--email').value;
+            ecardData.selectEcard = ecardSelect.querySelector('.en__field__input--radio:checked').value;
+            ecardData.sendDate = ecardFields.querySelector('.datepicker-input').value;
+            sessionStorage.setItem('ecardData', JSON.stringify(ecardData));
           } else {
-            delete donationData.ecardSelected
-            sessionStorage.removeItem('ecardData')
+            delete donationData.ecardSelected;
+            sessionStorage.removeItem('ecardData');
           }
         }
         // Save donation data for data layer on confirmation page
-        donationData.productId = utag_data.page_name.slice(0, -2)
-        donationData.campaignId = (typeof pageJson !== 'undefined') ? pageJson.campaignId : ''
-        donationData.campaignPageId = (typeof pageJson !== 'undefined') ? pageJson.campaignPageId : ''
-        donationData.extraAmount = extraAmount
-        donationData.state = theForm.querySelector(supporterStateSelector) ? theForm.querySelector(supporterStateSelector).value : ''
-        donationData.zipCode = theForm.querySelector(supporterZipCodeSelector) ? theForm.querySelector(supporterZipCodeSelector).value : ''
-        donationData.emailAddress = theForm.querySelector(supporterEmailAddressSelector) ? theForm.querySelector(supporterEmailAddressSelector).value : ''
-        sessionStorage.setItem('donationData', JSON.stringify(donationData))
+        donationData.address1 = getChildValue(theForm, supporterAddress1Selector);
+        donationData.city = getChildValue(theForm, supporterCitySelector);
+        donationData.campaignId = (typeof pageJson !== 'undefined') ? pageJson.campaignId : '';
+        donationData.campaignPageId = (typeof pageJson !== 'undefined') ? pageJson.campaignPageId : '';
+        donationData.emailAddress = getChildValue(theForm, supporterEmailAddressSelector);
+        donationData.extraAmount = extraAmount;
+        donationData.firstName = getChildValue(theForm, supporterFirstNameSelector);
+        donationData.lastName = getChildValue(theForm, supporterLastNameSelector);
+        donationData.phoneNumber = getChildValue(theForm, mobilePhoneInputSelector);
+        donationData.productId = utag_data.page_name.slice(0, -2);
+        donationData.state = getChildValue(theForm, supporterStateSelector);
+        donationData.zipCode = getChildValue(theForm, supporterZipCodeSelector);
+
+        sessionStorage.setItem('donationData', JSON.stringify(donationData));
       }
 
       // Looking for non-hidden, non-blank mobile phone field and mobile text opt-in to save and pass to SMS platform
@@ -4475,3 +4481,17 @@
     }
   }
 })()
+
+/********
+* Description - Get Child element value from a given element
+* @param parentEle - Valid HTML element 
+* @param selector - Valid HTML selector string
+*********/
+const getChildValue = (parentEle, selector) => {
+    if (!parentEle || !isHTMLElement(parentEle) || !selector || typeof selector !== 'string') {
+        return '';
+    }
+    return (parentEle.querySelector && parentEle.querySelector(selector)) ? parentEle.querySelector(selector).value : '';
+}
+
+const isHTMLElement = (element) => element instanceof HTMLElement;
