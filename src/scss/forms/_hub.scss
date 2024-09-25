@@ -169,7 +169,8 @@ $image-width-xxl: 66.6666%;
   }
   body:not(#en__pagebuilder) & {
     .en__field--mobile-text-opt-in,
-    .en__field--mobile-call-opt-in {
+    .en__field--mobile-call-opt-in,
+    .en__field--interested-in-mobile-text {
       position: static !important;
       width: auto !important;
       height: auto !important;
