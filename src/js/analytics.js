@@ -8,7 +8,7 @@ const utag_data = {
   'channel': 'preserve.nature.org',
   'constituent_id': pageJson.supporterId ? pageJson.supporterId : '',
   'en_campaignId': pageJson.campaignId,
-  'en_code': '2022-12-01',
+  'en_code': '2024-10-01',
   'en_page_count': pageJson.pageCount,
   'en_page_number': pageJson.pageNumber,
   'en_txn6': pageJson.externalReference6,
@@ -99,7 +99,7 @@ if (pageJson.pageType == 'donation') {
     if (pageJson.pageNumber === pageJson.pageCount && pageJson.pageType === 'e-card') {
       utag_data.donation_form_id = campaignPageId;
       utag_data.form_name = productId;
-      utag_data.page_category = 'donation_ecard';
+      utag_data.page_category = 'don_emt_txt_ecrd_submit';
       utag_data.product_id = [productId];
     }
   }
