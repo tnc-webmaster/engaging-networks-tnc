@@ -41,7 +41,6 @@ if (pageJson.pageType == 'donation') {
     // Set DonationData Object
     donationData = JSON.parse(donationData);
     mobilePhoneData = JSON.parse(mobilePhoneData);
-    sessionStorage.removeItem('donationData');
 
     const {
       address1 = '',
@@ -166,6 +165,10 @@ if (pageJson.pageType == 'otherdatacapture' || pageJson.pageType == 'event') {
   }
 }
 
+// Remove session storage last to support donationData check for non-donation ecard submissions
+if (donationData) {
+    sessionStorage.removeItem('donationData');
+}
 
 (function(a, b, c, d) {
   a = '//tags.tiqcdn.com/utag/tnc/global/prod/utag.js';
