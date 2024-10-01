@@ -95,7 +95,7 @@ if (pageJson.pageType == 'donation') {
     }
 
     // Donation confirmation with eCard
-    if (pageJson.pageNumber === pageJson.pageCount && pageJson.pageType === 'e-card') {
+    if (pageJson.pageNumber === pageJson.pageCount && donationData.ecardSelected) {
       utag_data.donation_form_id = campaignPageId;
       utag_data.form_name = productId;
       utag_data.page_category = 'don_emt_txt_ecrd_submit';
