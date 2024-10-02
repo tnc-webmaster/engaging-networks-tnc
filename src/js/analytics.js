@@ -95,7 +95,7 @@ if (pageJson.pageType == 'donation') {
     }
 
     // Donation confirmation with eCard
-    if (pageJson.pageNumber === pageJson.pageCount && donationData.ecardSelected) {
+    if (pageJson.pageNumber === pageJson.pageCount && donationData.ecardSelected === 'true') {
       utag_data.donation_form_id = campaignPageId;
       utag_data.form_name = productId;
       utag_data.page_category = 'don_emt_txt_ecrd_submit';
@@ -129,7 +129,7 @@ if ((pageJson.pageType == 'emailtotarget' || pageJson.pageType == 'advocacypetit
 //ecard view & non-donation submit
 if (pageJson.pageType == 'e-card') {
   utag_data.ecard_name = pageName_noNum;
-  if ((pageJson.pageNumber == pageJson.pageCount) && (!donationData)) {
+  if ((pageJson.pageNumber == pageJson.pageCount) && (!donationData) && !pageJson.amount) {
     utag_data.email_signup_location = 'ecard';
     utag_data.page_category = 'ecrd_emt_submit';
     utag_data.page_name = pageName_Num + '-complete';
@@ -148,7 +148,6 @@ if (pageJson.pageType == 'otherdatacapture' || pageJson.pageType == 'event') {
     // Enhanced data layer attricutes for events
     if (eventData && typeof JSON.parse(eventData) === 'object') {
       eventData = JSON.parse(eventData);
-      sessionStorage.removeItem('eventData');
 
       utag_data.const_address = eventData.address1 || '';
       utag_data.const_city = eventData.city || '';
@@ -165,9 +164,12 @@ if (pageJson.pageType == 'otherdatacapture' || pageJson.pageType == 'event') {
   }
 }
 
-// Remove session storage last to support donationData check for non-donation ecard submissions
+// Remove session storage last to consolidate removal until after functional code
 if (donationData) {
     sessionStorage.removeItem('donationData');
+}
+if (eventData) {
+    sessionStorage.removeItem('eventData');
 }
 
 (function(a, b, c, d) {
