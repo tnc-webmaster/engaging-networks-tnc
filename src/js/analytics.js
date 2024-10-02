@@ -98,8 +98,13 @@ if (pageJson.pageType == 'donation') {
     if (pageJson.pageNumber === pageJson.pageCount && donationData.ecardSelected === 'true') {
       utag_data.donation_form_id = campaignPageId;
       utag_data.form_name = productId;
-      utag_data.page_category = 'don_emt_txt_ecrd_submit';
       utag_data.product_id = [productId];
+        if (mobilePhoneData && mobilePhoneData.phoneNumber !== '') {
+            utag_data.page_category = 'don_emt_txt_ecrd_submit';
+        } else {
+            utag_data.page_category = 'donation_ecard';
+        }
+
     }
   }
 }
