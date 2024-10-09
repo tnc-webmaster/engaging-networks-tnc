@@ -8,7 +8,7 @@ const utag_data = {
   'channel': 'preserve.nature.org',
   'constituent_id': pageJson.supporterId ? pageJson.supporterId : '',
   'en_campaignId': pageJson.campaignId,
-  'en_code': '2022-12-01',
+  'en_code': '2024-10-01',
   'en_page_count': pageJson.pageCount,
   'en_page_number': pageJson.pageNumber,
   'en_txn6': pageJson.externalReference6,
@@ -41,7 +41,6 @@ if (pageJson.pageType == 'donation') {
     // Set DonationData Object
     donationData = JSON.parse(donationData);
     mobilePhoneData = JSON.parse(mobilePhoneData);
-    sessionStorage.removeItem('donationData');
 
     const {
       address1 = '',
@@ -96,11 +95,16 @@ if (pageJson.pageType == 'donation') {
     }
 
     // Donation confirmation with eCard
-    if (pageJson.pageNumber === pageJson.pageCount && pageJson.pageType === 'e-card') {
+    if (pageJson.pageNumber === pageJson.pageCount && donationData.ecardSelected === 'true') {
       utag_data.donation_form_id = campaignPageId;
       utag_data.form_name = productId;
-      utag_data.page_category = 'donation_ecard';
       utag_data.product_id = [productId];
+        if (mobilePhoneData && mobilePhoneData.phoneNumber !== '') {
+            utag_data.page_category = 'don_emt_txt_ecrd_submit';
+        } else {
+            utag_data.page_category = 'donation_ecard';
+        }
+
     }
   }
 }
@@ -130,7 +134,7 @@ if ((pageJson.pageType == 'emailtotarget' || pageJson.pageType == 'advocacypetit
 //ecard view & non-donation submit
 if (pageJson.pageType == 'e-card') {
   utag_data.ecard_name = pageName_noNum;
-  if ((pageJson.pageNumber == pageJson.pageCount) && (!donationData)) {
+  if ((pageJson.pageNumber == pageJson.pageCount) && (!donationData) && !pageJson.amount) {
     utag_data.email_signup_location = 'ecard';
     utag_data.page_category = 'ecrd_emt_submit';
     utag_data.page_name = pageName_Num + '-complete';
@@ -149,7 +153,6 @@ if (pageJson.pageType == 'otherdatacapture' || pageJson.pageType == 'event') {
     // Enhanced data layer attricutes for events
     if (eventData && typeof JSON.parse(eventData) === 'object') {
       eventData = JSON.parse(eventData);
-      sessionStorage.removeItem('eventData');
 
       utag_data.const_address = eventData.address1 || '';
       utag_data.const_city = eventData.city || '';
@@ -166,6 +169,13 @@ if (pageJson.pageType == 'otherdatacapture' || pageJson.pageType == 'event') {
   }
 }
 
+// Remove session storage last to consolidate removal until after functional code
+if (donationData) {
+    sessionStorage.removeItem('donationData');
+}
+if (eventData) {
+    sessionStorage.removeItem('eventData');
+}
 
 (function(a, b, c, d) {
   a = '//tags.tiqcdn.com/utag/tnc/global/prod/utag.js';

@@ -108,14 +108,6 @@ body._ff .header{
 			line-height: 20px;
 		}
 	}
-	.en__field__element--telephone {
-		&:after {
-			content: "By sharing your phone number, you give The Nature Conservancy permission to contact you with updates via phone and text.";
-			font-size: 14px;
-			color: $color_3;
-			line-height: 20px;
-		}
-	}
 	.en__field--bankAccountType {
 		.en__field__label {
 			margin-bottom: .5rem;

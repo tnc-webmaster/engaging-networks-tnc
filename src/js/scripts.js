@@ -1969,7 +1969,7 @@
 
   const optIns = () => {
     const permissionToContact = document.querySelector('.en__field--permission-to-contact-me')
-    const mobileTextOptIn = document.querySelector('.en__field--mobile-text-opt-in')
+    const mobileTextOptIn = document.querySelector('.en__field--interested-in-mobile-text')
     const mobileCallOptIn = document.querySelector('.en__field--mobile-call-opt-in')
 
     // Hide the "permission to contact" QCB if user is known and has not opted-in to both
@@ -2170,7 +2170,7 @@
       const ecardSelect = theForm.querySelector(ecardSelectSelector)
       const feeCoverCheckbox = theForm.querySelector('[name="transaction.feeCover"]')
       const mobilePhoneNumber = theForm.querySelector('.en__field--phoneNumber2:not(:placeholder-shown) .en__field__input')
-      const mobilePhoneOptIn = theForm.querySelector('.en__field--mobile-text-opt-in .en__field__input--checkbox:checked')
+      const mobilePhoneOptIn = theForm.querySelector('.en__field--interested-in-mobile-text .en__field__input--checkbox:checked')
       const trackSubmit = theForm.querySelector('.track-submit')
       let donationData = {}
       let ecardData = sessionStorage.getItem('ecardData')
