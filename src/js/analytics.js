@@ -64,7 +64,7 @@ const is_old_ecard_flow_final_page = (
 // Add on to data layer for specific page types
 
 // Donation Specific Fields
-if (pageJson.pagetype === 'donation') {
+if (pageJson.pageType === 'donation') {
     utag_data.donation_form_id = pageJson.campaignPageId;
     utag_data.form_name = pageName_noNum;
     utag_data.product_id = [pageName_noNum];
