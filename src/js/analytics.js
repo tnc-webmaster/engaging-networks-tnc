@@ -24,75 +24,25 @@ const utag_data = {
     'site_section_4': 'engaging networks|' + pageJson.pageType,
 };
 
-// Add on to data layer for specific page types
-
-//donation
-if (pageJson.pageType == 'donation') {
-    utag_data.donation_form_id = pageJson.campaignPageId;
-    utag_data.form_name = pageName_noNum;
-    utag_data.product_id = [pageName_noNum];
-    if (pageJson.pageNumber == '1') {
-        utag_data.form_type = 'donation';
-        utag_data.page_category = 'donation';
-    }
-
-    // donation confirmation
-    if (donationData && typeof JSON.parse(donationData) === 'object') {
-        // Set DonationData Object
-        donationData = JSON.parse(donationData);
-        mobilePhoneData = JSON.parse(mobilePhoneData);
-
-        const {
-            address1 = '',
-            city = '',
-            emailAddress = '',
-            en_txn1 = '',
-            extraAmount = '',
-            firstName = '',
-            lastName = '',
-            phoneNumber = '',
-            state = '',
-            vid = '',
-            vid2 = '',
-            zipCode = '',
-        } = donationData;
-
-        // Common Fields for e-card and noe-card donation Forms
-        utag_data.campaign_tag = en_txn1;
-        utag_data.const_address = address1;
-        utag_data.const_city = city;
-        utag_data.const_first = firstName;
-        utag_data.const_last = lastName;
-        utag_data.const_phone = phoneNumber;
-        utag_data.customer_country = pageJson.country;
-        utag_data.customer_postal_code = zipCode;
-        utag_data.customer_state = state;
-        utag_data.email = emailAddress;
-        utag_data.email_signup_location = 'donation';
-        utag_data.en_donation_type = pageJson.recurring;
-        utag_data.form_type = 'donation';
-        utag_data.order_currency_code = 'USD';
-        utag_data.order_id = pageJson.donationLogId.toString();
-        utag_data.order_total = pageJson.amount.toString();
-        utag_data.page_name = pageName_Num + '-complete';
-        utag_data.payment_method_dl = pageJson.paymentType;
-        utag_data.pixel_id = vid;
-        utag_data.pixel_id2 = vid2;
-        utag_data.product_quantity = ['1'];
-        utag_data.product_unit_price = [utag_data.order_total];
-        utag_data.tip_jar = extraAmount;
-
-        // donation confirmation with no ecard
-        if (pageJson.pageNumber == pageJson.pageCount && !donationData.ecardSelected) {
-            utag_data.page_category = 'don_emt_submit';
-
-            if (mobilePhoneData && mobilePhoneData.phoneNumber !== '') {
-                utag_data.page_category = 'don_emt_txt_submit';
-                utag_data.text_signup_location = 'donation';
-            }
-        }
-    }
+/******* Parse DonationData, MobileData, and EventData ******/
+if (donationData && typeof JSON.parse(donationData) === 'object') {
+    donationData = JSON.parse(donationData);
 }
+if (eventData && typeof JSON.parse(eventData) === 'object') {
+    eventData = JSON.parse(eventData);
+}
+if (mobilePhoneData && typeof JSON.parse(mobilePhoneData) === 'object') {
+    mobilePhoneData = JSON.parse(mobilePhoneData);
+}
+
+/******** Donation Flows Logic Check Statements Begin *******/
+
+const is_non_ecard_donation_final_page = (
+    pageJson.pageNumber === pageJson.pageCount &&
+    pageJson.pageType === 'donation' &&
+    donationData &&
+    (!donationData.ecardSelected || donationData.ecardSelected !== 'true')
+);
 
 const is_engrid_ecard_final_page = (
     utag_data.page_name.toLowerCase().includes('engrid') &&
@@ -106,23 +56,98 @@ const is_old_ecard_flow_final_page = (
     pageJson.pageNumber === pageJson.pageCount &&
     pageJson.pageType === 'e-card' && 
     donationData &&
-    typeof (JSON.parse(donationData)) === 'object' &&
-    JSON.parse(donationData).ecardSelected === 'true' 
+    donationData.ecardSelected === 'true'
 );
+
+/******** Donation Flows Logic Check Statements End ********/
+
+// Add on to data layer for specific page types
+
+// Donation Specific Fields
+if (pageJson.pageType === 'donation') {
+    utag_data.donation_form_id = pageJson.campaignPageId;
+    utag_data.form_name = pageName_noNum;
+    utag_data.product_id = [pageName_noNum];
+    if (pageJson.pageNumber == '1') {
+        utag_data.form_type = 'donation';
+        utag_data.page_category = 'donation';
+    }
+}
+
+/******** Successful Donations - eCard and non-ecard analytics Start ********/
+
+// Successful Donation/Donation + eCard Fields
+if (
+    is_engrid_ecard_final_page ||
+    is_non_ecard_donation_final_page ||
+    is_old_ecard_flow_final_page
+) {
+
+    const {
+        address1 = '',
+        city = '',
+        emailAddress = '',
+        en_txn1 = '',
+        extraAmount = '',
+        firstName = '',
+        lastName = '',
+        phoneNumber = '',
+        state = '',
+        vid = '',
+        vid2 = '',
+        zipCode = '',
+    } = donationData;
+
+    // Common Fields for e-card and no e-card donation Flows
+    utag_data.campaign_tag = en_txn1;
+    utag_data.const_address = address1;
+    utag_data.const_city = city;
+    utag_data.const_first = firstName;
+    utag_data.const_last = lastName;
+    utag_data.const_phone = phoneNumber;
+    utag_data.customer_country = pageJson.country;
+    utag_data.customer_postal_code = zipCode;
+    utag_data.customer_state = state;
+    utag_data.email = emailAddress;
+    utag_data.email_signup_location = 'donation';
+    utag_data.en_donation_type = pageJson.recurring;
+    utag_data.form_type = 'donation';
+    utag_data.order_currency_code = 'USD';
+    utag_data.order_id = pageJson.donationLogId.toString();
+    utag_data.order_total = pageJson.amount.toString();
+    utag_data.page_name = pageName_Num + '-complete';
+    utag_data.payment_method_dl = pageJson.paymentType;
+    utag_data.pixel_id = vid;
+    utag_data.pixel_id2 = vid2;
+    utag_data.product_quantity = ['1'];
+    utag_data.product_unit_price = [utag_data.order_total];
+    utag_data.tip_jar = extraAmount;
+
+}
+
+// Donation Confirmation with no eCard
+if (is_non_ecard_donation_final_page) {
+    utag_data.page_category = 'don_emt_submit';
+
+    if (mobilePhoneData && mobilePhoneData.phoneNumber) {
+        utag_data.page_category = 'don_emt_txt_submit';
+        utag_data.text_signup_location = 'donation';
+    }
+}
 
 // Donation confirmation with eCard
 if (is_engrid_ecard_final_page || is_old_ecard_flow_final_page) {
-    const { campaignPageId, productId } = utag_data;
+    const { campaignPageId, productId } = donationData;
     utag_data.donation_form_id = campaignPageId;
     utag_data.form_name = productId;
     utag_data.product_id = [productId];
-    if (mobilePhoneData && mobilePhoneData.phoneNumber !== '') {
+    if (mobilePhoneData && mobilePhoneData.phoneNumber) {
         utag_data.page_category = 'don_emt_txt_ecrd_submit';
     } else {
         utag_data.page_category = 'donation_ecard';
     }
-
 }
+/******** Successful Donations - eCard and non-eCard analytics End ********/
 
 
 //quiz or survey
@@ -166,10 +191,8 @@ if (pageJson.pageType == 'otherdatacapture' || pageJson.pageType == 'event') {
         utag_data.page_category = 'form_view';
     }
     if (pageJson.pageNumber == pageJson.pageCount && pageJson.pageType == 'event') {
-        // Enhanced data layer attricutes for events
-        if (eventData && typeof JSON.parse(eventData) === 'object') {
-            eventData = JSON.parse(eventData);
-
+        // Enhanced data layer attributes for events
+        if (eventData && typeof eventData === 'object') {
             utag_data.const_address = eventData.address1 || '';
             utag_data.const_city = eventData.city || '';
             utag_data.const_first = eventData.firstName || '';
@@ -187,10 +210,8 @@ if (pageJson.pageType == 'otherdatacapture' || pageJson.pageType == 'event') {
 
 // Remove session storage last to consolidate removal until after functional code
 if (
-    (donationData && !utag_data.page_name.toLowerCase().includes('ecard')) || // Delete on Donation sequence that doesn't have an ecard
-    (donationData && (utag_data.page_name.toLowerCase().includes('ecard') && 
-        utag_data.page_name.toLowerCase().includes('donation')) && 
-        utag_data.page_name.toLowerCase().includes('engrid')) || // Delete on ENGrid Donation e-card sequence
+    is_engrid_ecard_final_page || // Delete on ENGrid Donation e-card sequence
+    is_non_ecard_donation_final_page || // Delete on Donation sequence that doesn't have an ecard
     is_old_ecard_flow_final_page // Delete on Old Donation e-card sequence
 ) {
     sessionStorage.removeItem('donationData');
