@@ -2,16 +2,16 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     clean :  {
-      build: 'dist',
-      css: ['dist/*.css', 'dist/*.css.map'],
-      js:  ['dist/*.js', 'dist/*.js.map']
+      build: 'dist/dev',
+      css: ['dist/dev/*.css', 'dist/dev/*.css.map'],
+      js:  ['dist/dev/*.js', 'dist/dev/*.js.map']
     },
     jshint: {
       options: {
         jshintrc: '.jshintrc',
         reporter: require('jshint-stylish'),
       },
-      build: ['Gruntfile.js', 'src/js/scripts.js'],
+      build: ['Gruntfile.dev.js', 'src/js/scripts.js'],
     },
     babel: {
       options: {
@@ -19,7 +19,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/scripts.js': 'src/js/scripts.js',
+          'dist/dev/scripts_dev.js': 'src/js/scripts.js',
         }
       }
     },
@@ -29,8 +29,8 @@ module.exports = function(grunt) {
         sourceMap: true,
       },
       dist: {
-        src: ['src/js/vendor/**/*.js', 'dist/scripts.js'],
-        dest: 'dist/scripts.min.js',
+        src: ['src/js/vendor/**/*.js', 'dist/dev/scripts_dev.js'],
+        dest: 'dist/dev/scripts_dev.min.js',
       },
     },
     'dart-sass': {
@@ -41,7 +41,7 @@ module.exports = function(grunt) {
         },
         files: [{
           src:  'src/scss/styles.scss',
-          dest: 'dist/styles.css'
+          dest: 'dist/dev/styles_dev.css'
         }]
       }
     },
@@ -53,7 +53,7 @@ module.exports = function(grunt) {
         ]
       },
       dist: {
-        src: 'dist/*.css'
+        src: 'dist/dev/*.css'
       }
     },
     watch: {
@@ -78,6 +78,7 @@ module.exports = function(grunt) {
   grunt.registerTask('w', ['watch']);
   grunt.registerTask('css', ['clean:css', 'dart-sass', 'postcss']);
   grunt.registerTask('js', ['clean:js', 'jshint', 'babel', 'concat']);
+  grunt.registerTask('analytics', function () {grunt.file.copy('src/js/analytics.js', 'dist/dev/analytics_dev.js')});
   grunt.registerTask('build', ['clean:build', 'jshint', 'babel', 'concat', 'dart-sass', 'postcss']);
   grunt.registerTask('default', ['dart-sass', 'postcss']);
-};
+  };
