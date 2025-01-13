@@ -8,7 +8,7 @@ const utag_data = {
     'channel': 'preserve.nature.org',
     'constituent_id': pageJson.supporterId ? pageJson.supporterId : '',
     'en_campaignId': pageJson.campaignId,
-    'en_code': '2024-10-31',
+    'en_code': '2025-01-13',
     'en_page_count': pageJson.pageCount,
     'en_page_number': pageJson.pageNumber,
     'en_txn6': pageJson.externalReference6,
@@ -45,7 +45,7 @@ const is_non_ecard_donation_final_page = (
 );
 
 const is_engrid_ecard_final_page = (
-    utag_data.page_name.toLowerCase().includes('engrid') &&
+    document.querySelector('body[data-engrid-theme="tnc"]') &&
     pageJson.pageNumber === pageJson.pageCount &&
     donationData &&
     donationData.ecardSelected === 'true' &&
@@ -53,6 +53,7 @@ const is_engrid_ecard_final_page = (
 );
 
 const is_old_ecard_flow_final_page = (
+    !document.querySelector('body[data-engrid-theme="tnc"]') &&
     pageJson.pageNumber === pageJson.pageCount &&
     pageJson.pageType === 'e-card' && 
     donationData &&
@@ -173,7 +174,11 @@ if ((pageJson.pageType == 'emailtotarget' || pageJson.pageType == 'advocacypetit
 }
 
 //ecard view & non-donation submit
-if (pageJson.pageType == 'e-card' && !donationData) {
+if (
+    pageJson.pageType == 'e-card' && 
+    !pageName_Num.toLowerCase().includes('donation') &&
+    !donationData
+) {
     utag_data.ecard_name = pageName_noNum;
     if ((pageJson.pageNumber == pageJson.pageCount) && (!donationData) && !pageJson.amount) {
         utag_data.email_signup_location = 'ecard';
