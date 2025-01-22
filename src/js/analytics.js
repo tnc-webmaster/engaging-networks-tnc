@@ -126,12 +126,14 @@ if (
 
 }
 
+const { isEmailOptInChecked = false } = donationData;
+
 // Donation Confirmation with no eCard
 if (is_non_ecard_donation_final_page) {
-    utag_data.page_category = 'don_emt_submit';
+    utag_data.page_category = isEmailOptInChecked ? 'don_emt_emo_submit' : 'don_emt_submit';
 
     if (mobilePhoneData && mobilePhoneData.phoneNumber) {
-        utag_data.page_category = 'don_emt_txt_submit';
+        utag_data.page_category = isEmailOptInChecked ? 'don_emt_emo_txt_submit' : 'don_emt_txt_submit';
         utag_data.text_signup_location = 'donation';
     }
 }
@@ -143,9 +145,9 @@ if (is_engrid_ecard_final_page || is_old_ecard_flow_final_page) {
     utag_data.form_name = productId;
     utag_data.product_id = [productId];
     if (mobilePhoneData && mobilePhoneData.phoneNumber) {
-        utag_data.page_category = 'don_emt_txt_ecrd_submit';
+        utag_data.page_category = isEmailOptInChecked ? 'don_emt_emo_txt_ecrd_submit' : 'don_emt_txt_ecrd_submit';
     } else {
-        utag_data.page_category = 'donation_ecard';
+        utag_data.page_category = isEmailOptInChecked ? 'don_emt_emo_ecrd_submit' : 'donation_ecard';
     }
 }
 /******** Successful Donations - eCard and non-eCard analytics End ********/
