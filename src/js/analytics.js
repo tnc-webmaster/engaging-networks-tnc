@@ -126,10 +126,10 @@ if (
 
 }
 
-const { isEmailOptInChecked = false } = donationData;
 
 // Donation Confirmation with no eCard
 if (is_non_ecard_donation_final_page) {
+    const { isEmailOptInChecked = false } = donationData;
     utag_data.page_category = isEmailOptInChecked ? 'don_emt_emo_submit' : 'don_emt_submit';
 
     if (mobilePhoneData && mobilePhoneData.phoneNumber) {
@@ -140,6 +140,7 @@ if (is_non_ecard_donation_final_page) {
 
 // Donation confirmation with eCard
 if (is_engrid_ecard_final_page || is_old_ecard_flow_final_page) {
+    const { isEmailOptInChecked = false } = donationData;
     const { campaignPageId, productId } = donationData;
     utag_data.donation_form_id = campaignPageId;
     utag_data.form_name = productId;
