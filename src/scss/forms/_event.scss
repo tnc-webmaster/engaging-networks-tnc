@@ -871,7 +871,7 @@ a[href="javascript:history.back()"] {
   display: inline-block;
   margin-bottom: 3rem;
   &::before {
-    content: $icon-back;
+    // content: $icon-back;
     margin-right: 0.5rem;
   }
 }
@@ -898,7 +898,7 @@ a[href="javascript:history.back()"] {
     }
   }
   tr {
-    &:first-child,
+/*    &:first-child,
     &:nth-child(2) {
       td:first-child {
         &::before {
@@ -919,7 +919,7 @@ a[href="javascript:history.back()"] {
           content: $icon-time;
         }
       }
-    }
+    }*/
     @include media-breakpoint-down(md) {
       padding: 1rem 1.25rem;
       &:not(:last-child) {
