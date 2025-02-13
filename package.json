@@ -3,6 +3,13 @@
   "version": "0.0.1",
   "description": "The Nature Conservancy",
   "license": "MIT",
+  "scripts": {
+    "build-dev": "grunt --gruntfile Gruntfile.dev.js js && grunt --gruntfile Gruntfile.dev.js css && grunt --gruntfile Gruntfile.dev.js analytics",
+    "build-prod": "grunt --gruntfile Gruntfile.prod.js js && grunt --gruntfile Gruntfile.prod.js css && grunt --gruntfile Gruntfile.prod.js analytics",
+    "build-qa": "grunt --gruntfile Gruntfile.qa.js js && grunt --gruntfile Gruntfile.qa.js css && grunt --gruntfile Gruntfile.qa.js analytics",
+    "build-stage": "grunt --gruntfile Gruntfile.stage.js js && grunt --gruntfile Gruntfile.stage.js css && grunt --gruntfile Gruntfile.stage.js analytics",
+    "watch": "grunt --gruntfile Gruntfile.prod.js w"
+  },
   "devDependencies": {
     "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.13.12",
