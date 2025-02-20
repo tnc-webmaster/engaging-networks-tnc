@@ -871,7 +871,6 @@ a[href="javascript:history.back()"] {
   display: inline-block;
   margin-bottom: 3rem;
   &::before {
-    // content: $icon-back;
     margin-right: 0.5rem;
   }
 }
@@ -898,28 +897,6 @@ a[href="javascript:history.back()"] {
     }
   }
   tr {
-/*    &:first-child,
-    &:nth-child(2) {
-      td:first-child {
-        &::before {
-          content: $icon-date;
-        }
-      }
-    }
-    &:nth-child(3) {
-      td:first-child {
-        &::before {
-          content: $icon-location;
-        }
-      }
-    }
-    &:last-child {
-      td:first-child {
-        &::before {
-          content: $icon-time;
-        }
-      }
-    }*/
     @include media-breakpoint-down(md) {
       padding: 1rem 1.25rem;
       &:not(:last-child) {
