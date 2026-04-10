@@ -4495,3 +4495,316 @@ const getChildValue = (parentEle, selector) => {
 }
 
 const isHTMLElement = (element) => element instanceof HTMLElement;
+
+/* Start form-page.js script from 4Site for mobile single opt-in implementation */
+(function () {
+
+  const mobilePhoneQcbsPage = "https://preserve.nature.org/page/180037/data/1";
+  const fieldData = {
+    dataFieldName: "supporter.phoneNumber2",
+    optInFieldName: "supporter.questions.2268563", // GDCP Dummy Mobile Phone Opt-In
+    gdcpFieldName: "engrid.gdcp-mobile_phone", // Don't edit this field
+    gdcpFieldHtmlLabel: `<span>By entering my mobile phone number and submitting this form, I agree to receive phone and text updates from The Nature Conservancy for the purposes of supporting and promoting its charitable initiatives at the mobile number I entered above. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Mobile Terms & Conditions</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Privacy Statement</a>.</span>`,
+    gdcpFieldHtmlLabelEs: `<span>Al ingresar mi número de teléfono móvil y enviar este formulario, acepto recibir llamadas o mensajes de texto de The Nature Conservancy con el fin de apoyar y promover sus iniciativas benéficas, al número que he proporcionado.<em>Pueden aplicarse tarifas de mensajes y datos, y la frecuencia de los mensajes puede variar. Envía STOP para cancelar o HELP para obtener ayuda.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Términos y Condiciones Móviles</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Declaración de Privacidad</a>.</span>`,
+  };
+
+  /**
+   * Create our dummy opt-in field for mobile phone
+   * If the phone number is mandatory, checkbox is unchecked by default
+   * If the phone number is optional, checkbox is checked & hidden
+   */
+  function createOptInField() {
+    const formElement = document
+      .querySelector(`[name="${fieldData.dataFieldName}"]`)
+      ?.closest(".en__field");
+    if (!formElement) {
+      console.log("Data field not found, not adding gdcp field");
+      return;
+    }
+
+    const fieldHtmlLabel = window.pageJson.locale.startsWith("es") ? fieldData.gdcpFieldHtmlLabelEs : fieldData.gdcpFieldHtmlLabel;
+
+    const optInField = document.querySelector(
+      `[name="${fieldData.optInFieldName}"]`
+    );
+    const optInLabel = document.querySelector(
+      `[name="${fieldData.optInFieldName}"] + label`
+    );
+
+    if (!optInField || !optInLabel) {
+      console.log("Opt-in field or label not found, not adding gdcp field");
+      return;
+    }
+
+    optInLabel.innerHTML = fieldHtmlLabel;
+
+    const phoneNumberIsMandatory =
+      formElement.classList.contains("en__mandatory");
+
+    // When the phone number is mandatory, checkbox should be unchecked by default
+    // When it is optional, it should be checked & hidden
+    // (but QCB is only made when phone number is enter + country US)
+    if (phoneNumberIsMandatory) {
+      optInField.checked = false;
+    } else {
+      // set "before" style of optinLabel to hidden
+      optInLabel.classList.add("hidden-opt-in");
+    }
+
+    optInField.closest(".en__field").style.display = "block";
+  }
+
+  /**
+   * Add styles to head of the document
+   * @param styles
+   */
+  function addStylesToHead(styles) {
+    const style = document.createElement("style");
+    style.innerHTML = styles;
+    document.head.appendChild(style);
+  }
+
+  /**
+   * Initialize the script
+   * @return {Promise<void>}
+   */
+  async function init() {
+
+    // Return early if running inside an iframe on an ENgrid page, such as in the case of Bequest Lightbox
+    if (window.self !== window.top && window.parent.document.body.hasAttribute("data-engrid-theme")) {
+      console.log(`ENGrid detected, not using tnc_scripts.js to handle Mobile Phone QCB`);
+      return;
+    }
+
+    addStylesToHead(`
+       .en__field--2268563 {
+         display: none;
+       }
+    `);
+    const shouldAddField = await shouldAddMobilePhoneOptIn();
+    if (!shouldAddField) {
+      console.log("Not adding mobile phone gdcp field");
+      return;
+    }
+    addStylesToHead(`
+       .en__field--phoneNumber2 .field__help {
+         display: none !important;
+       }
+      .hidden-opt-in:before {
+        content: ""!important;
+        display: none!important;
+      }
+    `);
+    createOptInField();
+    addSessionStorageEventListeners();
+  }
+
+  /**
+   * Determine if we should add the mobile phone opt-in field (based on presence of other fields)
+   * @return {Promise<*|boolean>}
+   */
+  async function shouldAddMobilePhoneOptIn() {
+    const dataFieldPresent = document.querySelector(
+      `[name="${fieldData.dataFieldName}"]`
+    );
+    const optInFieldsPresent = document.querySelector(
+      `[name="${fieldData.optInFieldName}"]`
+    );
+
+    // If we have no data field, no need to do the iframe check
+    if (!dataFieldPresent) {
+      return false;
+    }
+
+    try {
+      const mobilePhoneOptInFieldPresent = await isPresentOnEmbeddedForm(
+        mobilePhoneQcbsPage,
+        `#en__field_supporter_questions_848527, #en__field_supporter_questions_848528`
+      );
+      return (
+        !!dataFieldPresent &&
+        !!optInFieldsPresent &&
+        mobilePhoneOptInFieldPresent
+      );
+    } catch (e) {
+      console.error("Error checking if opted into mobile phone", e);
+      return false;
+    }
+  }
+
+  /**
+   * Check if an element matching a given selector is present on an embedded page
+   * @param pageUrl
+   * @param selector
+   * @return {Promise<boolean>}
+   */
+  async function isPresentOnEmbeddedForm(pageUrl, selector) {
+    const iframe = createChainedIframeForm(pageUrl);
+
+    await new Promise((resolve, reject) => {
+      iframe.addEventListener("load", resolve);
+      iframe.addEventListener("error", reject);
+    });
+
+    const iframeDocument =
+      iframe.contentDocument || iframe.contentWindow?.document;
+    let elementInIframe = iframeDocument?.querySelector(selector);
+
+    return !!elementInIframe;
+  }
+
+  /**
+   * Create an iframe form with chaining and optional autosubmit form
+   * @param urlString
+   * @param autoSubmit
+   * @return {HTMLIFrameElement}
+   */
+  function createChainedIframeForm(urlString, autoSubmit = false) {
+    const url = new URL(urlString);
+    url.searchParams.append("chain", "");
+    if (autoSubmit) {
+      url.searchParams.append("autosubmit", "Y");
+    }
+    const iframe = document.createElement("iframe");
+    iframe.src = url.toString();
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    return iframe;
+  }
+
+  /**
+   * Add event listeners to update session storage when relevant fields change
+   */
+  function addSessionStorageEventListeners() {
+    const fields = [
+      document.querySelector(`[name="${fieldData.optInFieldName}"]`),
+      document.querySelector(`[name="supporter.phoneNumber2"]`),
+      document.querySelector(`[name="supporter.country"]`),
+    ]
+      .filter(Boolean)
+      .flat();
+
+    // Do an initial call to handle the current state (if pre-filled)
+    setMobilePhoneSessionItem();
+    fields.forEach((field) => {
+      field?.addEventListener("change", setMobilePhoneSessionItem.bind(this));
+    });
+  }
+
+  /**
+   * Set mobile phone session storage item based on form data
+   */
+  function setMobilePhoneSessionItem() {
+    const checked = !!document.querySelector(
+      `[name="${fieldData.optInFieldName}"]:checked`
+    );
+    const formData = new FormData(document.querySelector("form.en__component"));
+
+    if (
+      formData.get("supporter.phoneNumber2") !== "" &&
+      formData.get("supporter.country") === "US"
+    ) {
+      sessionStorage.setItem(
+        "gdcp-mobile-phone-create-qcb",
+        JSON.stringify({
+          state: checked ? "Y" : "N",
+          page: window.location.pathname,
+        })
+      );
+      console.log(
+        `Mobile Phone channel will create QCB with status: ${
+          checked ? "Y" : "N"
+        }`
+      );
+    } else {
+      sessionStorage.removeItem("gdcp-mobile-phone-create-qcb");
+      console.log(
+        `Mobile Phone channel missing required data, won't create a QCB`
+      );
+    }
+  }
+
+  init();
+})();
+/* End form-page.js script from 4Site for mobile single opt-in implementation */
+
+/* Start thank-you-page.js script from 4Site for mobile single opt-in implementation */
+(function () {
+
+  /* The form page with the mobile phone QCBs */
+  const mobilePhoneQcbsPage = "https://preserve.nature.org/page/180037/data/1";
+  /* Check if submission failed */
+  const submissionFailed = !!document.querySelector(
+    ".en__errorList .en__error"
+  );
+
+  /**
+   * Handle creating QCB for Mobile Phone opt-in if conditions are met
+   */
+  function handleMobilePhoneQcb() {
+
+    // Return early if running inside an iframe on an ENgrid page, such as in the case of Bequest Lightbox
+    if (window.self !== window.top && window.parent.document.body.hasAttribute("data-engrid-theme")) {
+      console.log(`ENGrid detected, not using tnc_scripts.js to handle Mobile Phone QCB`);
+      return;
+    }
+
+    const sessionData = JSON.parse(
+      sessionStorage.getItem("gdcp-mobile-phone-create-qcb") || "{}"
+    );
+
+    if (!sessionData || !sessionData.page || !sessionData.state) {
+      return;
+    }
+
+    const shouldCreateQcb =
+      sessionData.page &&
+      sessionData.page !== window.location.pathname &&
+      !submissionFailed;
+
+    if (!shouldCreateQcb) {
+      return;
+    }
+
+    let url = new URL(mobilePhoneQcbsPage);
+    if (sessionData.state === "N") {
+      // Don't create Negative QCBs
+      return;
+      // url.searchParams.append("supporter.questions.848527", "N");
+      // url.searchParams.append("supporter.questions.848528", "N");
+    }
+
+    // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
+    setTimeout(() => {
+      const iframe = createChainedIframeForm(url.toString(), true);
+      sessionStorage.removeItem("gdcp-mobile-phone-create-qcb");
+      console.log(
+        `Creating QCB for Mobile Phone using form: ${iframe.getAttribute(
+          "src"
+        )}`
+      );
+    }, 1500);
+  }
+
+  /**
+   * Create an iframe form with chaining and optional autosubmit form
+   * @param urlString
+   * @param autoSubmit
+   * @return {HTMLIFrameElement}
+   */
+  function createChainedIframeForm(urlString, autoSubmit = false) {
+    const url = new URL(urlString);
+    url.searchParams.append("chain", "");
+    if (autoSubmit) {
+      url.searchParams.append("autosubmit", "Y");
+    }
+    const iframe = document.createElement("iframe");
+    iframe.src = url.toString();
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    return iframe;
+  }
+
+  handleMobilePhoneQcb();
+})();
+/* End thank-you-page.js script from 4Site for mobile single opt-in implementation */
